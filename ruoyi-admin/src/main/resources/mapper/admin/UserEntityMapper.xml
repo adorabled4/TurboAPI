@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.api.admin.mapper.UserEntityMapper">
+    
+    <resultMap type="UserEntity" id="UserEntityResult">
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="userAccount"    column="user_account"    />
+        <result property="avatarUrl"    column="avatar_url"    />
+        <result property="gender"    column="gender"    />
+        <result property="password"    column="password"    />
+        <result property="phone"    column="phone"    />
+        <result property="email"    column="email"    />
+        <result property="accessKey"    column="access_key"    />
+        <result property="secretKey"    column="secret_key"    />
+        <result property="userRole"    column="user_role"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isDelete"    column="is_delete"    />
+    </resultMap>
+
+    <sql id="selectUserEntityVo">
+        select user_id, user_name, user_account, avatar_url, gender, password, phone, email, access_key, secret_key, user_role, create_time, update_time, is_delete from t_user_entity
+    </sql>
+
+    <select id="selectUserEntityList" parameterType="UserEntity" resultMap="UserEntityResult">
+        <include refid="selectUserEntityVo"/>
+        <where>  
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="userAccount != null  and userAccount != ''"> and user_account = #{userAccount}</if>
+            <if test="avatarUrl != null  and avatarUrl != ''"> and avatar_url = #{avatarUrl}</if>
+            <if test="gender != null "> and gender = #{gender}</if>
+            <if test="password != null  and password != ''"> and password = #{password}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="accessKey != null  and accessKey != ''"> and access_key = #{accessKey}</if>
+            <if test="secretKey != null  and secretKey != ''"> and secret_key = #{secretKey}</if>
+            <if test="userRole != null "> and user_role = #{userRole}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserEntityByUserId" parameterType="Long" resultMap="UserEntityResult">
+        <include refid="selectUserEntityVo"/>
+        where user_id = #{userId}
+    </select>
+        
+    <insert id="insertUserEntity" parameterType="UserEntity" useGeneratedKeys="true" keyProperty="userId">
+        insert into t_user_entity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="userAccount != null and userAccount != ''">user_account,</if>
+            <if test="avatarUrl != null and avatarUrl != ''">avatar_url,</if>
+            <if test="gender != null">gender,</if>
+            <if test="password != null and password != ''">password,</if>
+            <if test="phone != null">phone,</if>
+            <if test="email != null">email,</if>
+            <if test="accessKey != null and accessKey != ''">access_key,</if>
+            <if test="secretKey != null and secretKey != ''">secret_key,</if>
+            <if test="userRole != null">user_role,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="userAccount != null and userAccount != ''">#{userAccount},</if>
+            <if test="avatarUrl != null and avatarUrl != ''">#{avatarUrl},</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="password != null and password != ''">#{password},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="email != null">#{email},</if>
+            <if test="accessKey != null and accessKey != ''">#{accessKey},</if>
+            <if test="secretKey != null and secretKey != ''">#{secretKey},</if>
+            <if test="userRole != null">#{userRole},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserEntity" parameterType="UserEntity">
+        update t_user_entity
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="userAccount != null and userAccount != ''">user_account = #{userAccount},</if>
+            <if test="avatarUrl != null and avatarUrl != ''">avatar_url = #{avatarUrl},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="accessKey != null and accessKey != ''">access_key = #{accessKey},</if>
+            <if test="secretKey != null and secretKey != ''">secret_key = #{secretKey},</if>
+            <if test="userRole != null">user_role = #{userRole},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
+    <delete id="deleteUserEntityByUserId" parameterType="Long">
+        delete from t_user_entity where user_id = #{userId}
+    </delete>
+
+    <delete id="deleteUserEntityByUserIds" parameterType="String">
+        delete from t_user_entity where user_id in 
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+</mapper>

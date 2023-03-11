@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.api.admin.mapper.WhiteListMapper">
+    
+    <resultMap type="WhiteList" id="WhiteListResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="host"    column="host"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isDelete"    column="is_delete"    />
+    </resultMap>
+
+    <sql id="selectWhiteListVo">
+        select id, user_id, host, create_time, update_time, is_delete from t_white_list
+    </sql>
+
+    <select id="selectWhiteListList" parameterType="WhiteList" resultMap="WhiteListResult">
+        <include refid="selectWhiteListVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="host != null  and host != ''"> and host = #{host}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+    
+    <select id="selectWhiteListById" parameterType="Long" resultMap="WhiteListResult">
+        <include refid="selectWhiteListVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWhiteList" parameterType="WhiteList" useGeneratedKeys="true" keyProperty="id">
+        insert into t_white_list
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="host != null and host != ''">host,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="host != null and host != ''">#{host},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWhiteList" parameterType="WhiteList">
+        update t_white_list
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="host != null and host != ''">host = #{host},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWhiteListById" parameterType="Long">
+        delete from t_white_list where id = #{id}
+    </delete>
+
+    <delete id="deleteWhiteListByIds" parameterType="String">
+        delete from t_white_list where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

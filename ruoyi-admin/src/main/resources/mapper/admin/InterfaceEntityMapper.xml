@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.api.admin.mapper.InterfaceEntityMapper">
+    
+    <resultMap type="InterfaceEntity" id="InterfaceEntityResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="description"    column="description"    />
+        <result property="isFree"    column="is_free"    />
+        <result property="url"    column="url"    />
+        <result property="method"    column="method"    />
+        <result property="requestParam"    column="request_param"    />
+        <result property="requestHeader"    column="request_header"    />
+        <result property="responseHeader"    column="response_header"    />
+        <result property="status"    column="status"    />
+        <result property="userId"    column="user_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isDelete"    column="is_delete"    />
+    </resultMap>
+
+    <sql id="selectInterfaceEntityVo">
+        select id, name, description, is_free, url, method, request_param, request_header, response_header, status, user_id, create_time, update_time, is_delete from t_interface_entity
+    </sql>
+
+    <select id="selectInterfaceEntityList" parameterType="InterfaceEntity" resultMap="InterfaceEntityResult">
+        <include refid="selectInterfaceEntityVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="isFree != null "> and is_free = #{isFree}</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="method != null  and method != ''"> and method = #{method}</if>
+            <if test="requestParam != null  and requestParam != ''"> and request_param = #{requestParam}</if>
+            <if test="requestHeader != null  and requestHeader != ''"> and request_header = #{requestHeader}</if>
+            <if test="responseHeader != null  and responseHeader != ''"> and response_header = #{responseHeader}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+    
+    <select id="selectInterfaceEntityById" parameterType="Long" resultMap="InterfaceEntityResult">
+        <include refid="selectInterfaceEntityVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertInterfaceEntity" parameterType="InterfaceEntity" useGeneratedKeys="true" keyProperty="id">
+        insert into t_interface_entity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="description != null and description != ''">description,</if>
+            <if test="isFree != null">is_free,</if>
+            <if test="url != null and url != ''">url,</if>
+            <if test="method != null and method != ''">method,</if>
+            <if test="requestParam != null and requestParam != ''">request_param,</if>
+            <if test="requestHeader != null and requestHeader != ''">request_header,</if>
+            <if test="responseHeader != null and responseHeader != ''">response_header,</if>
+            <if test="status != null">status,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="description != null and description != ''">#{description},</if>
+            <if test="isFree != null">#{isFree},</if>
+            <if test="url != null and url != ''">#{url},</if>
+            <if test="method != null and method != ''">#{method},</if>
+            <if test="requestParam != null and requestParam != ''">#{requestParam},</if>
+            <if test="requestHeader != null and requestHeader != ''">#{requestHeader},</if>
+            <if test="responseHeader != null and responseHeader != ''">#{responseHeader},</if>
+            <if test="status != null">#{status},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInterfaceEntity" parameterType="InterfaceEntity">
+        update t_interface_entity
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="description != null and description != ''">description = #{description},</if>
+            <if test="isFree != null">is_free = #{isFree},</if>
+            <if test="url != null and url != ''">url = #{url},</if>
+            <if test="method != null and method != ''">method = #{method},</if>
+            <if test="requestParam != null and requestParam != ''">request_param = #{requestParam},</if>
+            <if test="requestHeader != null and requestHeader != ''">request_header = #{requestHeader},</if>
+            <if test="responseHeader != null and responseHeader != ''">response_header = #{responseHeader},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteInterfaceEntityById" parameterType="Long">
+        delete from t_interface_entity where id = #{id}
+    </delete>
+
+    <delete id="deleteInterfaceEntityByIds" parameterType="String">
+        delete from t_interface_entity where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
