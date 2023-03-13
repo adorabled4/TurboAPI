@@ -9,9 +9,12 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.sql.DataSource;
+
+import com.alibaba.druid.support.http.StatViewServlet;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -76,6 +79,22 @@ public class DruidConfig
         catch (Exception e)
         {
         }
+    }
+
+    @Bean
+    public ServletRegistrationBean druidServlet() {
+        ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean();
+        servletRegistrationBean.setServlet(new StatViewServlet());
+        servletRegistrationBean.addUrlMappings("/druid/*");
+        Map<String, String> initParameters = new HashMap<>();
+        initParameters.put("resetEnable", "false"); //禁用HTML页面上的“Rest All”功能
+//        initParameters.put("allow", "10.8.9.115");  //ip白名单（没有配置或者为空，则允许所有访问）
+        initParameters.put("loginUsername", "admin");  //++监控页面登录用户名
+        initParameters.put("loginPassword", "admin");  //++监控页面登录用户密码
+        initParameters.put("deny", ""); //ip黑名单
+        //如果某个ip同时存在，deny优先于allow
+        servletRegistrationBean.setInitParameters(initParameters);
+        return servletRegistrationBean;
     }
 
     /**

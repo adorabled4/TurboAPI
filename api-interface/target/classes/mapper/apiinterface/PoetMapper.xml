@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.api.apiinterface.mapper.PoetMapper">
+    
+    <resultMap type="com.api.apiinterface.domain.Poet" id="PoetResult">
+        <result property="id"    column="id"    />
+        <result property="author"    column="author"    />
+        <result property="dynasty"    column="dynasty"    />
+        <result property="title"    column="title"    />
+        <result property="poetry"    column="poetry"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectPoetVo">
+        select id, author, dynasty, title, poetry, create_time from t_poet
+    </sql>
+
+    <select id="selectPoetList" parameterType="com.api.apiinterface.domain.Poet" resultMap="PoetResult">
+        <include refid="selectPoetVo"/>
+        <where>  
+            <if test="author != null  and author != ''"> and author = #{author}</if>
+            <if test="dynasty != null  and dynasty != ''"> and dynasty = #{dynasty}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="poetry != null  and poetry != ''"> and poetry = #{poetry}</if>
+        </where>
+    </select>
+    
+    <select id="selectPoetById" parameterType="java.lang.Long" resultMap="PoetResult">
+        <include refid="selectPoetVo"/>
+        where id = #{id}
+    </select>
+    <select id="getTotal" resultType="java.lang.Long">
+        select count(id) from t_poet;
+    </select>
+
+    <insert id="insertPoet" parameterType="com.api.apiinterface.domain.Poet">
+        insert into t_poet
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="author != null and author != ''">author,</if>
+            <if test="dynasty != null and dynasty != ''">dynasty,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="poetry != null and poetry != ''">poetry,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="author != null and author != ''">#{author},</if>
+            <if test="dynasty != null and dynasty != ''">#{dynasty},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="poetry != null and poetry != ''">#{poetry},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePoet" parameterType="com.api.apiinterface.domain.Poet">
+        update t_poet
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="author != null and author != ''">author = #{author},</if>
+            <if test="dynasty != null and dynasty != ''">dynasty = #{dynasty},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="poetry != null and poetry != ''">poetry = #{poetry},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePoetById" parameterType="java.lang.Long">
+        delete from t_poet where id = #{id}
+    </delete>
+
+    <delete id="deletePoetByIds" parameterType="java.lang.String">
+        delete from t_poet where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
