@@ -4,7 +4,7 @@ server:
   port: 8123
   servlet:
     # 应用的访问路径
-    context-path: /
+    context-path: /api
   tomcat:
     # tomcat的URI编码
     uri-encoding: UTF-8

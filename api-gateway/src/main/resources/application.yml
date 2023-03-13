@@ -1,0 +1,25 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        # 需要添加 三个 , 一个是主要的管理系统,另一个是后台通往的接口模块的CRUD , 以及之后前端访问的接口(或者通过dubbo远程调用)
+        - id: api_route
+          uri: http://127.0.0.1:8123
+          predicates:
+          - Path=/dev-api/api/** # 符合 /api开头的地址就会被路由
+          filters:
+          - RewritePath=/dev-api/api/?(?<segment>.*),/api/$\{segment}
+        - id: admin_route
+          uri: http://127.0.0.1:8080
+          predicates:
+          - Path=/dev-api/** # 符合 /api开头的地址就会被路由
+  application:
+    name: api-gateway
+server:
+  port: 88
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway: trace # 设置日志级别
