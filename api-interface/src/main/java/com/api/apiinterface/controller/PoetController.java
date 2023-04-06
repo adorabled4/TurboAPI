@@ -1,12 +1,11 @@
 package com.api.apiinterface.controller;
 
 import java.util.List;
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import com.api.apicommon.common.BaseResponse;
 import com.api.apiinterface.vo.PoetVO;
-import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +25,7 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 【请填写功能名称】Controller
+ * 随机诗词Controller
  * 
  * @author adorabled4
  * @date 2023-03-11
@@ -49,9 +48,9 @@ public class PoetController extends BaseController
     }
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询随机诗词列表
      */
-    @PreAuthorize("@ss.hasPermi('apiinterface:poet:list')")
+//    @PreAuthorize("@ss.hasPermi('apiinterface:poet:list')")
     @GetMapping("/list")
     public TableDataInfo list(Poet poet)
     {
@@ -61,22 +60,22 @@ public class PoetController extends BaseController
     }
 
     /**
-     * 导出【请填写功能名称】列表
+     * 导出随机诗词列表
      */
-    @PreAuthorize("@ss.hasPermi('apiinterface:poet:export')")
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.EXPORT)
+//    @PreAuthorize("@ss.hasPermi('apiinterface:poet:export')")
+    @Log(title = "随机诗词", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, Poet poet)
     {
         List<Poet> list = poetService.selectPoetList(poet);
         ExcelUtil<Poet> util = new ExcelUtil<Poet>(Poet.class);
-        util.exportExcel(response, list, "【请填写功能名称】数据");
+        util.exportExcel(response, list, "随机诗词数据");
     }
 
     /**
-     * 获取【请填写功能名称】详细信息
+     * 获取随机诗词详细信息
      */
-    @PreAuthorize("@ss.hasPermi('apiinterface:poet:query')")
+//    @PreAuthorize("@ss.hasPermi('apiinterface:poet:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -84,10 +83,10 @@ public class PoetController extends BaseController
     }
 
     /**
-     * 新增【请填写功能名称】
+     * 新增随机诗词
      */
-    @PreAuthorize("@ss.hasPermi('apiinterface:poet:add')")
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.INSERT)
+//    @PreAuthorize("@ss.hasPermi('apiinterface:poet:add')")
+    @Log(title = "随机诗词", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Poet poet)
     {
@@ -95,10 +94,10 @@ public class PoetController extends BaseController
     }
 
     /**
-     * 修改【请填写功能名称】
+     * 修改随机诗词
      */
-    @PreAuthorize("@ss.hasPermi('apiinterface:poet:edit')")
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.UPDATE)
+//    @PreAuthorize("@ss.hasPermi('apiinterface:poet:edit')")
+    @Log(title = "随机诗词", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Poet poet)
     {
@@ -106,10 +105,10 @@ public class PoetController extends BaseController
     }
 
     /**
-     * 删除【请填写功能名称】
+     * 删除随机诗词
      */
-    @PreAuthorize("@ss.hasPermi('apiinterface:poet:remove')")
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.DELETE)
+//    @PreAuthorize("@ss.hasPermi('apiinterface:poet:remove')")
+    @Log(title = "随机诗词", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {

@@ -27,6 +27,7 @@ spring:
   security:
     user:
       password: admin
+      name: admin
   # 服务模块
   devtools:
     restart:
