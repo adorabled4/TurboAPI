@@ -48,7 +48,7 @@ CREATE TABLE `gen_table`  (
 -- ----------------------------
 -- Records of gen_table
 -- ----------------------------
-INSERT INTO `gen_table` VALUES (25, 't_interfaceEntity', '', NULL, NULL, 'InterfaceEntity', 'crud', 'com.api.admin', 'admin', 'interfaceEntity', NULL, 'adorabled4', '0', '/', NULL, 'admin', '2023-03-10 15:49:57', '', NULL, NULL);
+INSERT INTO `gen_table` VALUES (25, 't_interfaceEntity', '', NULL, NULL, 'InterfaceEntity', 'crud', 'com.dhx.admin', 'admin', 'interfaceEntity', NULL, 'adorabled4', '0', '/', NULL, 'admin', '2023-03-10 15:49:57', '', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for gen_table_column

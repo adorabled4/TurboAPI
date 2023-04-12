@@ -1,5 +1,6 @@
 package com.ruoyi.api.admin.domain;
 
+import com.ruoyi.common.annotation.DataSource;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -56,6 +57,10 @@ public class UserEntity extends BaseEntity
     /** 0-用户 1-管理员 */
     @Excel(name = "0-用户 1-管理员")
     private Integer userRole;
+
+    /** 是否封禁*/
+    @Excel(name="是否封禁")
+    private Integer isDisabled;
 
     /** 逻辑删除(1删除) */
     @Excel(name = "逻辑删除(1删除)")

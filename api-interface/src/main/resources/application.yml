@@ -19,7 +19,7 @@ server:
 # 日志配置
 logging:
   level:
-    com.api.com.api.apiinterface: debug
+    com.dhx.com.api.apiinterface: debug
     org.springframework: warn
 # 用户配置
 # Spring配置

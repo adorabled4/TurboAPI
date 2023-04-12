@@ -17,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<!-- <setting name="mapUnderscoreToCamelCase" value="true"/> -->
 	</settings>
     <typeAliases>
-        <package name="com.api.admin.domain"/>
+        <package name="com.dhx.admin.domain"/>
     </typeAliases>
 	
 </configuration>

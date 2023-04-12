@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.api.apiinterface.mapper.PoetMapper">
+<mapper namespace="com.dhx.apiinterface.mapper.PoetMapper">
     
-    <resultMap type="com.api.apiinterface.domain.Poet" id="PoetResult">
+    <resultMap type="com.dhx.apiinterface.domain.Poet" id="PoetResult">
         <result property="id"    column="id"    />
         <result property="author"    column="author"    />
         <result property="dynasty"    column="dynasty"    />
@@ -17,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, author, dynasty, title, poetry, create_time from t_poet
     </sql>
 
-    <select id="selectPoetList" parameterType="com.api.apiinterface.domain.Poet" resultMap="PoetResult">
+    <select id="selectPoetList" parameterType="com.dhx.apiinterface.domain.Poet" resultMap="PoetResult">
         <include refid="selectPoetVo"/>
         <where>  
             <if test="author != null  and author != ''"> and author = #{author}</if>
@@ -35,7 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select count(id) from t_poet;
     </select>
 
-    <insert id="insertPoet" parameterType="com.api.apiinterface.domain.Poet">
+    <insert id="insertPoet" parameterType="com.dhx.apiinterface.domain.Poet">
         insert into t_poet
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
@@ -55,7 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updatePoet" parameterType="com.api.apiinterface.domain.Poet">
+    <update id="updatePoet" parameterType="com.dhx.apiinterface.domain.Poet">
         update t_poet
         <trim prefix="SET" suffixOverrides=",">
             <if test="author != null and author != ''">author = #{author},</if>
