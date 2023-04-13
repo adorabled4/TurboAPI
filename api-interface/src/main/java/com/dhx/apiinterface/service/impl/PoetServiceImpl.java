@@ -4,6 +4,7 @@ import java.util.List;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.dhx.apicommon.common.BaseResponse;
+import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apiinterface.vo.PoetVO;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class PoetServiceImpl implements IPoetService
             poet = poetMapper.selectPoetById(1L);
         }
         PoetVO poetVO = BeanUtil.copyProperties(poet, PoetVO.class);
-        return new BaseResponse<>(poetVO);
+        return ResultUtil.success(poetVO);
     }
 
     /**

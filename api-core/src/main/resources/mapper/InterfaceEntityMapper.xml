@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhx.apicore.mapper.InterfaceEntityMapper">
+
+    <resultMap id="BaseResultMap" type="com.dhx.apicore.model.DO.InterfaceEntity">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="isFree" column="is_free" jdbcType="TINYINT"/>
+            <result property="url" column="url" jdbcType="VARCHAR"/>
+            <result property="method" column="method" jdbcType="VARCHAR"/>
+            <result property="requestParam" column="request_param" jdbcType="VARCHAR"/>
+            <result property="requestHeader" column="request_header" jdbcType="VARCHAR"/>
+            <result property="responseHeader" column="response_header" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="is_delete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,description,
+        is_free,url,method,
+        request_param,request_header,response_header,
+        status,user_id,create_time,
+        update_time,is_delete
+    </sql>
+</mapper>

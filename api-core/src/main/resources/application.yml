@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: api-core
+  datasource:
+    url: jdbc:mysql://192.168.159.134:3306/ry
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: 192.168.159.134
+    database: 1
+    port: 6379
+#    password:
+
+server:
+  port: 9001
+  servlet:
+    context-path: /api-core
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-not-delete-value: 1 # mybatis-plus 逻辑删除
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 打印sql
+#  mapper-locations: classpath*:com/dhx/apicore/mapper/*.xml
+knife4j:
+  enable: true
+  openapi:
+    title: 自动驾驶决策系统bankend接口文档
+    description: 后端接口文档
+    email: dhx2648466390@163.com
+    concat: adorabled4
+    url: https://blog.dhx.icu
+    version: v4.0
+    license: Apache 2.0
+    license-url: https://stackoverflow.com/
+    terms-of-service-url: https://stackoverflow.com/
+    group:
+      dev:
+        group-name: 开发环境
+        api-rule: package
+        api-rule-resources:
+          - com.dhx.apicore.controller
