@@ -69,7 +69,7 @@ public class InterfaceEntity implements Serializable {
     /**
      * 创建人
      */
-    private Integer userId;
+    private Long userId;
 
     /**
      * 创建时间

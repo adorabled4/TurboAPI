@@ -26,7 +26,18 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new ReFreshTokenInterceptor(stringRedisTemplate,jwtTokensService)).addPathPatterns("/**")
-                .excludePathPatterns("/**/login","/**/register");
+                .excludePathPatterns("/**/login",
+                        "/**/register",
+                        "/**/interface/list",
+                        "/**/interface/detail/**",
+                        "/**/interface/example/**",
+                        "/**/doc.html/**",
+                        "/static/**",
+                        "/**/swagger-ui.html/**",
+                        "/**/favicon.ico",
+                        "/**/swagger-resources/**",
+                        "/**/webjars/**"
+                );
         WebMvcConfigurer.super.addInterceptors(registry);
     }
 }

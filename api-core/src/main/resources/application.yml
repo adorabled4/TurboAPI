@@ -20,13 +20,12 @@ mybatis-plus:
   global-config:
     db-config:
       logic-not-delete-value: 1 # mybatis-plus 逻辑删除
-#  configuration:
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 打印sql
-#  mapper-locations: classpath*:com/dhx/apicore/mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 打印sql
 knife4j:
   enable: true
   openapi:
-    title: 自动驾驶决策系统bankend接口文档
+    title: api开发平台bankend接口文档
     description: 后端接口文档
     email: dhx2648466390@163.com
     concat: adorabled4
