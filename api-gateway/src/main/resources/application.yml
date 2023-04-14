@@ -9,13 +9,13 @@ spring:
             - Path=/api-core/** # 符合 /api开头的地址就会被路由
           filters:
             - RewritePath=/api-core/?(?<segment>.*),/api-core/$\{segment}
-        - id: api_route
+        - id: api_route # 接口路由
           uri: http://127.0.0.1:8123
           predicates:
           - Path=/dev-api/api/** # 符合 /api开头的地址就会被路由
           filters:
           - RewritePath=/dev-api/api/?(?<segment>.*),/api/$\{segment}
-        - id: admin_route
+        - id: admin_route # ry路由
           uri: http://127.0.0.1:8080
           predicates:
           - Path=/dev-api/** # 符合 /api开头的地址就会被路由
