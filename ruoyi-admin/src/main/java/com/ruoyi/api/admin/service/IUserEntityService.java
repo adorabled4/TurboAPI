@@ -58,4 +58,6 @@ public interface IUserEntityService
      * @return 结果
      */
     public int deleteUserEntityByUserId(Long userId);
+
+    public String getUserNameById(Long userId);
 }

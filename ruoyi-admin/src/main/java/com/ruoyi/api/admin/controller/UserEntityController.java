@@ -102,4 +102,9 @@ public class UserEntityController extends BaseController
     {
         return toAjax(userEntityService.deleteUserEntityByUserIds(userIds));
     }
+
+    @GetMapping("/{id}")
+    public AjaxResult getUserNameById(@PathVariable("id")Long userId){
+        return success(userEntityService.getUserNameById(userId));
+    }
 }

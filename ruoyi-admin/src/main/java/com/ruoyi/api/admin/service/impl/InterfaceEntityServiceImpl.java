@@ -1,12 +1,22 @@
 package com.ruoyi.api.admin.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import cn.hutool.core.bean.BeanUtil;
+import com.ruoyi.api.admin.service.IUserEntityService;
+import com.ruoyi.api.admin.vo.InterfaceInfoVo;
+import com.ruoyi.common.enums.UserStatus;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.bean.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import com.ruoyi.api.admin.mapper.InterfaceEntityMapper;
 import com.ruoyi.api.admin.domain.InterfaceEntity;
 import com.ruoyi.api.admin.service.IInterfaceEntityService;
+
+import javax.annotation.Resource;
 
 /**
  * 【请填写功能名称】Service业务层处理
@@ -19,6 +29,9 @@ public class InterfaceEntityServiceImpl implements IInterfaceEntityService
 {
     @Autowired
     private InterfaceEntityMapper interfaceEntityMapper;
+
+    @Resource
+    private IUserEntityService userService;
 
     /**
      * 查询【请填写功能名称】
@@ -39,9 +52,16 @@ public class InterfaceEntityServiceImpl implements IInterfaceEntityService
      * @return 【请填写功能名称】
      */
     @Override
-    public List<InterfaceEntity> selectInterfaceEntityList(InterfaceEntity interfaceEntity)
+    public List<InterfaceInfoVo> selectInterfaceEntityList(InterfaceEntity interfaceEntity)
     {
-        return interfaceEntityMapper.selectInterfaceEntityList(interfaceEntity);
+        List<InterfaceEntity> interfaceEntities = interfaceEntityMapper.selectInterfaceEntityList(interfaceEntity);
+        List<InterfaceInfoVo> interfaceInfoVos = interfaceEntities.stream().map(item -> {
+            InterfaceInfoVo interfaceInfoVo = BeanUtil.copyProperties(item, InterfaceInfoVo.class);
+            String userName = userService.getUserNameById(interfaceInfoVo.getUserId());
+            interfaceInfoVo.setUserName(userName);
+            return interfaceInfoVo;
+        }).collect(Collectors.toList());
+        return interfaceInfoVos;
     }
 
     /**

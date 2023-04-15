@@ -2,6 +2,7 @@ package com.ruoyi.api.admin.service;
 
 import java.util.List;
 import com.ruoyi.api.admin.domain.InterfaceEntity;
+import com.ruoyi.api.admin.vo.InterfaceInfoVo;
 
 /**
  * 【请填写功能名称】Service接口
@@ -25,7 +26,7 @@ public interface IInterfaceEntityService
      * @param interfaceEntity 【请填写功能名称】
      * @return 【请填写功能名称】集合
      */
-    public List<InterfaceEntity> selectInterfaceEntityList(InterfaceEntity interfaceEntity);
+    public List<InterfaceInfoVo> selectInterfaceEntityList(InterfaceEntity interfaceEntity);
 
     /**
      * 新增【请填写功能名称】

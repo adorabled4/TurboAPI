@@ -68,8 +68,8 @@ public class ResultUtil {
      *
      * @return
      */
-    public static <T> BaseResponse<T> error(int code , String message){
-        return new BaseResponse<T>(code,null,message);
+    public static <T> BaseResponse<T> error(int code , String description){
+        return new BaseResponse<T>(code,null,"error",description);
     }
 
     /**

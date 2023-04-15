@@ -24,6 +24,12 @@
             <optional>true</optional> <!-- 表示依赖不会传递 -->
         </dependency>
 
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.11</version>
+        </dependency>
         <!-- swagger3-->
         <dependency>
             <groupId>io.springfox</groupId>

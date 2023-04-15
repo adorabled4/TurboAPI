@@ -93,4 +93,13 @@ public class UserEntityServiceImpl implements IUserEntityService
     {
         return userEntityMapper.deleteUserEntityByUserId(userId);
     }
+
+    @Override
+    public String getUserNameById(Long userId) {
+        UserEntity userEntity = userEntityMapper.selectUserEntityByUserId(userId);
+        if(userEntity!=null){
+            return userEntity.getUserName();
+        }
+        return "adorabled4";
+    }
 }

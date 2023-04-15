@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.api.admin.domain.InterfaceEntity;
+import com.ruoyi.api.admin.vo.InterfaceInfoVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +44,7 @@ public class InterfaceEntityController extends BaseController
     public TableDataInfo list(InterfaceEntity interfaceEntity)
     {
         startPage();
-        List<InterfaceEntity> list = interfaceEntityService.selectInterfaceEntityList(interfaceEntity);
+        List<InterfaceInfoVo> list = interfaceEntityService.selectInterfaceEntityList(interfaceEntity);
         return getDataTable(list);
     }
 
@@ -55,8 +56,8 @@ public class InterfaceEntityController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, InterfaceEntity interfaceEntity)
     {
-        List<InterfaceEntity> list = interfaceEntityService.selectInterfaceEntityList(interfaceEntity);
-        ExcelUtil<InterfaceEntity> util = new ExcelUtil<InterfaceEntity>(InterfaceEntity.class);
+        List<InterfaceInfoVo> list = interfaceEntityService.selectInterfaceEntityList(interfaceEntity);
+        ExcelUtil<InterfaceInfoVo> util = new ExcelUtil<InterfaceInfoVo>(InterfaceInfoVo.class);
         util.exportExcel(response, list, "接口数据");
     }
 
