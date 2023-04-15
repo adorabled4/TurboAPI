@@ -6,9 +6,9 @@ spring:
         - id: frontend_route
           uri: http://127.0.0.1:9001
           predicates:
-            - Path=/api-core/** # 符合 /api开头的地址就会被路由
+            - Path=/apicore/** # 符合 /api开头的地址就会被路由
           filters:
-            - RewritePath=/api-core/?(?<segment>.*),/api-core/$\{segment}
+            - RewritePath=/apicore/?(?<segment>.*),/apicore/$\{segment}
         - id: api_route # 接口路由
           uri: http://127.0.0.1:8123
           predicates:

@@ -15,7 +15,7 @@ spring:
 server:
   port: 9001
   servlet:
-    context-path: /api-core
+    context-path: /apicore
 mybatis-plus:
   global-config:
     db-config:
@@ -25,7 +25,7 @@ mybatis-plus:
 knife4j:
   enable: true
   openapi:
-    title: api开发平台bankend接口文档
+    title: api-plantform_bankend
     description: 后端接口文档
     email: dhx2648466390@163.com
     concat: adorabled4

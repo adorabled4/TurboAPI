@@ -41,8 +41,9 @@ buildNumber.properties
 .mvn/timing.properties
 **/.mvn/
 **/test
-
 ## File-based project format:
 *.iws
 *.iml
 *.ipr
+/**/target/
+/api-common/target/
