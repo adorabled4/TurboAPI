@@ -4,6 +4,7 @@ import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.common.exception.BusinessException;
 import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.util.ResultUtil;
+import com.dhx.apicore.model.DO.InterfaceExampleEntity;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVo;
 import com.dhx.apicore.service.InterfaceEntityService;
 import io.swagger.annotations.Api;
@@ -26,7 +27,7 @@ public class InterfaceController {
     InterfaceEntityService interfaceEntityService;
 
     @GetMapping("/list")
-    public BaseResponse getInterfaceList(@RequestParam("pageSize")int pageSize, @RequestParam("current")int current) {
+    public BaseResponse<List<InterfaceBasicInfoVo>> getInterfaceList(@RequestParam("pageSize")int pageSize, @RequestParam("current")int current) {
         if(pageSize <= 0 ){
             pageSize=5;
         }
@@ -46,13 +47,11 @@ public class InterfaceController {
     }
 
     @GetMapping("/example/{id}")
-    public BaseResponse getInterfaceExample(@PathVariable("id")Long id){
+    public BaseResponse<InterfaceExampleEntity> getInterfaceExample(@PathVariable("id")Long id){
         if(id<0){
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         return interfaceEntityService.getInterfaceExample(id);
     }
-
-
 
 }

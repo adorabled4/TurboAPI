@@ -3,7 +3,9 @@ package com.dhx.apicore.service;
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicore.model.DO.InterfaceEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.dhx.apicore.model.DO.InterfaceExampleEntity;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVo;
+import com.dhx.apicore.model.vo.InterfaceDetailVo;
 
 import java.util.List;
 
@@ -27,7 +29,7 @@ public interface InterfaceEntityService extends IService<InterfaceEntity> {
      * @param id
      * @return
      */
-    BaseResponse getInterfaceDetail(Long id);
+    BaseResponse<InterfaceDetailVo> getInterfaceDetail(Long id);
 
 
     /**
@@ -35,5 +37,5 @@ public interface InterfaceEntityService extends IService<InterfaceEntity> {
      * @param id
      * @return
      */
-    BaseResponse getInterfaceExample(Long id);
+    BaseResponse<InterfaceExampleEntity> getInterfaceExample(Long id);
 }

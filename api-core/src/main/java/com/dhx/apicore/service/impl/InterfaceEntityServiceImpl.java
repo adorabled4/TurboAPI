@@ -58,7 +58,7 @@ public class InterfaceEntityServiceImpl extends ServiceImpl<InterfaceEntityMappe
 
 
     @Override
-    public BaseResponse getInterfaceDetail(Long id) {
+    public BaseResponse<InterfaceDetailVo> getInterfaceDetail(Long id) {
         InterfaceEntity interfaceEntity = getById(id);
         InterfaceDetailVo interfaceBasicInfoVo = BeanUtil.copyProperties(interfaceEntity, InterfaceDetailVo.class);
         // 设置创建者相关的信息
@@ -73,7 +73,7 @@ public class InterfaceEntityServiceImpl extends ServiceImpl<InterfaceEntityMappe
     }
 
     @Override
-    public BaseResponse getInterfaceExample(Long id) {
+    public BaseResponse<InterfaceExampleEntity> getInterfaceExample(Long id) {
         InterfaceExampleEntity interfaceExampleEntity = interfaceExampleEntityMapper.selectById(id);
         if(interfaceExampleEntity==null){
             return ResultUtil.error(ErrorCode.NULL_ERROR,"该接口暂无示例");

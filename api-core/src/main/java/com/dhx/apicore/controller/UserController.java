@@ -1,12 +1,16 @@
 package com.dhx.apicore.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.util.ResultUtil;
+import com.dhx.apicore.model.DO.UserEntity;
+import com.dhx.apicore.model.DTO.UserDTO;
 import com.dhx.apicore.model.param.LoginParam;
 import com.dhx.apicore.model.param.RegisterParam;
 import com.dhx.apicore.model.vo.UserVo;
 import com.dhx.apicore.service.UserService;
+import com.dhx.apicore.util.UserHolder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,5 +94,14 @@ public class UserController {
             return ResultUtil.error(ErrorCode.PARAMS_ERROR);
         }
         return userService.addUser(userVo);
+    }
+
+    @GetMapping("/current")
+    @ApiOperation("获取当前用户信息")
+    public BaseResponse<UserVo> currentUser(){
+        UserDTO user = UserHolder.getUser();
+        UserEntity userEntity = userService.getById(user.getUserId());
+        UserVo userVo = BeanUtil.copyProperties(userEntity, UserVo.class);
+        return ResultUtil.success(userVo);
     }
 }
