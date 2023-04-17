@@ -1,11 +1,13 @@
 package com.dhx.apisdk.client.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.dhx.apisdk.client.HxApiClient;
 import com.dhx.apisdk.model.TO.Poet;
+import com.dhx.apisdk.model.TO.WeatherInfo;
 import com.dhx.apisdk.model.common.BaseResponse;
 import com.dhx.apisdk.model.exception.BusinessException;
 import com.dhx.apisdk.util.SignUtil;
@@ -81,6 +83,36 @@ public class HxApiClientImpl implements HxApiClient {
                     throw new RuntimeException();
                 }else{
                     return dataStr;
+                }
+            }else{
+                throw new BusinessException(baseResponse.getCode(), baseResponse.getDescription(), baseResponse.getMessage());
+            }
+        }catch (IORuntimeException e){
+            System.out.println("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 访问服务器失败 --"+e.getMessage() );
+        }catch(RuntimeException e){
+            System.out.println("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 调用接口失败 --"+e.getMessage() );
+        }
+        return null;
+    }
+
+    @Override
+    public WeatherInfo getNowWeather(String cityName) {
+        try{
+
+            HashMap<String, Object> paramMap = new HashMap<>();
+            if(cityName!=null && !cityName.equals("")){
+                paramMap.put("cityName", cityName);
+            }
+            //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
+            String result = HttpUtil.get(SERVER_HOST + "/dev-api/api/weather/now",paramMap);
+            BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
+            if(baseResponse.getCode()==200){
+                String dataStr = JSONUtil.toJsonStr(baseResponse.getData());
+                if(dataStr==null || dataStr.equals("") ){
+                    throw new RuntimeException();
+                }else{
+                    WeatherInfo weatherInfo = JSONUtil.toBean(dataStr, WeatherInfo.class);
+                    return weatherInfo;
                 }
             }else{
                 throw new BusinessException(baseResponse.getCode(), baseResponse.getDescription(), baseResponse.getMessage());

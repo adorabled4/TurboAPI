@@ -72,8 +72,8 @@ public class WeatherServiceImpl implements WeatherService {
         }
         String response = HttpUtil.get(url,params);
         WeatherResponse weatherResponse = JSONUtil.toBean(response, WeatherResponse.class);
-        // 响应码正常
-        if(weatherResponse.getStatus().equals("1") && weatherResponse.getInfo().equals("10000") ){
+        // 响应码正常 weatherResponse.getStatus().equals("1") && weatherResponse.getInfo().equals("10000")
+        if(weatherResponse.getStatus().equals("1")){
             WeatherInfo forecasts = weatherResponse.getLives().get(0);
             return ResultUtil.success(forecasts);
         }else{
