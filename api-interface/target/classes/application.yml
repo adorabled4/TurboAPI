@@ -49,3 +49,6 @@ pagehelper:
   helperDialect: mysql
   supportMethodsArguments: true
   params: count=countSql
+
+weather:
+  apiKey: e86fcaac97a97aaa116af494ac1c9bfb

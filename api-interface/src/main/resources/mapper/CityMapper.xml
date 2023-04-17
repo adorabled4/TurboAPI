@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhx.apiinterface.mapper.CityMapper">
+
+    <resultMap id="BaseResultMap" type="com.dhx.apiinterface.domain.City">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <id property="cityName" column="city_name" jdbcType="VARCHAR"/>
+            <result property="adcode" column="adcode" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,city_name,adcode,
+        create_time
+    </sql>
+</mapper>
