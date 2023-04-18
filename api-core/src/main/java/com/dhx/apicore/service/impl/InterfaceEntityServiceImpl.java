@@ -81,6 +81,17 @@ public class InterfaceEntityServiceImpl extends ServiceImpl<InterfaceEntityMappe
         return null;
     }
 
+    @Override
+    public boolean isValidInterfaceId(long id) {
+        if(id<0){
+            return false;
+        }
+        InterfaceEntity byId = getById(id);
+        if(byId==null || byId.getStatus()==InterfaceConstant.CLOSED_STATUS){
+            return false;
+        }
+        return true;
+    }
 }
 
 

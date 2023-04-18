@@ -38,4 +38,12 @@ public interface InterfaceEntityService extends IService<InterfaceEntity> {
      * @return
      */
     BaseResponse<InterfaceExampleEntity> getInterfaceExample(Long id);
+
+
+    /**
+     * 是否是可用的接口id ( 接口状态 )
+     * @param id
+     * @return
+     */
+    boolean isValidInterfaceId(long id);
 }

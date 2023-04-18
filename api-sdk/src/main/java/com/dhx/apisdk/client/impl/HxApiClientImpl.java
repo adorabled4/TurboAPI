@@ -1,19 +1,23 @@
 package com.dhx.apisdk.client.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.dhx.apisdk.client.HxApiClient;
+import com.dhx.apisdk.model.BaseResponse;
 import com.dhx.apisdk.model.TO.Poet;
 import com.dhx.apisdk.model.TO.WeatherInfo;
-import com.dhx.apisdk.model.common.BaseResponse;
 import com.dhx.apisdk.model.exception.BusinessException;
+import com.dhx.apisdk.model.exception.ErrorCode;
+import com.dhx.apisdk.util.ResultUtil;
 import com.dhx.apisdk.util.SignUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +36,15 @@ public class HxApiClientImpl implements HxApiClient {
 
     @Value("dhx.client.secretKey")
     String secretKey;
+
+    public HxApiClientImpl(String accessKey, String secretKey) {
+        this.accessKey = accessKey;
+        this.secretKey = secretKey;
+    }
+
+    public HxApiClientImpl(){
+
+    }
 
     Map<String, String> getHeaderMap(String body) {
         Map<String, String> hashMap = new HashMap<>();
@@ -123,5 +136,34 @@ public class HxApiClientImpl implements HxApiClient {
             System.out.println("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 调用接口失败 --"+e.getMessage() );
         }
         return null;
+    }
+
+    @Override
+    public BaseResponse invokeInterface(String method, String params, String url) {
+        try{
+            // 处理url , 通过uri 类, 获取path
+            URI uri = new URI(url);
+            // 转换数据格式
+            JSONObject jsonObject = JSONUtil.parseObj(params);
+            Map<String, Object> map = jsonObject.toBean(Map.class);
+
+            // 判断请求方式
+            String result="";
+            if(method.equalsIgnoreCase("GET")){
+                result = HttpUtil.get(SERVER_HOST + uri.getPath(), map);
+            }else if(method.equalsIgnoreCase("POST")){
+                result = HttpUtil.post(SERVER_HOST + uri.getPath(), map);
+            }
+            if(result.equals("")){
+                throw new BusinessException(ErrorCode.SYSTEM_ERROR);
+            }
+            BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
+            if(baseResponse.getMessage()==null && baseResponse.getDescription()==null){
+                return ResultUtil.error();
+            }
+            return baseResponse;
+        } catch (URISyntaxException e) {
+            return ResultUtil.error(ErrorCode.SYSTEM_ERROR);
+        }
     }
 }

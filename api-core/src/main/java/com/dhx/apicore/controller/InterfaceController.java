@@ -4,14 +4,24 @@ import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.common.exception.BusinessException;
 import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.util.ResultUtil;
+import com.dhx.apicore.model.DO.InterfaceEntity;
 import com.dhx.apicore.model.DO.InterfaceExampleEntity;
+import com.dhx.apicore.model.DO.UserEntity;
+import com.dhx.apicore.model.DTO.UserDTO;
+import com.dhx.apicore.model.param.InterfaceInfoRequest;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVo;
 import com.dhx.apicore.service.InterfaceEntityService;
+import com.dhx.apicore.service.UserService;
+import com.dhx.apicore.util.UserHolder;
+import com.dhx.apisdk.client.HxApiClient;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author adorabled4
@@ -25,6 +35,33 @@ public class InterfaceController {
 
     @Resource
     InterfaceEntityService interfaceEntityService;
+
+    @Resource
+    HxApiClient hxApiClient;
+
+    @Resource
+    UserService userService;
+
+    @PostMapping
+    public Object invokeInterfaceOL(@Valid @RequestBody InterfaceInfoRequest interfaceInfoRequest, HttpServletRequest request){
+        if(interfaceInfoRequest==null || interfaceInfoRequest.getInterfaceId()==null){
+            return ResultUtil.error(ErrorCode.PARAMS_ERROR);
+        }
+        long id = interfaceInfoRequest.getInterfaceId();
+        String requestParams = interfaceInfoRequest.getUserRequestParams();
+        boolean validInterface=  interfaceEntityService.isValidInterfaceId(id);
+        if(!validInterface){
+            return ResultUtil.error(ErrorCode.PARAMS_ERROR,"接口已关闭!");
+        }
+        // 获取接口相关的信息 : 包括 请求方式, 请求路径等
+        InterfaceEntity interfaceEntity = interfaceEntityService.getById(id);
+        String method = interfaceEntity.getMethod();
+        String url = interfaceEntity.getUrl();
+        UserDTO userDTO = UserHolder.getUser();
+        UserEntity user = userService.getById(userDTO.getUserId());
+        // 调用SDK 来调用接口
+        return hxApiClient.invokeInterface(method, requestParams, interfaceEntity.getUrl());
+    }
 
     @GetMapping("/list")
     public BaseResponse<List<InterfaceBasicInfoVo>> getInterfaceList(@RequestParam("pageSize")int pageSize, @RequestParam("current")int current) {

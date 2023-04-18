@@ -1,13 +1,9 @@
 package com.dhx.apisdk.client;
 
-import cn.hutool.core.util.RandomUtil;
+import com.dhx.apisdk.model.BaseResponse;
 import com.dhx.apisdk.model.TO.Poet;
 import com.dhx.apisdk.model.TO.WeatherInfo;
-import com.dhx.apisdk.util.SignUtil;
 import org.springframework.lang.Nullable;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public interface HxApiClient {
 
@@ -35,4 +31,6 @@ public interface HxApiClient {
      */
     WeatherInfo getNowWeather(@Nullable String cityName);
 
+
+    BaseResponse invokeInterface(String method, String params, String url);
 }

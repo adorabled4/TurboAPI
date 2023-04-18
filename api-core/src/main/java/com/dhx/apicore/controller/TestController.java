@@ -5,6 +5,7 @@ import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apicore.model.DTO.UserDTO;
 import com.dhx.apicore.util.UserHolder;
 import com.dhx.apisdk.client.HxApiClient;
+import com.dhx.apisdk.model.TO.WeatherInfo;
 import io.lettuce.core.api.reactive.BaseRedisReactiveCommands;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,4 +44,9 @@ public class TestController {
         return ResultUtil.success(s);
     }
 
+    @RequestMapping("/weather")
+    public BaseResponse<WeatherInfo> weatherTest(String cityName){
+        WeatherInfo nowWeather = hxApiClient.getNowWeather(cityName);
+        return ResultUtil.success(nowWeather);
+    }
 }
