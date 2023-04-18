@@ -16,7 +16,6 @@ public class BusinessException extends RuntimeException{
      */
     private int code=500;
 
-
     private String message;
     /**
      * 错误描述
@@ -26,7 +25,20 @@ public class BusinessException extends RuntimeException{
     public BusinessException(int code,String description,String message){
         super(message);// 错误信息
         this.code=code;
+        this.message=message;
         this.description=description;
     }
 
+    public BusinessException(ErrorCode errorCode, String description){
+        super(errorCode.getMessage());// 错误信息
+        this.message=errorCode.getMessage();
+        this.description=description;
+    }
+
+    public BusinessException(ErrorCode errorCode){
+        super(errorCode.getMessage());// 错误信息
+        this.code=errorCode.getCode();
+        this.message=errorCode.getMessage();
+        this.description=errorCode.getDescription();
+    }
 }
