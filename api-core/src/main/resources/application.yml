@@ -20,8 +20,8 @@ mybatis-plus:
   global-config:
     db-config:
       logic-not-delete-value: 1 # mybatis-plus 逻辑删除
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 打印sql
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 打印sql
 knife4j:
   enable: true
   openapi:
@@ -40,3 +40,9 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.dhx.apicore.controller
+
+api:
+  thread:
+    core-size: 20
+    max-size: 200
+    keep-alive-time: 10

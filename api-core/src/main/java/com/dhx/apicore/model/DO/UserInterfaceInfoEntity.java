@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
+import org.apache.catalina.User;
 
 /**
  * 
@@ -63,6 +64,45 @@ public class UserInterfaceInfoEntity implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+    public UserInterfaceInfoEntity setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public void setInterfaceId(Long interfaceId) {
+        this.interfaceId = interfaceId;
+    }
+
+    public UserInterfaceInfoEntity setTotalNum(Integer totalNum) {
+        this.totalNum = totalNum;
+        return this;
+    }
+
+    public UserInterfaceInfoEntity setLeftNum(Integer leftNum) {
+        this.leftNum = leftNum;
+        return this;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public void setIsDelete(Integer isDelete) {
+        this.isDelete = isDelete;
+    }
 
     @Override
     public boolean equals(Object that) {
