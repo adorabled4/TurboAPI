@@ -30,7 +30,7 @@ import java.util.Map;
  **/
 @Api(tags = "interface控制层")
 @RestController
-@RequestMapping("interface")
+@RequestMapping("/interface")
 public class InterfaceController {
 
     @Resource
@@ -42,7 +42,7 @@ public class InterfaceController {
     @Resource
     UserService userService;
 
-    @PostMapping
+    @PostMapping("/invoke")
     public Object invokeInterfaceOL(@Valid @RequestBody InterfaceInfoRequest interfaceInfoRequest, HttpServletRequest request){
         if(interfaceInfoRequest==null || interfaceInfoRequest.getInterfaceId()==null){
             return ResultUtil.error(ErrorCode.PARAMS_ERROR);
@@ -60,7 +60,7 @@ public class InterfaceController {
         UserDTO userDTO = UserHolder.getUser();
         UserEntity user = userService.getById(userDTO.getUserId());
         // 调用SDK 来调用接口
-        return hxApiClient.invokeInterface(method, requestParams, interfaceEntity.getUrl());
+        return hxApiClient.invokeInterface(method, requestParams, interfaceEntity.getUrl(),request);
     }
 
     @GetMapping("/list")

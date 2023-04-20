@@ -29,3 +29,17 @@ logging:
       springframework:
         cloud:
           gateway: trace # 设置日志级别
+
+dubbo:
+  application:
+    name: api-core-consumer
+    shutwait: 1000000
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    id: nacos-registry
+    address: nacos://192.168.159.134:8848?register-consumer-url=true
+    # #Dubbo3.0.0版本以后，增加了是否注册消费者的参数，如果需要将消费者注册到nacos注册中心上，需要将参数(register-consumer-url)设置为true，默认是false。
+  provider:
+    timeout: 100000
