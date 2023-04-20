@@ -27,6 +27,8 @@ public class HxApiClientConfig {
 
     private String secretKey;
 
-    @Resource
-    HxApiClient hxApiClient;
+    @Bean
+    HxApiClient hxApiClient(){
+        return new HxApiClientImpl(accessKey,secretKey);
+    }
 }

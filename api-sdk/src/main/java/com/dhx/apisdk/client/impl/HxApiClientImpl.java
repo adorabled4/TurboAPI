@@ -2,7 +2,7 @@ package com.dhx.apisdk.client.impl;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.http.HttpUtil;
+import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.dhx.apisdk.client.HxApiClient;
@@ -13,11 +13,13 @@ import com.dhx.apisdk.model.exception.BusinessException;
 import com.dhx.apisdk.model.exception.ErrorCode;
 import com.dhx.apisdk.util.ResultUtil;
 import com.dhx.apisdk.util.SignUtil;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,10 +33,8 @@ import static com.dhx.apisdk.HxApiClientConfig.SERVER_HOST;
 @Component
 public class HxApiClientImpl implements HxApiClient {
 
-    @Value("dhx.client.accessKey")
     String accessKey;
 
-    @Value("dhx.client.secretKey")
     String secretKey;
 
     public HxApiClientImpl(String accessKey, String secretKey) {
@@ -49,8 +49,6 @@ public class HxApiClientImpl implements HxApiClient {
     Map<String, String> getHeaderMap(String body) {
         Map<String, String> hashMap = new HashMap<>();
         hashMap.put("accessKey", accessKey);
-        // 一定不能直接发送
-//        hashMap.put("secretKey", secretKey);
         hashMap.put("nonce", RandomUtil.randomNumbers(4));
         hashMap.put("body", body);
         hashMap.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
@@ -58,11 +56,21 @@ public class HxApiClientImpl implements HxApiClient {
         return hashMap;
     }
 
+    Map<String, String> getHeaderMap() {
+        Map<String, String> hashMap = new HashMap<>();
+        hashMap.put("accessKey", accessKey);
+        hashMap.put("nonce", RandomUtil.randomNumbers(4));
+        hashMap.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
+        hashMap.put("sign", SignUtil.genSign("", secretKey)); // 空字符串作为 body 参数
+        return hashMap;
+    }
+
     @Override
     public Poet getRandomPoet(){
         try{
             //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
-            String result = HttpUtil.get(SERVER_HOST + "/dev-api/api/apiinterface/poet/random");
+            String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+            String result =  HttpRequest.get(SERVER_HOST + "/dev-api/api/apiinterface/poet/random").header("dhx.sdk",nowTime).addHeaders(getHeaderMap()).execute().body();
             BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
             if(baseResponse.getCode()==200){
                 String dataStr = JSONUtil.toJsonStr(baseResponse.getData());
@@ -88,7 +96,8 @@ public class HxApiClientImpl implements HxApiClient {
             HashMap<String, Object> paramMap = new HashMap<>();
             paramMap.put("ip", ipv4);
             //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
-            String result = HttpUtil.get(SERVER_HOST + "/dev-api/api/ip/ana",paramMap);
+            String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+            String result =  HttpRequest.get(SERVER_HOST + "/dev-api/api/ip/ana").header("dhx.sdk",nowTime).addHeaders(getHeaderMap()).form(paramMap).execute().body();
             BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
             if(baseResponse.getCode()==200){
                 String dataStr = JSONUtil.toJsonStr(baseResponse.getData());
@@ -117,7 +126,8 @@ public class HxApiClientImpl implements HxApiClient {
                 paramMap.put("cityName", cityName);
             }
             //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
-            String result = HttpUtil.get(SERVER_HOST + "/dev-api/api/weather/now",paramMap);
+            String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+            String result =  HttpRequest.get(SERVER_HOST + "/dev-api/api/weather/now").header("dhx.sdk",nowTime).addHeaders(getHeaderMap()).execute().body();
             BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
             if(baseResponse.getCode()==200){
                 String dataStr = JSONUtil.toJsonStr(baseResponse.getData());
@@ -139,7 +149,7 @@ public class HxApiClientImpl implements HxApiClient {
     }
 
     @Override
-    public BaseResponse invokeInterface(String method, String params, String url) {
+    public BaseResponse invokeInterface(String method, String params, String url, HttpServletRequest request) {
         try{
             // 处理url , 通过uri 类, 获取path
             URI uri = new URI(url);
@@ -147,12 +157,14 @@ public class HxApiClientImpl implements HxApiClient {
             JSONObject jsonObject = JSONUtil.parseObj(params);
             Map<String, Object> map = jsonObject.toBean(Map.class);
 
+            //准备httpRequest
             // 判断请求方式
             String result="";
+            String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
             if(method.equalsIgnoreCase("GET")){
-                result = HttpUtil.get(SERVER_HOST + uri.getPath(), map);
+                result= HttpRequest.get(SERVER_HOST + uri.getPath()).header("dhx.sdk",nowTime).addHeaders(getHeaderMap()).form(map).execute().body();
             }else if(method.equalsIgnoreCase("POST")){
-                result = HttpUtil.post(SERVER_HOST + uri.getPath(), map);
+                result= HttpRequest.get(SERVER_HOST + uri.getPath()).header("dhx.sdk",nowTime).addHeaders(getHeaderMap(params)).form(map).execute().body();
             }
             if(result.equals("")){
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR);
