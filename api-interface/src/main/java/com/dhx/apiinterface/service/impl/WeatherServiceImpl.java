@@ -69,6 +69,8 @@ public class WeatherServiceImpl implements WeatherService {
                     params.put("city",tmpCity.getAdcode());
                 }
             }
+        }else{
+            params.put("city",city.getAdcode());
         }
         String response = HttpUtil.get(url,params);
         WeatherResponse weatherResponse = JSONUtil.toBean(response, WeatherResponse.class);
@@ -96,32 +98,5 @@ public class WeatherServiceImpl implements WeatherService {
             }
         }
         return cityName;
-    }
-}
-
-class Solution {
-    public int maxProduct(int[] nums) {
-        if(nums.length==1) return nums[0];
-        int[]dp1=new int[nums.length+1];
-        int[]dp2=new int[nums.length+1];
-        dp1[0]=nums[0];
-        dp2[0]=nums[0];
-        for(int i=1;i<nums.length;i++){
-            // 可能会存在两个较大的负数, 负负得正的问题
-            // 我们考虑两个dp数组 , 一个用来存较大的数字, 一个用来存较小的数字
-            dp1[i]=max(dp1[i-1],dp1[i-1]*nums[i],nums[i]);
-            dp2[i]=min(dp2[i-1],dp2[i-1]*nums[i],nums[i]);
-        }
-        int res=Integer.MIN_VALUE;
-        for(int i=0;i<nums.length;i++){
-            res=max(dp1[i],dp2[i],res);
-        }
-        return res;
-    }
-    int max(int a,int b,int c){
-        return Math.max(Math.max(a,b),c);
-    }
-    int min(int a,int b,int c){
-        return Math.min(Math.min(a,b),c);
     }
 }

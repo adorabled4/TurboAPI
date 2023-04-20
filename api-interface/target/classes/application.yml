@@ -52,3 +52,22 @@ pagehelper:
 
 weather:
   apiKey: e86fcaac97a97aaa116af494ac1c9bfb
+
+knife4j:
+  enable: true
+  openapi:
+    title: api-plantform_bankend
+    description: 接口模块文档
+    email: dhx2648466390@163.com
+    concat: adorabled4
+    url: https://blog.dhx.icu
+    version: v4.0
+    license: Apache 2.0
+    license-url: https://stackoverflow.com/
+    terms-of-service-url: https://stackoverflow.com/
+    group:
+      dev:
+        group-name: 开发环境
+        api-rule: package
+        api-rule-resources:
+          - com.dhx.apiinterface.controller
