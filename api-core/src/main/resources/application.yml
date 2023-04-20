@@ -20,8 +20,8 @@ mybatis-plus:
   global-config:
     db-config:
       logic-not-delete-value: 1 # mybatis-plus 逻辑删除
-#  configuration:
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 打印sql
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 打印sql
 knife4j:
   enable: true
   openapi:
@@ -46,3 +46,17 @@ api:
     core-size: 20
     max-size: 200
     keep-alive-time: 10
+
+dubbo:
+  application:
+    name: api-core-provider
+  protocol:
+    name: dubbo
+    port: 20880
+  registry:
+    id: nacos-registry
+    address: nacos://192.168.159.134:8848
+dhx:
+  client:
+    access-key: r3242rfj3w9r
+    secret-key: g45hg34wrxsa
