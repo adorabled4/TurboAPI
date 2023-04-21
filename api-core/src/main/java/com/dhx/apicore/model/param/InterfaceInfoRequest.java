@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * @author adorabled4
@@ -26,8 +27,8 @@ public class InterfaceInfoRequest implements Serializable {
     /**
      * 用户请求参数
      */
-    private String userRequestParams;
-
+    private Map<Object,Object> params;
+//    private String userRequestParams;
 
 
 }

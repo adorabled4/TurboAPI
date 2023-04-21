@@ -149,28 +149,28 @@ public class HxApiClientImpl implements HxApiClient {
     }
 
     @Override
-    public BaseResponse invokeInterface(String method, String params, String url, HttpServletRequest request) {
+    public BaseResponse invokeInterface(String method, Map params, String url, HttpServletRequest request) {
         try{
             // 处理url , 通过uri 类, 获取path
             URI uri = new URI(url);
             // 转换数据格式
-            JSONObject jsonObject = JSONUtil.parseObj(params);
-            Map<String, Object> map = jsonObject.toBean(Map.class);
-
+            String paramsStr= JSONUtil.toJsonStr(params);
+//            String authorization = request.getHeader("Authorization"); // 如果在发送的请求中添加这个,那么会被拦截(被网关识别为非前端来源)
             //准备httpRequest
             // 判断请求方式
             String result="";
             String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
             if(method.equalsIgnoreCase("GET")){
-                result= HttpRequest.get(SERVER_HOST + uri.getPath()).header("dhx.sdk",nowTime).addHeaders(getHeaderMap()).form(map).execute().body();
+                System.out.println(uri.getPath());
+                result= HttpRequest.get(SERVER_HOST + uri.getPath()).header("dhx.SDK",nowTime).addHeaders(getHeaderMap()).form(params).execute().body();
             }else if(method.equalsIgnoreCase("POST")){
-                result= HttpRequest.get(SERVER_HOST + uri.getPath()).header("dhx.sdk",nowTime).addHeaders(getHeaderMap(params)).form(map).execute().body();
+                result= HttpRequest.get(SERVER_HOST + uri.getPath()).header("dhx.SDK",nowTime).addHeaders(getHeaderMap(paramsStr)).form(params).execute().body();
             }
             if(result.equals("")){
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR);
             }
             BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
-            if(baseResponse.getMessage()==null && baseResponse.getDescription()==null){
+            if(baseResponse.getMessage()==null && baseResponse.getDescription()==null ||baseResponse.getCode()!=200){
                 return ResultUtil.error();
             }
             return baseResponse;

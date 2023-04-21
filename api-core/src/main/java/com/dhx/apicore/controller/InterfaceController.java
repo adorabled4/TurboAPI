@@ -48,7 +48,7 @@ public class InterfaceController {
             return ResultUtil.error(ErrorCode.PARAMS_ERROR);
         }
         long id = interfaceInfoRequest.getInterfaceId();
-        String requestParams = interfaceInfoRequest.getUserRequestParams();
+        Map requestParams = interfaceInfoRequest.getParams();
         boolean validInterface=  interfaceEntityService.isValidInterfaceId(id);
         if(!validInterface){
             return ResultUtil.error(ErrorCode.PARAMS_ERROR,"接口已关闭!");

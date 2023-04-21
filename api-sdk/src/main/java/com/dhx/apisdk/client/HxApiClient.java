@@ -6,6 +6,7 @@ import com.dhx.apisdk.model.TO.WeatherInfo;
 import org.springframework.lang.Nullable;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 public interface HxApiClient {
 
@@ -34,5 +35,5 @@ public interface HxApiClient {
     WeatherInfo getNowWeather(@Nullable String cityName);
 
 
-    BaseResponse invokeInterface(String method, String params, String url, HttpServletRequest request);
+    BaseResponse invokeInterface(String method, Map params, String url, HttpServletRequest request);
 }
