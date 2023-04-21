@@ -1,29 +1,38 @@
 package com.dhx.apiinterface.service.impl;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.json.JSONUtil;
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.util.ResultUtil;
+import com.dhx.apiinterface.constant.RedisConstant;
 import com.dhx.apiinterface.vo.PoetVO;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import com.dhx.apiinterface.mapper.PoetMapper;
 import com.dhx.apiinterface.domain.Poet;
 import com.dhx.apiinterface.service.IPoetService;
 
+import javax.annotation.Resource;
+
 /**
- * 【请填写功能名称】Service业务层处理
- * 
+ * 诗句Service业务层处理
+ *
  * @author adorabled4
  * @date 2023-03-11
  */
 @Service
-public class PoetServiceImpl implements IPoetService 
-{
+public class PoetServiceImpl implements IPoetService {
     @Autowired
     private PoetMapper poetMapper;
+
+    @Resource
+    StringRedisTemplate stringRedisTemplate;
 
 
     @Override
@@ -33,84 +42,88 @@ public class PoetServiceImpl implements IPoetService
 
     @Override
     public BaseResponse<PoetVO> getPoetVO(long id) {
-        Poet poet = poetMapper.selectPoetById(id);
-        while(poet==null){
-            poet = poetMapper.selectPoetById(1L);
+        String key = RedisConstant.RANDOM_POET_KEY + id;
+        String s = stringRedisTemplate.opsForValue().get(key);
+        if (StringUtils.isEmpty(s)) {
+            // 写入redis
+            Poet poet = poetMapper.selectPoetById(id);
+            while (poet == null) {
+                poet = poetMapper.selectPoetById(1L);
+            }
+            PoetVO poetVO = BeanUtil.copyProperties(poet, PoetVO.class);
+            s = JSONUtil.toJsonStr(poetVO);
+            stringRedisTemplate.opsForValue().set(key, s, RedisConstant.RANDOM_POET_TTL, TimeUnit.SECONDS);
+            return ResultUtil.success(poetVO);
+        } else {
+            PoetVO poetVO = JSONUtil.toBean(s, PoetVO.class);
+            return ResultUtil.success(poetVO);
         }
-        PoetVO poetVO = BeanUtil.copyProperties(poet, PoetVO.class);
-        return ResultUtil.success(poetVO);
     }
 
     /**
-     * 查询【请填写功能名称】
-     * 
-     * @param id 【请填写功能名称】主键
-     * @return 【请填写功能名称】
+     * 查询诗句
+     *
+     * @param id 诗句主键
+     * @return 诗句
      */
     @Override
-    public Poet selectPoetById(Long id)
-    {
+    public Poet selectPoetById(Long id) {
         return poetMapper.selectPoetById(id);
     }
 
     /**
-     * 查询【请填写功能名称】列表
-     * 
-     * @param poet 【请填写功能名称】
-     * @return 【请填写功能名称】
+     * 查询诗句列表
+     *
+     * @param poet 诗句
+     * @return 诗句
      */
     @Override
-    public List<Poet> selectPoetList(Poet poet)
-    {
+    public List<Poet> selectPoetList(Poet poet) {
         return poetMapper.selectPoetList(poet);
     }
 
     /**
-     * 新增【请填写功能名称】
-     * 
-     * @param poet 【请填写功能名称】
+     * 新增诗句
+     *
+     * @param poet 诗句
      * @return 结果
      */
     @Override
-    public int insertPoet(Poet poet)
-    {
+    public int insertPoet(Poet poet) {
         poet.setCreateTime(DateUtils.getNowDate());
         return poetMapper.insertPoet(poet);
     }
 
     /**
-     * 修改【请填写功能名称】
-     * 
-     * @param poet 【请填写功能名称】
+     * 修改诗句
+     *
+     * @param poet 诗句
      * @return 结果
      */
     @Override
-    public int updatePoet(Poet poet)
-    {
+    public int updatePoet(Poet poet) {
         return poetMapper.updatePoet(poet);
     }
 
     /**
-     * 批量删除【请填写功能名称】
-     * 
-     * @param ids 需要删除的【请填写功能名称】主键
+     * 批量删除诗句
+     *
+     * @param ids 需要删除的诗句主键
      * @return 结果
      */
     @Override
-    public int deletePoetByIds(Long[] ids)
-    {
+    public int deletePoetByIds(Long[] ids) {
         return poetMapper.deletePoetByIds(ids);
     }
 
     /**
-     * 删除【请填写功能名称】信息
-     * 
-     * @param id 【请填写功能名称】主键
+     * 删除诗句信息
+     *
+     * @param id 诗句主键
      * @return 结果
      */
     @Override
-    public int deletePoetById(Long id)
-    {
+    public int deletePoetById(Long id) {
         return poetMapper.deletePoetById(id);
     }
 }
