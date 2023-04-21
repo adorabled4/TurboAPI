@@ -12,18 +12,29 @@ spring:
         - id: api_route # 接口路由
           uri: http://127.0.0.1:8123
           predicates:
-          - Path=/dev-api/api/** # 符合 /api开头的地址就会被路由
+            - Path=/dev-api/api/** # 符合 /api开头的地址就会被路由
+#            - Path=/dev-api/admin/api/** # 符合 /api开头的地址就会被路由
           filters:
-          - RewritePath=/dev-api/api/?(?<segment>.*),/api/$\{segment}
+            - RewritePath=/dev-api/api/?(?<segment>.*),/api/$\{segment}
+#            - RewritePath=/dev-api/admin/api/?(?<segment>.*),/api/$\{segment}
+        - id: api_route2 # 接口路由
+          uri: http://127.0.0.1:8123
+          predicates:
+            - Path=/dev-api/admin/api/** # 符合 /api开头的地址就会被路由
+          filters:
+            - RewritePath=/dev-api/admin/api/?(?<segment>.*),/api/$\{segment}
         - id: admin_route # ry路由
           uri: http://127.0.0.1:8080
           predicates:
-          - Path=/dev-api/** # 符合 /api开头的地址就会被路由
+          - Path=/dev-api/admin/** # 符合 /api开头的地址就会被路由
+          filters:
+            - RewritePath=/dev-api/admin/?(?<segment>.*),/dev-api/$\{segment}
   application:
     name: api-gateway
 server:
   port: 88
 logging:
+  config: D:\j2ee_project\api-platform\api-gateway\src\main\resources\logback.xml # 日志配置文件
   level:
     org:
       springframework:
@@ -43,3 +54,4 @@ dubbo:
     # #Dubbo3.0.0版本以后，增加了是否注册消费者的参数，如果需要将消费者注册到nacos注册中心上，需要将参数(register-consumer-url)设置为true，默认是false。
   provider:
     timeout: 100000
+

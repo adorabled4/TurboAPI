@@ -1,4 +1,4 @@
-package com.dhx.apigateway.filter;
+package com.dhx.apigateway.global;
 
 import com.dhx.apicommon.model.to.InterfaceTo;
 import com.dhx.apicommon.model.to.UserTo;
@@ -6,7 +6,6 @@ import com.dhx.apicommon.service.InnerInterfaceService;
 import com.dhx.apicommon.service.InnerUserInterfaceInfoService;
 import com.dhx.apicommon.service.InnerUserService;
 import com.dhx.apicommon.util.SignUtil;
-import com.dhx.apigateway.constant.PathConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -34,6 +33,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
+
+import static com.dhx.apigateway.constant.PathConstant.API_ADMIN_MODULE_PATH;
 
 /**
  * @author adorabled4
@@ -63,9 +64,22 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         List<String> sdkList = request.getHeaders().get("dhx.SDK");
         List<String> authorization = request.getHeaders().get("Authorization");
         List<String> apiPlantform = request.getHeaders().get("apiplantform");
+        if(path.toString().startsWith(API_ADMIN_MODULE_PATH)){
+            // 后台管理直接放行
+            return chain.filter(exchange);
+        }
         boolean isFromSDK = false;
         UserTo user = null;
-        if (sdkList != null && sdkList.size() != 0) {
+        if (apiPlantform != null) {
+            // 请求来自前端 : 通过DUBBO RPC查询用户信息
+            if (authorization != null && authorization.size() > 0) { //
+                String token = authorization.get(0);
+                // exchange 没有实现Serializable , 不能用来传输, 因此这里需要使用HttpHeaders
+                ServerHttpResponse response = exchange.getResponse();
+                HttpHeaders responseHeaders = response.getHeaders();
+                user = innerUserService.getUserEntityByAccessToken(token, responseHeaders);
+            }
+        }else if (sdkList != null && sdkList.size() != 0) {
             // 请求来自SDK , 用户鉴权
             HttpHeaders headers = request.getHeaders();
             String accessKey = headers.getFirst("accessKey");
@@ -103,16 +117,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
                 return handleNoAuth(exchange.getResponse());
             }
             isFromSDK = true;
-        } else if (apiPlantform != null) {
-            // 请求来自前端 : 通过DUBBO RPC查询用户信息
-            if (authorization != null && authorization.size() > 0) { //
-                String token = authorization.get(0);
-                // exchange 没有实现Serializable , 不能用来传输, 因此这里需要使用HttpHeaders
-                ServerHttpResponse response = exchange.getResponse();
-                HttpHeaders responseHeaders = response.getHeaders();
-                user = innerUserService.getUserEntityByAccessToken(token, responseHeaders);
-            }
-        } else {
+        }else {
             // 非法请求 , 拦截
             return handleNoAuth(exchange.getResponse());
         }

@@ -8,5 +8,6 @@ package com.dhx.apigateway.constant;
 public class PathConstant {
     public static final String API_INTERFACE_MODULE_PATH ="/dev-api/api";
     public static final String API_CORE_MODULE_PATH ="/apicore";
+    public static final String API_ADMIN_MODULE_PATH="/dev-api/admin";
 
 }

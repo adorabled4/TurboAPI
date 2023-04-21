@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
 @EnableDubbo
-@ComponentScan(value = "com.dhx.apigateway.filter")
+@ComponentScan(value = "com.dhx.apigateway.global")
 public class ApiGatewayApplication {
 
     public static void main(String[] args) {
