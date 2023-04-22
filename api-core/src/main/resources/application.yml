@@ -62,6 +62,16 @@ api:
     keep-alive-time: 10
 
 dubbo:
+  # 配置元数据中心
+  metadata-report:
+    address: nacos://192.168.159.134:8848
+    username: test
+    password: 123456
+    # 配置 namespace，有namespace需要指定namespace
+    parameters:
+      namespace: 88b66463-1685-40b3-ba9c-7b25e526dcfb
+    # 配置 隔离组，有配置 group 的需要指定 group
+    group: ucp
   application:
     name: api-core-provider
   protocol:

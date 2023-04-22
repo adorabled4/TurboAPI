@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    url: jdbc:mysql://39.105.61.0:1227/ry
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    # Redis服务器连接端口
+    host: 39.105.61.0
+    # Redis数据库索引（默认为0）
+    database: 1
+    port: 5498
+    # 连接超时时间
+    timeout: 10s
+    lettuce:
+      pool:
+        # 连接池最大连接数
+        max-active: 200
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1ms
+        # 连接池中的最大空闲连接
+        max-idle: 10
+        # 连接池中的最小空闲连接
+        min-idle: 0
+dubbo:
+  application:
+    name: api-core-provider
+  protocol:
+    name: dubbo
+    port: 20880
+  registry:
+    id: nacos-registry
+    address: nacos://39.105.61.0:8848

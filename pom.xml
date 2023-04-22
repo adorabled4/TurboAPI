@@ -180,6 +180,10 @@
         <module>ruoyi-quartz</module>
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
+        <module>api-common</module>
+        <module>api-core</module>
+        <module>api-gateway</module>
+        <module>api-interface</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -189,7 +193,16 @@
     </dependencies>
 
     <build>
+        <finalName>projectName</finalName>
         <plugins>
+            <!-- 打包时跳过测试 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

@@ -4,29 +4,29 @@ spring:
       routes:
         # 需要添加 三个 , 一个是主要的管理系统,另一个是后台通往的接口模块的CRUD , 以及之后前端访问的接口(或者通过dubbo远程调用)
         - id: frontend_route
-          uri: http://127.0.0.1:9001
+          uri: http://192.168.159.134:9001
           predicates:
             - Path=/apicore/** # 符合 /api开头的地址就会被路由
           filters:
             - RewritePath=/apicore/?(?<segment>.*),/apicore/$\{segment}
         - id: api_route # 接口路由
-          uri: http://127.0.0.1:8123
+          uri: http://192.168.159.134:8123
           predicates:
             - Path=/dev-api/api/** # 符合 /api开头的地址就会被路由
-#            - Path=/dev-api/admin/api/** # 符合 /api开头的地址就会被路由
+          #            - Path=/dev-api/admin/api/** # 符合 /api开头的地址就会被路由
           filters:
             - RewritePath=/dev-api/api/?(?<segment>.*),/api/$\{segment}
-#            - RewritePath=/dev-api/admin/api/?(?<segment>.*),/api/$\{segment}
+        #            - RewritePath=/dev-api/admin/api/?(?<segment>.*),/api/$\{segment}
         - id: api_route2 # 接口路由
-          uri: http://127.0.0.1:8123
+          uri: http://192.168.159.134:8123
           predicates:
             - Path=/dev-api/admin/api/** # 符合 /api开头的地址就会被路由
           filters:
             - RewritePath=/dev-api/admin/api/?(?<segment>.*),/api/$\{segment}
         - id: admin_route # ry路由
-          uri: http://127.0.0.1:8080
+          uri: http://192.168.159.134:8080
           predicates:
-          - Path=/dev-api/admin/** # 符合 /api开头的地址就会被路由
+            - Path=/dev-api/admin/** # 符合 /api开头的地址就会被路由
           filters:
             - RewritePath=/dev-api/admin/?(?<segment>.*),/dev-api/$\{segment}
   application:
@@ -34,7 +34,7 @@ spring:
 server:
   port: 88
 logging:
-#  config: D:\j2ee_project\api-platform\api-gateway\src\main\resources\logback.xml # 日志配置文件
+  #  config: D:\j2ee_project\api-platform\api-gateway\src\main\resources\logback.xml # 日志配置文件
   config: classpath:logback.xml
   level:
     org:
@@ -46,16 +46,6 @@ dubbo:
   application:
     name: api-core-consumer
     shutwait: 1000000
-  # 配置元数据中心
-#  metadata-report:
-#    address: nacos://192.168.159.134:8848
-#    username: test
-#    password: 123456
-#    # 配置 namespace，有namespace需要指定namespace
-#    parameters:
-#      namespace: 88b66463-1685-40b3-ba9c-7b25e526dcfb
-#    # 配置 隔离组，有配置 group 的需要指定 group
-#    group: ucp
   protocol:
     name: dubbo
     port: -1

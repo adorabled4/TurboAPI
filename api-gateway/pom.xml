@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.dhx</groupId>
     <artifactId>api-gateway</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+<!--    <version>0.0.1-SNAPSHOT</version>-->
     <name>api-gateway</name>
     <description>api-gateway</description>
     <properties>
@@ -77,6 +77,9 @@
     </dependencyManagement>
 
     <build>
+        <finalName>${name}</finalName>
+
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
