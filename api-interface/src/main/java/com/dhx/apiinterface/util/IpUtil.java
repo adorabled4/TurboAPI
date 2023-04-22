@@ -1,13 +1,17 @@
 package com.dhx.apiinterface.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.lionsoul.ip2region.xdb.Searcher;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.util.ResourceUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -57,7 +61,10 @@ public class IpUtil {
         Searcher searcher = null;
         String dbPath = "ip2region.xdb";
         try {
-            File file = ResourceUtils.getFile("classpath:" + "ip2region.xdb");
+            Resource resource = new ClassPathResource(dbPath);
+            InputStream inputStream = resource.getInputStream();
+            File file = File.createTempFile("ip2region", ".xdb");
+            FileUtils.copyInputStreamToFile(inputStream, file);
             searcher = Searcher.newWithFileOnly(file.getAbsolutePath());
         } catch (IOException e) {
             log.error("failed to create searcher with `" + dbPath +"`:"  + e);
