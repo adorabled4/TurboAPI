@@ -64,7 +64,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         List<String> sdkList = request.getHeaders().get("dhx.SDK");
         List<String> authorization = request.getHeaders().get("Authorization");
         List<String> apiPlantform = request.getHeaders().get("apiplantform");
-        if(path.toString().startsWith(API_ADMIN_MODULE_PATH)){
+        if (path.toString().startsWith(API_ADMIN_MODULE_PATH)) {
             // 后台管理直接放行
             return chain.filter(exchange);
         }
@@ -79,7 +79,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
                 HttpHeaders responseHeaders = response.getHeaders();
                 user = innerUserService.getUserEntityByAccessToken(token, responseHeaders);
             }
-        }else if (sdkList != null && sdkList.size() != 0) {
+        } else if (sdkList != null && sdkList.size() != 0) {
             // 请求来自SDK , 用户鉴权
             HttpHeaders headers = request.getHeaders();
             String accessKey = headers.getFirst("accessKey");
@@ -107,17 +107,17 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
             }
             // 对比  签名是否相同
             String secretKey = user.getSecretKey();
-            String serverSign ;
-            if(body==null){ // 这里如果body为空, 那么会拼接上null字符串
+            String serverSign;
+            if (body == null) { // 这里如果body为空, 那么会拼接上null字符串
                 serverSign = SignUtil.genSign("", secretKey);
-            }else{
+            } else {
                 serverSign = SignUtil.genSign(body, secretKey);
             }
             if (sign == null || !sign.equals(serverSign)) {
                 return handleNoAuth(exchange.getResponse());
             }
             isFromSDK = true;
-        }else {
+        } else {
             // 非法请求 , 拦截
             return handleNoAuth(exchange.getResponse());
         }
@@ -136,11 +136,17 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
             if (user.getUserId() == null) {
                 return handleNoAuth(exchange.getResponse());
             }
+            // 查看用户的剩余可用次数
+            int count = innerUserInterfaceInfoService.getUserLeftNum(user.getUserId(), interfaceInfo.getId());
+            if (count <= 0) {
+                return handleNoLeftNum(exchange.getResponse());
+            }
             return handleInvokeInterfaceResponse(exchange, chain, interfaceInfo.getId(), user.getUserId());
         } else {
             return chain.filter(exchange);
         }
     }
+
 
     /**
      * 处理响应
@@ -149,9 +155,11 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
      * @param chain
      * @return
      */
-    public Mono<Void> handleInvokeInterfaceResponse(ServerWebExchange exchange, GatewayFilterChain chain, long interfaceInfoId,
+    public Mono<Void> handleInvokeInterfaceResponseMy(ServerWebExchange exchange, GatewayFilterChain chain, long interfaceInfoId,
                                                     long userId) {
         try {
+            //拿到requet
+            ServerHttpRequest request = exchange.getRequest();
             ServerHttpResponse originalResponse = exchange.getResponse();
             // 缓存数据的工厂
             DataBufferFactory bufferFactory = originalResponse.bufferFactory();
@@ -163,7 +171,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
                     // 等调用完转发的接口后才会执行
                     @Override
                     public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
-                        log.info("body instanceof Flux: {}", (body instanceof Flux));
+//                        log.info("body instanceof Flux: {}", (body instanceof Flux));
                         if (body instanceof Flux) {
                             Flux<? extends DataBuffer> fluxBody = Flux.from(body);
                             // 往返回值里写数据
@@ -186,7 +194,9 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
                                         String data = new String(content, StandardCharsets.UTF_8); // data
                                         sb2.append(data);
                                         // 打印日志
-                                        log.info("响应结果：" + data);
+                                        log.info("[接口调用成功],ip:{} ,用户ID:{},  接口ID: {}, 请求参数:{}, 响应结果：{}",
+                                                request.getRemoteAddress().getHostString(),
+                                                userId, interfaceInfoId, request.getQueryParams(),data);
                                         return bufferFactory.wrap(content);
                                     }));
                         } else {
@@ -204,6 +214,44 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
             log.error("网关处理响应异常" + e);
             return chain.filter(exchange);
         }
+    }
+
+
+    public Mono<Void> handleInvokeInterfaceResponse(ServerWebExchange exchange, GatewayFilterChain chain, long interfaceInfoId,
+                                                    long userId) {
+        ServerHttpRequest request = exchange.getRequest();
+        ServerHttpResponse originalResponse = exchange.getResponse();
+        DataBufferFactory bufferFactory = originalResponse.bufferFactory();
+
+        HttpStatus statusCode = originalResponse.getStatusCode();
+        if (statusCode != HttpStatus.OK) {
+            return chain.filter(exchange);
+        }
+
+        ServerHttpResponseDecorator decoratedResponse = new ServerHttpResponseDecorator(originalResponse) {
+            @Override
+            public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
+                if (body instanceof Flux) {
+                    return super.writeWith(Mono.fromDirect(body).map(dataBuffer -> {
+                        innerUserInterfaceInfoService.invokeCount(userId, interfaceInfoId);
+                        byte[] content = new byte[dataBuffer.readableByteCount()];
+                        dataBuffer.read(content);
+                        DataBufferUtils.release(dataBuffer);
+
+                        log.info("[接口调用成功],ip:{} ,用户ID:{},  接口ID: {}, 请求参数:{}, 响应结果：{}",
+                                request.getRemoteAddress().getHostString(),
+                                userId, interfaceInfoId, request.getQueryParams(), new String(content, StandardCharsets.UTF_8));
+
+                        return bufferFactory.wrap(content);
+                    }));
+                } else {
+                    log.error("<--- {} 响应code异常", getStatusCode());
+                }
+                return super.writeWith(body);
+            }
+        };
+
+        return chain.filter(exchange.mutate().response(decoratedResponse).build());
     }
 
 
@@ -237,7 +285,8 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
     }
 
     /**
-     *  非常关键 ! 否则增强的结果不会起作用
+     * 非常关键 ! 否则增强的结果不会起作用
+     *
      * @return
      */
     @Override
@@ -256,6 +305,16 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         return response.setComplete();
     }
 
+
+    /**
+     *  处理用户次数不足
+     * @param response
+     * @return
+     */
+    private Mono<Void> handleNoLeftNum(ServerHttpResponse response) {
+        response.setStatusCode(HttpStatus.PAYMENT_REQUIRED);
+        return response.setComplete();
+    }
     /**
      * 处理内部异常
      *
