@@ -8,4 +8,6 @@ package com.dhx.apicommon.service;
 public interface InnerUserInterfaceInfoService {
 
     boolean invokeCount(Long userId, Long interfaceId);
+
+    int getUserLeftNum(Long userId, Long interfaceId);
 }
