@@ -1,5 +1,7 @@
 package com.dhx.apicore.config;
 
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 import org.redisson.config.TransportMode;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,20 +16,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RedissonConfig {
 
-    @Value("${spring.redis.host}")
-    private String host;
-
-    @Value("${spring.redis.port}")
-    private String redisPort;
-
     @Bean
-    Config config(){
+    RedissonClient redissonClient(){
         Config config = new Config();
-        config.setTransportMode(TransportMode.EPOLL); // 默认是NIO的方式
-        String prefix = "redis://";
-        config.useClusterServers()
+//        config.setTransportMode(TransportMode.EPOLL); // 默认是NIO的方式
+        config.useSingleServer()
                 //可以用"rediss://"来启用SSL连接，前缀必须是redis:// or rediss://
-                .addNodeAddress(prefix + host+redisPort);
-        return config;
+                .setAddress("redis://192.168.159.134:6379").setPassword("adorabled4");
+        return Redisson.create(config);
     }
 }

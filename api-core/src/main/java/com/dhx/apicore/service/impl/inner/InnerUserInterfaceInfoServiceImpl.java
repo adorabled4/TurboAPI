@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.dhx.apicommon.service.InnerUserInterfaceInfoService;
 import com.dhx.apicore.model.DO.UserInterfaceInfoEntity;
 import com.dhx.apicore.service.UserInterfaceInfoEntityService;
+import com.dhx.apicore.util.RedisLock;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import javax.annotation.Resource;
 import java.util.concurrent.Executors;
@@ -26,6 +28,9 @@ public class InnerUserInterfaceInfoServiceImpl implements InnerUserInterfaceInfo
     UserInterfaceInfoEntityService userInterfaceInfoEntityService;
 
     @Resource
+    StringRedisTemplate stringRedisTemplate;
+
+    @Resource
     RedissonClient redissonClient;
 
     @Override
@@ -37,6 +42,7 @@ public class InnerUserInterfaceInfoServiceImpl implements InnerUserInterfaceInfo
 //        }
         try {
             boolean tryLock= lock.tryLock(10, TimeUnit.SECONDS);
+            lock.lock();
             if (tryLock) {
                 try{
                     Long count = userInterfaceInfoEntityService.query().eq("user_id", userId).eq("interface_id", interfaceId).count();
@@ -75,6 +81,32 @@ public class InnerUserInterfaceInfoServiceImpl implements InnerUserInterfaceInfo
 
     @Override
     public int getUserLeftNum(Long userId, Long interfaceId) {
+        String lockKey = "getUserLeftNum:" + interfaceId + ":" + userId;
+        RedisLock lock = new RedisLock(stringRedisTemplate, lockKey);
+        boolean tryLock = lock.tryLock(5L, TimeUnit.SECONDS);
+        if(tryLock){
+            try {
+                UserInterfaceInfoEntity one = userInterfaceInfoEntityService.query().eq("user_id", userId).eq("interface_id", interfaceId).one();
+                if (one.getLeftNum() == null || one.getLeftNum() <= 0) {
+                    return 0;
+                }
+                return one.getLeftNum();
+            } finally {
+                lock.unLock();
+            }
+        }else{
+            // 没有获取到锁, 自旋获取锁
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            return getUserLeftNum(userId, interfaceId);
+        }
+    }
+
+//    @Override
+    public int getUserLeftNum11(Long userId, Long interfaceId) {
         String lockKey = "getUserLeftNum:" + interfaceId + ":" + userId;
         RLock lock = redissonClient.getLock(lockKey);
         try {

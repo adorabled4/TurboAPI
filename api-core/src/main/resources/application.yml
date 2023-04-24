@@ -12,6 +12,7 @@ spring:
     # Redis数据库索引（默认为0）
     database: 1
     port: 6379
+    password: adorabled4
     # 连接超时时间
     timeout: 10s
     lettuce:
