@@ -1,4 +1,8 @@
 spring:
+  redis:
+    password: adorabled4
+    host: 192.168.159.134
+    port: 6379
   cloud:
     gateway:
       routes:
@@ -13,8 +17,12 @@ spring:
           uri: http://127.0.0.1:8123
           predicates:
             - Path=/dev-api/api/** # 符合 /api开头的地址就会被路由
-#            - Path=/dev-api/admin/api/** # 符合 /api开头的地址就会被路由
           filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10   # 令牌桶每秒填充速率 生产令牌速度，每秒多少个令牌
+                redis-rate-limiter.burstCapacity: 20   # 令牌桶总容量
+                keyResolver: '#{@myKeyResolver}'  # 使用SpringEL表达式，从Spring容器中找对象，并赋值。 '#{@beanName}'
             - RewritePath=/dev-api/api/?(?<segment>.*),/api/$\{segment}
 #            - RewritePath=/dev-api/admin/api/?(?<segment>.*),/api/$\{segment}
         - id: api_route2 # 接口路由
@@ -46,6 +54,9 @@ dubbo:
   application:
     name: api-core-consumer
     shutwait: 1000000
+  reference:
+    timeout: 3000
+
   # 配置元数据中心
 #  metadata-report:
 #    address: nacos://192.168.159.134:8848
