@@ -13,6 +13,8 @@ import com.dhx.apisdk.model.exception.BusinessException;
 import com.dhx.apisdk.model.exception.ErrorCode;
 import com.dhx.apisdk.util.ResultUtil;
 import com.dhx.apisdk.util.SignUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +33,7 @@ import static com.dhx.apisdk.HxApiClientConfig.SERVER_HOST;
  * @date : 2023/04/14/ 12:51
  **/
 @Component
+@Slf4j
 public class HxApiClientImpl implements HxApiClient {
 
     String accessKey;
@@ -83,9 +86,9 @@ public class HxApiClientImpl implements HxApiClient {
                 throw new BusinessException(baseResponse.getCode(), baseResponse.getDescription(), baseResponse.getMessage());
             }
         }catch (IORuntimeException e){
-            System.out.println("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 访问服务器失败 --"+e.getMessage() );
+            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 访问服务器失败 --"+e.getMessage() );
         }catch(RuntimeException e){
-            System.out.println("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 调用接口失败 --"+e.getMessage() );
+            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 调用接口失败 --"+e.getMessage() );
         }
         return null;
     }
@@ -110,9 +113,9 @@ public class HxApiClientImpl implements HxApiClient {
                 throw new BusinessException(baseResponse.getCode(), baseResponse.getDescription(), baseResponse.getMessage());
             }
         }catch (IORuntimeException e){
-            System.out.println("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 访问服务器失败 --"+e.getMessage() );
+            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 访问服务器失败 --"+e.getMessage() );
         }catch(RuntimeException e){
-            System.out.println("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 调用接口失败 --"+e.getMessage() );
+            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 调用接口失败 --"+e.getMessage() );
         }
         return null;
     }
@@ -141,9 +144,9 @@ public class HxApiClientImpl implements HxApiClient {
                 throw new BusinessException(baseResponse.getCode(), baseResponse.getDescription(), baseResponse.getMessage());
             }
         }catch (IORuntimeException e){
-            System.out.println("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 访问服务器失败 --"+e.getMessage() );
+            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 访问服务器失败 --"+e.getMessage() );
         }catch(RuntimeException e){
-            System.out.println("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 调用接口失败 --"+e.getMessage() );
+            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 调用接口失败 --"+e.getMessage() );
         }
         return null;
     }
@@ -161,19 +164,20 @@ public class HxApiClientImpl implements HxApiClient {
             String result="";
             String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
             if(method.equalsIgnoreCase("GET")){
-                System.out.println(uri.getPath());
                 result= HttpRequest.get(SERVER_HOST + uri.getPath()).header("dhx.SDK",nowTime).addHeaders(getHeaderMap()).form(params).execute().body();
             }else if(method.equalsIgnoreCase("POST")){
                 result= HttpRequest.get(SERVER_HOST + uri.getPath()).header("dhx.SDK",nowTime).addHeaders(getHeaderMap(paramsStr)).form(params).execute().body();
             }
-            if(result.equals("")){
-                throw new BusinessException(ErrorCode.SYSTEM_ERROR);
+            try{
+                BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
+                if(baseResponse.getMessage()==null && baseResponse.getDescription()==null ||baseResponse.getCode()!=200){
+                    return ResultUtil.error();
+                }
+                return baseResponse;
+            }catch(RuntimeException e){
+                log.error("接口调用失败, result: {}",result);
+                return ResultUtil.error(HttpStatus.TOO_MANY_REQUESTS.value(),"请求次数过多!");
             }
-            BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
-            if(baseResponse.getMessage()==null && baseResponse.getDescription()==null ||baseResponse.getCode()!=200){
-                return ResultUtil.error();
-            }
-            return baseResponse;
         } catch (URISyntaxException e) {
             return ResultUtil.error(ErrorCode.SYSTEM_ERROR);
         }
