@@ -28,4 +28,16 @@ public class RedisConstant {
      * 刷新token 前缀
      */
     public static final String REFRESH_TOKEN_PREFIX = "refresh_token:";
+
+
+    /**
+     * 缓存用户剩余次数
+     */
+    public static final String USER_INTERFACE_INFO_PREFIX= "user:interface:";
+
+    /**
+     *
+     */
+    public static final long LEFT_NUM_TTL = TimeUnit.DAYS.toHours(12);
+
 }

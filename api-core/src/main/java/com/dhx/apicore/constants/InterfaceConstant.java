@@ -21,4 +21,6 @@ public class InterfaceConstant {
      * 已关闭的接口
      */
     public static final int CLOSED_STATUS=0;
+
+    public static final Long DEFAULT_LEFT_NUM=100L;
 }
