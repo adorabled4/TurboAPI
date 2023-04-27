@@ -54,6 +54,12 @@ spring:
         # 连接池中的最小空闲连接
         min-idle: 0
     password: adorabled4
+  rabbitmq:
+    username: dhx
+    password: qwer
+    host: 192.168.159.134
+    port: 5672 # 端口
+    virtual-host: / # 虚拟主机
 #    password:
 # MyBatis配置
 mybatis:

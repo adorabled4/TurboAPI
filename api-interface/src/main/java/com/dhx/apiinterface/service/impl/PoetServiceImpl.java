@@ -60,6 +60,16 @@ public class PoetServiceImpl implements IPoetService {
         }
     }
 
+    @Override
+    public BaseResponse<PoetVO> getRandomPoetVo() {
+        long total = this.getTotal();
+        long id = (long) (Math.random()*total+1);
+        while(id<0 || id >= total){
+            id = (long) (Math.random()*total+1);
+        }
+        return this.getPoetVO(id);
+    }
+
     /**
      * 查询诗句
      *

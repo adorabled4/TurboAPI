@@ -64,5 +64,12 @@ public interface IPoetService
 
     BaseResponse<PoetVO> getPoetVO(long id);
 
+    /**
+     * 获取随机诗句
+     * @return
+     */
+    BaseResponse<PoetVO> getRandomPoetVo();
+
+
     long getTotal();
 }

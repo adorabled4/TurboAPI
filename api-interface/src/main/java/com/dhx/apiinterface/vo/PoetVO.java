@@ -2,13 +2,15 @@ package com.dhx.apiinterface.vo;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author dhx_
  * @className PoetVO
  * @date : 2023/03/13/ 12:26
  **/
 @Data
-public class PoetVO {
+public class PoetVO implements Serializable {
     /**
      * 作者
      */
