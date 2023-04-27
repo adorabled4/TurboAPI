@@ -3,13 +3,17 @@ package com.dhx.apicommon.common;
 import com.dhx.apicommon.common.exception.ErrorCode;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author adorabled4
  * @className BaseResponse
  * @date : 2023/04/10/ 14:21
  **/
 @Data
-public class BaseResponse<T> {
+public class BaseResponse<T> implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
 
     private int code;
