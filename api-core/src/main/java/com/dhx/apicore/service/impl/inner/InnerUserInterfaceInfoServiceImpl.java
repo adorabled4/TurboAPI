@@ -107,6 +107,7 @@ public class InnerUserInterfaceInfoServiceImpl implements InnerUserInterfaceInfo
                 userInterfaceInfoEntityService.updateById(one);
                 leftNum=one.getLeftNum()-1;
             }
+            shouldUpdateCache=true;
         }else{
             // redis中已经缓存了
             leftNum = Long.parseLong(cachedLeftNum );

@@ -39,6 +39,12 @@ spring:
             - RewritePath=/dev-api/admin/?(?<segment>.*),/dev-api/$\{segment}
   application:
     name: api-gateway
+  rabbitmq:
+    username: dhx
+    password: qwer
+    host: 192.168.159.134
+    port: 5672 # 端口
+    virtual-host: / # 虚拟主机
 server:
   port: 88
 logging:
