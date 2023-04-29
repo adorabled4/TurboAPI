@@ -1,13 +1,46 @@
-dubbo:
+spring:
+  cloud:
+    gateway:
+      routes:
+        # 需要添加 三个 , 一个是主要的管理系统,另一个是后台通往的接口模块的CRUD , 以及之后前端访问的接口(或者通过dubbo远程调用)
+        - id: frontend_route
+          uri: http://39.105.61.0:9001
+          predicates:
+            - Path=/apicore/** # 符合 /api开头的地址就会被路由
+          filters:
+            - RewritePath=/apicore/?(?<segment>.*),/apicore/$\{segment}
+        - id: api_route # 接口路由
+          uri: http://39.105.61.0:8123
+          predicates:
+            - Path=/dev-api/api/** # 符合 /api开头的地址就会被路由
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10   # 令牌桶每秒填充速率 生产令牌速度，每秒多少个令牌
+                redis-rate-limiter.burstCapacity: 20   # 令牌桶总容量
+                keyResolver: '#{@myKeyResolver}'  # 使用SpringEL表达式，从Spring容器中找对象，并赋值。 '#{@beanName}'
+            - RewritePath=/dev-api/api/?(?<segment>.*),/api/$\{segment}
+        - id: api_route2 # 接口路由
+          uri: http://39.105.61.0:8123
+          predicates:
+            - Path=/dev-api/admin/api/** # 符合 /api开头的地址就会被路由
+          filters:
+            - RewritePath=/dev-api/admin/api/?(?<segment>.*),/api/$\{segment}
+        - id: admin_route # ry路由
+          uri: http://39.105.61.0:8080
+          predicates:
+            - Path=/dev-api/admin/** # 符合 /api开头的地址就会被路由
+          filters:
+            - RewritePath=/dev-api/admin/?(?<segment>.*),/dev-api/$\{segment}
   application:
-    name: api-core-consumer
-    shutwait: 1000000
-  protocol:
-    name: dubbo
-    port: -1
-  registry:
-    id: nacos-registry
-    address: nacos://39.105.61.0:8848?register-consumer-url=true
-    # #Dubbo3.0.0版本以后，增加了是否注册消费者的参数，如果需要将消费者注册到nacos注册中心上，需要将参数(register-consumer-url)设置为true，默认是false。
-  provider:
-    timeout: 100000
+    name: api-gateway
+server:
+  port: 88
+logging:
+  #  config: D:\j2ee_project\api-platform\api-gateway\src\main\resources\logback.xml # 日志配置文件
+  config: classpath:logback.xml
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway: trace # 设置日志级别

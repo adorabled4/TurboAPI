@@ -37,10 +37,11 @@ spring:
     active: druid
   redis:
     # Redis服务器连接端口
-    host: 192.168.159.134
+    host: 8.130.79.173
     # Redis数据库索引（默认为0）
     database: 1
     port: 6379
+    password: r324fhh2n3084brj2w
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -53,11 +54,10 @@ spring:
         max-idle: 10
         # 连接池中的最小空闲连接
         min-idle: 0
-    password: adorabled4
   rabbitmq:
     username: dhx
-    password: qwer
-    host: 192.168.159.134
+    password: r324fhh2n3084brj2w
+    host: 8.130.79.173
     port: 5672 # 端口
     virtual-host: / # 虚拟主机
 #    password:
@@ -89,8 +89,8 @@ knife4j:
     url: https://blog.dhx.icu
     version: v4.0
     license: Apache 2.0
-    license-url: https://stackoverflow.com/
-    terms-of-service-url: https://stackoverflow.com/
+    license-url: https://blog.dhx.icu
+    terms-of-service-url: https://blog.dhx.icu
     group:
       dev:
         group-name: 开发环境

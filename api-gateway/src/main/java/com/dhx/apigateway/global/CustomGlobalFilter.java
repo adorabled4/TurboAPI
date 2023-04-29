@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.reactivestreams.Publisher;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -74,7 +75,9 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         List<String> sdkList = request.getHeaders().get("dhx.SDK");
         List<String> authorization = request.getHeaders().get("Authorization");
         List<String> apiPlantform = request.getHeaders().get("apiplantform");
-        if (path.toString().startsWith(API_ADMIN_MODULE_PATH)) {
+        if (path.toString().startsWith(API_ADMIN_MODULE_PATH)
+                || path.toString().contains("doc")
+                || path.toString().contains("apicore")) {
             // 后台管理直接放行
             return chain.filter(exchange);
         }
@@ -151,6 +154,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
             if (count <= 0) {
                 return handleNoLeftNum(exchange.getResponse());
             }
+//            rabbitTemplate.
             // path映射到交换机
             // ! 这里request.getPath().toString() 必须要toString 否则会 获取不到 QUEUE
             String queueName = Path2Queue.data.get(request.getPath().toString());
@@ -160,6 +164,9 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
             }
             String paramJson = JSONUtil.toJsonStr(request.getQueryParams());
             Message message = new Message(paramJson.getBytes());
+            // 设置消息属性
+            MessageProperties messageProperties = new MessageProperties();
+            
             Message interfaceModuleResult = rabbitTemplate.sendAndReceive(MQConstant.INTERFACE_ROUTE_EXCHANGE, queueName, message);
             if(interfaceModuleResult==null){
                 ServerHttpResponse response = exchange.getResponse();
@@ -174,7 +181,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
                 // 正常返回 , 响应成功 => 调用成功, 统计用户调用次数
                 innerUserInterfaceInfoService.invokeCount(user.getUserId(), interfaceInfo.getId());
                 response.setStatusCode(HttpStatus.OK);
-                response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+                response.getHeaders ().setContentType(MediaType.APPLICATION_JSON);
                 return response.writeWith(Mono.just(response.bufferFactory().wrap(interfaceModuleResult.getBody())));
             }else{
                 // * 调用失败 , 不统计次数

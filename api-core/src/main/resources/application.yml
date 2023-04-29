@@ -2,17 +2,18 @@ spring:
   application:
     name: api-core
   datasource:
-    url: jdbc:mysql://192.168.159.134:3306/ry
+    url: jdbc:mysql://8.130.79.173:4234/api-core
     username: root
-    password: root
+    password: 324rfwefefg3f
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
     # Redis服务器连接端口
-    host: 192.168.159.134
+    host: 8.130.79.173
     # Redis数据库索引（默认为0）
     database: 1
     port: 6379
-    password: adorabled4
+    password: r324fhh2n3084brj2w
+    #    password: r324fhh2n3084brj2w
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -47,8 +48,8 @@ knife4j:
     url: https://blog.dhx.icu
     version: v4.0
     license: Apache 2.0
-    license-url: https://stackoverflow.com/
-    terms-of-service-url: https://stackoverflow.com/
+    license-url: https://blog.dhx.icu
+    terms-of-service-url: https://blog.dhx.icu
     group:
       dev:
         group-name: 开发环境
@@ -65,12 +66,12 @@ api:
 dubbo:
   # 配置元数据中心
   metadata-report:
-    address: nacos://192.168.159.134:8848
-    username: test
-    password: 123456
+    address: nacos://8.130.79.173:8848
+    username: adorabled4
+    password: r324fhh2n3084brj2w
     # 配置 namespace，有namespace需要指定namespace
     parameters:
-      namespace: 88b66463-1685-40b3-ba9c-7b25e526dcfb
+      namespace: 1bd50375-01d2-4e47-ac7b-0cc9a91a8dde
     # 配置 隔离组，有配置 group 的需要指定 group
     group: ucp
   application:
@@ -80,7 +81,9 @@ dubbo:
     port: 20880
   registry:
     id: nacos-registry
-    address: nacos://192.168.159.134:8848
+#    address: nacos://192.168.159.134:8848
+    address: nacos://8.130.79.173:8848
+
 dhx:
   client:
     access-key: r3242rfj3w9r

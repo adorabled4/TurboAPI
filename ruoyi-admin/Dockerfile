@@ -8,13 +8,13 @@ RUN apk add --no-cache tzdata && \
     apk del tzdata
 
 # 创建工作目录
-RUN mkdir -p /app/api-gateway
+RUN mkdir -p /app/ruoyi-admin
 
 # 将所有jar文件添加到对应模块的目录中 => 需要注意的是 , TODO 构建的时候是以dockerfile所在的目录开始的
-COPY jar/api-gateway.jar /app/api-gateway
+COPY jar/ruoyi-admin.jar /app/ruoyi-admin
 
 # 暴露端口号 (gateway)
-EXPOSE 88
+EXPOSE 8080
 
 # 运行所有jar文件
-CMD ["sh", "-c", "java -jar /app/api-gateway/api-gateway.jar --spring.profiles.active=test"]
+CMD ["sh", "-c", "java -jar /app/ruoyi-admin/ruoyi-admin.jar --spring.profiles.active=test"]

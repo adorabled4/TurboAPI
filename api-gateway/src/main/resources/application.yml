@@ -1,8 +1,8 @@
 spring:
   redis:
-    password: adorabled4
-    host: 192.168.159.134
+    host: 8.130.79.173
     port: 6379
+    password: r324fhh2n3084brj2w
   cloud:
     gateway:
       routes:
@@ -24,7 +24,6 @@ spring:
                 redis-rate-limiter.burstCapacity: 20   # 令牌桶总容量
                 keyResolver: '#{@myKeyResolver}'  # 使用SpringEL表达式，从Spring容器中找对象，并赋值。 '#{@beanName}'
             - RewritePath=/dev-api/api/?(?<segment>.*),/api/$\{segment}
-#            - RewritePath=/dev-api/admin/api/?(?<segment>.*),/api/$\{segment}
         - id: api_route2 # 接口路由
           uri: http://127.0.0.1:8123
           predicates:
@@ -41,8 +40,8 @@ spring:
     name: api-gateway
   rabbitmq:
     username: dhx
-    password: qwer
-    host: 192.168.159.134
+    password: r324fhh2n3084brj2w
+    host: 8.130.79.173
     port: 5672 # 端口
     virtual-host: / # 虚拟主机
 server:
@@ -62,10 +61,9 @@ dubbo:
     shutwait: 1000000
   reference:
     timeout: 3000
-
   # 配置元数据中心
 #  metadata-report:
-#    address: nacos://192.168.159.134:8848
+#    address: nacos://8.130.79.173:8848
 #    username: test
 #    password: 123456
 #    # 配置 namespace，有namespace需要指定namespace
@@ -78,5 +76,5 @@ dubbo:
     port: -1
   registry:
     id: nacos-registry
-    address: nacos://192.168.159.134:8848?register-consumer-url=true
+    address: nacos://8.130.79.173:8848?register-consumer-url=true
     # #Dubbo3.0.0版本以后，增加了是否注册消费者的参数，如果需要将消费者注册到nacos注册中心上，需要将参数(register-consumer-url)设置为true，默认是false。

@@ -22,7 +22,7 @@ public class RedissonConfig {
 //        config.setTransportMode(TransportMode.EPOLL); // 默认是NIO的方式
         config.useSingleServer()
                 //可以用"rediss://"来启用SSL连接，前缀必须是redis:// or rediss://
-                .setAddress("redis://192.168.159.134:6379").setPassword("adorabled4");
+                .setAddress("redis://8.130.79.173:6379").setPassword("r324fhh2n3084brj2w");
         return Redisson.create(config);
     }
 }
