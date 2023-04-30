@@ -1,20 +1,15 @@
 package com.dhx.apiinterface.listener;
 
-import cn.hutool.json.JSONUtil;
-import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.constant.MQConstant;
 import com.dhx.apiinterface.service.IPoetService;
-import com.dhx.apiinterface.util.MQUtil;
-import com.dhx.apiinterface.vo.PoetVO;
+import com.dhx.apicommon.util.MQUtil;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.*;
 import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author adorabled4

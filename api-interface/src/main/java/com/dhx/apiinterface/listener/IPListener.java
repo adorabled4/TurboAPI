@@ -1,18 +1,13 @@
 package com.dhx.apiinterface.listener;
 
 import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.common.exception.BusinessException;
 import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.constant.MQConstant;
 import com.dhx.apicommon.util.ResultUtil;
-import com.dhx.apiinterface.service.IPoetService;
 import com.dhx.apiinterface.util.IpUtil;
-import com.dhx.apiinterface.util.MQUtil;
-import com.dhx.apiinterface.vo.PoetVO;
-import com.mysql.cj.xdevapi.JsonArray;
+import com.dhx.apicommon.util.MQUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.core.Message;
@@ -22,11 +17,9 @@ import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
