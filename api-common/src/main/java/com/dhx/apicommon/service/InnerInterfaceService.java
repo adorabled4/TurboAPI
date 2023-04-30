@@ -16,4 +16,11 @@ public interface InnerInterfaceService {
      * @return
      */
     InterfaceTo getInterfaceInfo(String  url , String method);
+
+
+    /**
+     * 接口调用次数+1
+     * @param interfaceId
+     */
+    void interfaceCallCount(long interfaceId);
 }

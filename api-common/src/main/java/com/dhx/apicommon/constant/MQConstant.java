@@ -12,4 +12,8 @@ public class MQConstant {
 
     public static final String NOW_WEATHER_QUEUE="weather.now";
 
+    public static final String INTERFACE_COUNT_EXCHANGE="count.interface";
+
+    public static final String INTERFACE_COUNT_QUEUE="call.count";
+
 }

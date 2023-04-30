@@ -26,7 +26,12 @@ spring:
         max-idle: 10
         # 连接池中的最小空闲连接
         min-idle: 0
-#    password:
+  rabbitmq:
+    username: dhx
+    password: r324fhh2n3084brj2w
+    host: 8.130.79.173
+    port: 5672 # 端口
+    virtual-host: / # 虚拟主机
 
 server:
   port: 9001
