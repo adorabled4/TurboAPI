@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhx.apiinterface.mapper.LovelornSentenceMapper">
+
+    <resultMap id="BaseResultMap" type="com.dhx.apiinterface.domain.LovelornSentence">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="sentence" column="sentence" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,sentence,create_time,
+        is_deleted
+    </sql>
+</mapper>
