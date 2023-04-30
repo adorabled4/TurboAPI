@@ -1,5 +1,6 @@
 package com.dhx.apicore.model.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -7,13 +8,14 @@ import java.util.Date;
 
 /**
  * @author adorabled4
- * @className InterfaceDetailVo 接口详细信息
- * @date : 2023/04/13/ 10:48
+ * @className InterfaceRankInfoVo
+ * @date : 2023/04/30/ 11:35
  **/
 @Data
-public class InterfaceDetailVo implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class InterfaceRankInfoVo implements Serializable {
 
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 主键
@@ -46,26 +48,6 @@ public class InterfaceDetailVo implements Serializable {
     private String method;
 
     /**
-     * 请求参数
-     */
-    private String requestParam;
-
-    /**
-     * 请求头
-     */
-    private String requestHeader;
-
-    /**
-     * 响应头
-     */
-    private String responseHeader;
-
-    /**
-     * 创建人
-     */
-    private String userName;
-
-    /**
      * 接口调用次数
      */
     private Long callTimes;
@@ -79,12 +61,5 @@ public class InterfaceDetailVo implements Serializable {
      * 接口背景图片
      */
     private String background;
-
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
 
 }

@@ -7,19 +7,25 @@ import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apicore.constants.InterfaceConstant;
+import com.dhx.apicore.constants.RedisConstant;
 import com.dhx.apicore.mapper.InterfaceExampleEntityMapper;
 import com.dhx.apicore.model.DO.InterfaceEntity;
 import com.dhx.apicore.model.DO.InterfaceExampleEntity;
 import com.dhx.apicore.model.DO.UserEntity;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVo;
 import com.dhx.apicore.model.vo.InterfaceDetailVo;
+import com.dhx.apicore.model.vo.InterfaceRankInfoVo;
 import com.dhx.apicore.service.InterfaceEntityService;
 import com.dhx.apicore.mapper.InterfaceEntityMapper;
 import com.dhx.apicore.service.UserService;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -35,6 +41,9 @@ public class InterfaceEntityServiceImpl extends ServiceImpl<InterfaceEntityMappe
     UserService userService;
 
     @Resource
+    StringRedisTemplate stringRedisTemplate;
+
+    @Resource
     InterfaceExampleEntityMapper interfaceExampleEntityMapper;
 
     @Override
@@ -44,7 +53,7 @@ public class InterfaceEntityServiceImpl extends ServiceImpl<InterfaceEntityMappe
                 .filter(item -> item.getStatus() != InterfaceConstant.CLOSED_STATUS)
                 .map(item -> {
                     InterfaceBasicInfoVo interfaceBasicInfoVo = BeanUtil.copyProperties(item, InterfaceBasicInfoVo.class);
-                    Long userId = item.getUserId(); // 创建者的id
+                    Integer userId = item.getUserId(); // 创建者的id
                     UserEntity user = userService.getById(userId);
                     if(user!=null){
                         interfaceBasicInfoVo.setUserName(user.getUserName());
@@ -62,7 +71,7 @@ public class InterfaceEntityServiceImpl extends ServiceImpl<InterfaceEntityMappe
         InterfaceEntity interfaceEntity = getById(id);
         InterfaceDetailVo interfaceBasicInfoVo = BeanUtil.copyProperties(interfaceEntity, InterfaceDetailVo.class);
         // 设置创建者相关的信息
-        Long userId = interfaceEntity.getUserId(); // 创建者的id
+        Integer userId = interfaceEntity.getUserId(); // 创建者的id
         UserEntity user = userService.getById(userId);
         if(user!=null){
             interfaceBasicInfoVo.setUserName(user.getUserName());
@@ -91,6 +100,33 @@ public class InterfaceEntityServiceImpl extends ServiceImpl<InterfaceEntityMappe
             return false;
         }
         return true;
+    }
+
+
+    @Override
+    public void addRankScore(Long interfaceId) {
+        stringRedisTemplate.opsForZSet().incrementScore(RedisConstant.INTERFACE_RANK_KEY, String.valueOf(interfaceId),1);
+    }
+
+    @Override
+    public BaseResponse<List<InterfaceRankInfoVo>> getRank5Interface() {
+        Set<ZSetOperations.TypedTuple<String>> typedTuples = stringRedisTemplate.opsForZSet().reverseRangeWithScores(RedisConstant.INTERFACE_RANK_KEY, 0, 4);
+        // 获取ids , 批量查询更快
+        List<Long> ids = typedTuples.stream().map(item -> {
+            String interfaceId = item.getValue();
+            return Long.valueOf(interfaceId);
+        }).collect(Collectors.toList());
+        // 封装vo
+        List<InterfaceEntity> interfaceEntities = listByIds(ids);
+        List<InterfaceRankInfoVo> collect = interfaceEntities.stream().map(item -> {
+            InterfaceRankInfoVo interfaceRankInfoVo = BeanUtil.copyProperties(item, InterfaceRankInfoVo.class);
+            return interfaceRankInfoVo;
+        }).collect(Collectors.toList());
+        return ResultUtil.success(collect);
+    }
+
+    public void addScore(String itemId, double score) {
+        stringRedisTemplate.opsForZSet().incrementScore(RedisConstant.INTERFACE_RANK_KEY, itemId, score);
     }
 }
 

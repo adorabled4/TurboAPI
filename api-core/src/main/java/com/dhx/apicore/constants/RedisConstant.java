@@ -40,4 +40,9 @@ public class RedisConstant {
      */
     public static final long LEFT_NUM_TTL = TimeUnit.DAYS.toHours(12);
 
+
+    /**
+     * 是一个集合
+     */
+    public static final String INTERFACE_RANK_KEY = "interface:rank";
 }

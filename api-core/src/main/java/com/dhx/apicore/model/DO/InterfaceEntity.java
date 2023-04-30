@@ -9,7 +9,7 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * 
+ *
  * @TableName t_interface_entity
  */
 @TableName(value ="t_interface_entity")
@@ -32,6 +32,11 @@ public class InterfaceEntity implements Serializable {
     private String description;
 
     /**
+     * 接口调用次数
+     */
+    private Long callTimes;
+
+    /**
      * 是否免费
      */
     private Integer isFree;
@@ -40,6 +45,16 @@ public class InterfaceEntity implements Serializable {
      * 接口地址
      */
     private String url;
+
+    /**
+     * 接口标签
+     */
+    private String tag;
+
+    /**
+     * 接口背景图片
+     */
+    private String background;
 
     /**
      * 请求方式
@@ -69,7 +84,7 @@ public class InterfaceEntity implements Serializable {
     /**
      * 创建人
      */
-    private Long userId;
+    private Integer userId;
 
     /**
      * 创建时间
@@ -102,19 +117,22 @@ public class InterfaceEntity implements Serializable {
         }
         InterfaceEntity other = (InterfaceEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
-            && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()))
-            && (this.getIsFree() == null ? other.getIsFree() == null : this.getIsFree().equals(other.getIsFree()))
-            && (this.getUrl() == null ? other.getUrl() == null : this.getUrl().equals(other.getUrl()))
-            && (this.getMethod() == null ? other.getMethod() == null : this.getMethod().equals(other.getMethod()))
-            && (this.getRequestParam() == null ? other.getRequestParam() == null : this.getRequestParam().equals(other.getRequestParam()))
-            && (this.getRequestHeader() == null ? other.getRequestHeader() == null : this.getRequestHeader().equals(other.getRequestHeader()))
-            && (this.getResponseHeader() == null ? other.getResponseHeader() == null : this.getResponseHeader().equals(other.getResponseHeader()))
-            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
-            && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
-            && (this.getIsDelete() == null ? other.getIsDelete() == null : this.getIsDelete().equals(other.getIsDelete()));
+                && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
+                && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()))
+                && (this.getCallTimes() == null ? other.getCallTimes() == null : this.getCallTimes().equals(other.getCallTimes()))
+                && (this.getIsFree() == null ? other.getIsFree() == null : this.getIsFree().equals(other.getIsFree()))
+                && (this.getUrl() == null ? other.getUrl() == null : this.getUrl().equals(other.getUrl()))
+                && (this.getTag() == null ? other.getTag() == null : this.getTag().equals(other.getTag()))
+                && (this.getBackground() == null ? other.getBackground() == null : this.getBackground().equals(other.getBackground()))
+                && (this.getMethod() == null ? other.getMethod() == null : this.getMethod().equals(other.getMethod()))
+                && (this.getRequestParam() == null ? other.getRequestParam() == null : this.getRequestParam().equals(other.getRequestParam()))
+                && (this.getRequestHeader() == null ? other.getRequestHeader() == null : this.getRequestHeader().equals(other.getRequestHeader()))
+                && (this.getResponseHeader() == null ? other.getResponseHeader() == null : this.getResponseHeader().equals(other.getResponseHeader()))
+                && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+                && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
+                && (this.getIsDelete() == null ? other.getIsDelete() == null : this.getIsDelete().equals(other.getIsDelete()));
     }
 
     @Override
@@ -124,8 +142,11 @@ public class InterfaceEntity implements Serializable {
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
         result = prime * result + ((getDescription() == null) ? 0 : getDescription().hashCode());
+        result = prime * result + ((getCallTimes() == null) ? 0 : getCallTimes().hashCode());
         result = prime * result + ((getIsFree() == null) ? 0 : getIsFree().hashCode());
         result = prime * result + ((getUrl() == null) ? 0 : getUrl().hashCode());
+        result = prime * result + ((getTag() == null) ? 0 : getTag().hashCode());
+        result = prime * result + ((getBackground() == null) ? 0 : getBackground().hashCode());
         result = prime * result + ((getMethod() == null) ? 0 : getMethod().hashCode());
         result = prime * result + ((getRequestParam() == null) ? 0 : getRequestParam().hashCode());
         result = prime * result + ((getRequestHeader() == null) ? 0 : getRequestHeader().hashCode());
@@ -147,8 +168,11 @@ public class InterfaceEntity implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", name=").append(name);
         sb.append(", description=").append(description);
+        sb.append(", callTimes=").append(callTimes);
         sb.append(", isFree=").append(isFree);
         sb.append(", url=").append(url);
+        sb.append(", tag=").append(tag);
+        sb.append(", background=").append(background);
         sb.append(", method=").append(method);
         sb.append(", requestParam=").append(requestParam);
         sb.append(", requestHeader=").append(requestHeader);

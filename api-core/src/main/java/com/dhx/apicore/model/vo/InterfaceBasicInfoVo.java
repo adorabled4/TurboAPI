@@ -3,6 +3,7 @@ package com.dhx.apicore.model.vo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -11,7 +12,9 @@ import java.util.Date;
  * @date : 2023/04/13/ 10:31
  **/
 @Data
-public class InterfaceBasicInfoVo {
+public class InterfaceBasicInfoVo implements Serializable {
+
+
     /**
      * 主键
      */
@@ -33,15 +36,29 @@ public class InterfaceBasicInfoVo {
     private Integer isFree;
 
     /**
+     * 接口调用次数
+     */
+    private Long callTimes;
+
+    /**
      * 接口地址
      */
     private String url;
 
     /**
+     * 接口标签
+     */
+    private String tag;
+
+    /**
+     * 接口背景图片
+     */
+    private String background;
+
+    /**
      * 请求方式
      */
     private String method;
-
 
     /**
      * 创建人

@@ -32,6 +32,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/**/interface/list",
                         "/**/interface/detail/**",
                         "/**/interface/example/**",
+                        "/**/interface/list/**",
                         "/**/doc.html/**",
                         "/static/**",
                         "/**/swagger-ui.html/**",

@@ -2,14 +2,17 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="generator.mapper.InterfaceEntityMapper">
+<mapper namespace="com.dhx.core.mapper.InterfaceEntityMapper">
 
-    <resultMap id="BaseResultMap" type="com.dhx.apicore.model.DO.InterfaceEntity">
+    <resultMap id="BaseResultMap" type="com.dhx.core.generator.InterfaceEntity">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="callTimes" column="call_times" jdbcType="BIGINT"/>
             <result property="isFree" column="is_free" jdbcType="TINYINT"/>
             <result property="url" column="url" jdbcType="VARCHAR"/>
+            <result property="tag" column="tag" jdbcType="VARCHAR"/>
+            <result property="background" column="background" jdbcType="VARCHAR"/>
             <result property="method" column="method" jdbcType="VARCHAR"/>
             <result property="requestParam" column="request_param" jdbcType="VARCHAR"/>
             <result property="requestHeader" column="request_header" jdbcType="VARCHAR"/>
@@ -23,7 +26,8 @@
 
     <sql id="Base_Column_List">
         id,name,description,
-        is_free,url,method,
+        call_times,is_free,url,
+        tag,background,method,
         request_param,request_header,response_header,
         status,user_id,create_time,
         update_time,is_delete

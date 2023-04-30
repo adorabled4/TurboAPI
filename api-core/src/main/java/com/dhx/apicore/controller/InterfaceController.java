@@ -10,6 +10,8 @@ import com.dhx.apicore.model.DO.UserEntity;
 import com.dhx.apicore.model.DTO.UserDTO;
 import com.dhx.apicore.model.param.InterfaceInfoRequest;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVo;
+import com.dhx.apicore.model.vo.InterfaceDetailVo;
+import com.dhx.apicore.model.vo.InterfaceRankInfoVo;
 import com.dhx.apicore.service.InterfaceEntityService;
 import com.dhx.apicore.service.UserService;
 import com.dhx.apicore.util.UserHolder;
@@ -76,7 +78,7 @@ public class InterfaceController {
     }
 
     @GetMapping("/detail/{id}")
-    public BaseResponse getInterfaceDetail(@PathVariable("id")Long id){
+    public BaseResponse<InterfaceDetailVo> getInterfaceDetail(@PathVariable("id")Long id){
         if(id<0){
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -89,6 +91,11 @@ public class InterfaceController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         return interfaceEntityService.getInterfaceExample(id);
+    }
+
+    @GetMapping("/list/rank")
+    public BaseResponse<List<InterfaceRankInfoVo>> getRankInterfaces(){
+        return interfaceEntityService.getRank5Interface();
     }
 
 }

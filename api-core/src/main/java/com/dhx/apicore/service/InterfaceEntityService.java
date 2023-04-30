@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.dhx.apicore.model.DO.InterfaceExampleEntity;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVo;
 import com.dhx.apicore.model.vo.InterfaceDetailVo;
+import com.dhx.apicore.model.vo.InterfaceRankInfoVo;
 
 import java.util.List;
 
@@ -46,4 +47,17 @@ public interface InterfaceEntityService extends IService<InterfaceEntity> {
      * @return
      */
     boolean isValidInterfaceId(long id);
+
+    /**
+     *  添加接口在排行榜中的分数
+     * @param id
+     */
+    void addRankScore(Long id);
+
+
+    /**
+     * 获取top 接口
+     * @return
+     */
+    BaseResponse<List<InterfaceRankInfoVo>> getRank5Interface();
 }
