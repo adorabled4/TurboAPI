@@ -7,6 +7,8 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.dhx.apisdk.client.HxApiClient;
 import com.dhx.apisdk.model.BaseResponse;
+import com.dhx.apisdk.model.TO.ComputerSuffix;
+import com.dhx.apisdk.model.TO.LovelornSentence;
 import com.dhx.apisdk.model.TO.Poet;
 import com.dhx.apisdk.model.TO.WeatherInfo;
 import com.dhx.apisdk.model.exception.BusinessException;
@@ -181,5 +183,62 @@ public class HxApiClientImpl implements HxApiClient {
         } catch (URISyntaxException e) {
             return ResultUtil.error(ErrorCode.SYSTEM_ERROR);
         }
+    }
+
+
+    @Override
+    public LovelornSentence getRandomLovelornSentence (){
+        try{
+            //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
+            String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+            String result =  HttpRequest.get(SERVER_HOST + "/dev-api/api/apiinterface/common/lovelorn").header("dhx.sdk",nowTime).addHeaders(getHeaderMap()).execute().body();
+            BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
+            if(baseResponse.getCode()==200){
+                String dataStr = JSONUtil.toJsonStr(baseResponse.getData());
+                if(dataStr==null || dataStr.equals("") ){
+                    throw new RuntimeException();
+                }
+                LovelornSentence lovelornSentence = JSONUtil.toBean(dataStr, LovelornSentence.class);
+                return lovelornSentence;
+            }else{
+                throw new BusinessException(baseResponse.getCode(), baseResponse.getDescription(), baseResponse.getMessage());
+            }
+        }catch (IORuntimeException e){
+            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 访问服务器失败 --"+e.getMessage() );
+        }catch(RuntimeException e){
+            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 调用接口失败 --"+e.getMessage() );
+        }
+        return null;
+    }
+
+
+    @Override
+    public ComputerSuffix getDescriptionOfSuffix(String suffix) {
+        try{
+            HashMap<String, Object> paramMap = new HashMap<>();
+            if(suffix!=null && !suffix.equals("")){
+                paramMap.put("cityName", suffix);
+            }
+            //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
+            String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+            String result =  HttpRequest.get(SERVER_HOST + "/dev-api/api/common/suffix").header("dhx.sdk",nowTime).addHeaders(getHeaderMap()).execute().body();
+            BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
+            if(baseResponse.getCode()==200){
+                String dataStr = JSONUtil.toJsonStr(baseResponse.getData());
+                if(dataStr==null || dataStr.equals("") ){
+                    throw new RuntimeException();
+                }else{
+                    ComputerSuffix computerSuffix = JSONUtil.toBean(dataStr, ComputerSuffix.class);
+                    return computerSuffix;
+                }
+            }else{
+                throw new BusinessException(baseResponse.getCode(), baseResponse.getDescription(), baseResponse.getMessage());
+            }
+        }catch (IORuntimeException e){
+            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 访问服务器失败 --"+e.getMessage() );
+        }catch(RuntimeException e){
+            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 调用接口失败 --"+e.getMessage() );
+        }
+        return null;
     }
 }

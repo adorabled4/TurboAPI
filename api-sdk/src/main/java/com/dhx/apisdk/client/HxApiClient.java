@@ -1,6 +1,8 @@
 package com.dhx.apisdk.client;
 
 import com.dhx.apisdk.model.BaseResponse;
+import com.dhx.apisdk.model.TO.ComputerSuffix;
+import com.dhx.apisdk.model.TO.LovelornSentence;
 import com.dhx.apisdk.model.TO.Poet;
 import com.dhx.apisdk.model.TO.WeatherInfo;
 import org.springframework.lang.Nullable;
@@ -18,6 +20,20 @@ public interface HxApiClient {
      */
     Poet getRandomPoet();
 
+
+    /**
+     * 获取随机失恋文案
+     *
+     * @return
+     */
+    LovelornSentence getRandomLovelornSentence();
+
+    /**
+     * 获取 后缀名 详情
+     * @param suffix
+     * @return
+     */
+    ComputerSuffix getDescriptionOfSuffix(String suffix);
 
     /**
      * 分析IP属地

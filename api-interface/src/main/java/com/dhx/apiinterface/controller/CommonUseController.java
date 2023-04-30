@@ -51,7 +51,7 @@ public class CommonUseController {
      * 随机 失恋 文案
      * @return
      */
-    @GetMapping("/suffix")
+    @GetMapping("/lovelorn")
     public BaseResponse<LovelornSentence> getSuffixDetail(){
         long total = loveSentenceService.count();
         long id = (long) (Math.random()*total+1);
