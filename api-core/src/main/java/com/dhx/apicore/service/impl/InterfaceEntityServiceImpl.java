@@ -15,6 +15,7 @@ import com.dhx.apicore.model.DO.UserEntity;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVo;
 import com.dhx.apicore.model.vo.InterfaceDetailVo;
 import com.dhx.apicore.model.vo.InterfaceRankInfoVo;
+import com.dhx.apicore.model.vo.InterfaceTagVo;
 import com.dhx.apicore.service.InterfaceEntityService;
 import com.dhx.apicore.mapper.InterfaceEntityMapper;
 import com.dhx.apicore.service.UserService;
@@ -23,7 +24,7 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -105,6 +106,7 @@ public class InterfaceEntityServiceImpl extends ServiceImpl<InterfaceEntityMappe
 
     @Override
     public void addRankScore(Long interfaceId) {
+        System.out.println("addRankScore:"+ interfaceId);
         stringRedisTemplate.opsForZSet().incrementScore(RedisConstant.INTERFACE_RANK_KEY, String.valueOf(interfaceId),1);
     }
 
@@ -117,16 +119,66 @@ public class InterfaceEntityServiceImpl extends ServiceImpl<InterfaceEntityMappe
             return Long.valueOf(interfaceId);
         }).collect(Collectors.toList());
         // 封装vo
-        List<InterfaceEntity> interfaceEntities = listByIds(ids);
-        List<InterfaceRankInfoVo> collect = interfaceEntities.stream().map(item -> {
-            InterfaceRankInfoVo interfaceRankInfoVo = BeanUtil.copyProperties(item, InterfaceRankInfoVo.class);
-            return interfaceRankInfoVo;
-        }).collect(Collectors.toList());
-        return ResultUtil.success(collect);
+        if(ids.size()>=5){
+            List<InterfaceEntity> interfaceEntities = listByIds(ids);
+            List<InterfaceRankInfoVo> collect = interfaceEntities.stream().map(item -> {
+                InterfaceRankInfoVo interfaceRankInfoVo = BeanUtil.copyProperties(item, InterfaceRankInfoVo.class);
+                return interfaceRankInfoVo;
+            }).collect(Collectors.toList());
+            return ResultUtil.success(collect);
+        }else{
+            // 从数据库中查询
+//            QueryWrapper<InterfaceEntity> wrapper = new QueryWrapper<>();
+//            wrapper.ne("status",0).orderByAsc("call_times");
+            List<InterfaceEntity> interfaceEntities = query().gt("status", 0).orderByDesc("call_times").page(new Page<>(1, 5)).getRecords();
+            List<InterfaceRankInfoVo> collect = interfaceEntities.stream().map(item -> {
+                InterfaceRankInfoVo interfaceRankInfoVo = BeanUtil.copyProperties(item, InterfaceRankInfoVo.class);
+                return interfaceRankInfoVo;
+            }).collect(Collectors.toList());
+            return ResultUtil.success(collect);
+        }
     }
 
-    public void addScore(String itemId, double score) {
-        stringRedisTemplate.opsForZSet().incrementScore(RedisConstant.INTERFACE_RANK_KEY, itemId, score);
+
+    @Override
+    public BaseResponse<List<InterfaceTagVo>> getInterfaceByTag() {
+        List<String> tags = this.baseMapper.getTags();
+        List<InterfaceTagVo> result = new ArrayList<>();
+        List<InterfaceTagVo> tagVos = tags.stream().map(item -> {
+            List<InterfaceEntity> interfaceEntities = query().eq("tag", item).list();
+            // 封装vo
+            List<InterfaceBasicInfoVo> basicInfoVos = interfaceEntities.stream().map(interfaceEntity -> {
+                InterfaceBasicInfoVo interfaceBasicInfoVo = BeanUtil.copyProperties(interfaceEntity, InterfaceBasicInfoVo.class);
+                setUserName(interfaceEntity, interfaceBasicInfoVo);
+                return interfaceBasicInfoVo;
+            }).collect(Collectors.toList());
+            // 封装tagVo
+            InterfaceTagVo interfaceTagVo = new InterfaceTagVo();
+            interfaceTagVo.setTag(item);
+            interfaceTagVo.setInterfaceBasicInfoVos(basicInfoVos);
+            return interfaceTagVo;
+        }).collect(Collectors.toList());
+        return ResultUtil.success(tagVos);
+    }
+
+
+    /**
+     * 封装接口的创建者
+     * @param interfaceEntity
+     * @param interfaceBasicInfoVo
+     */
+    private void setUserName(InterfaceEntity interfaceEntity, InterfaceBasicInfoVo interfaceBasicInfoVo) {
+        if(interfaceEntity.getUserId()==null){
+            interfaceBasicInfoVo.setUserName("adorabled4");
+        }else{
+            UserEntity user = userService.getById(interfaceEntity.getUserId().longValue());
+            if(user==null){
+                interfaceBasicInfoVo.setUserName("adorabled4");
+            }else{
+                String userName = user.getUserName();
+                interfaceBasicInfoVo.setUserName(userName);
+            }
+        }
     }
 }
 

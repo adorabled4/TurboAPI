@@ -3,8 +3,10 @@ spring:
     name: api-core
   datasource:
     url: jdbc:mysql://8.130.79.173:4234/api-core
-    username: root
     password: 324rfwefefg3f
+#    url: jdbc:mysql://192.168.159.134:3306/ry
+#    password: root
+    username: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
     # Redis服务器连接端口
@@ -33,6 +35,9 @@ spring:
     port: 5672 # 端口
     virtual-host: / # 虚拟主机
 
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
 server:
   port: 9001
   servlet:
@@ -70,15 +75,16 @@ api:
 
 dubbo:
   # 配置元数据中心
-  metadata-report:
-    address: nacos://8.130.79.173:8848
-    username: adorabled4
-    password: r324fhh2n3084brj2w
-    # 配置 namespace，有namespace需要指定namespace
-    parameters:
-      namespace: 1bd50375-01d2-4e47-ac7b-0cc9a91a8dde
-    # 配置 隔离组，有配置 group 的需要指定 group
-    group: ucp
+#  metadata-report:
+##    address: nacos://8.130.79.173:8848
+#    address: nacos://192.168.159.134:8848
+#    username: adorabled4
+#    password: r324fhh2n3084brj2w
+#    # 配置 namespace，有namespace需要指定namespace
+#    parameters:
+#      namespace: 1bd50375-01d2-4e47-ac7b-0cc9a91a8dde
+#    # 配置 隔离组，有配置 group 的需要指定 group
+#    group: ucp
   application:
     name: api-core-provider
   protocol:
@@ -86,8 +92,8 @@ dubbo:
     port: 20880
   registry:
     id: nacos-registry
-#    address: nacos://192.168.159.134:8848
-    address: nacos://8.130.79.173:8848
+    address: nacos://192.168.159.134:8848
+#    address: nacos://8.130.79.173:8848
 
 dhx:
   client:

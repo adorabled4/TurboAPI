@@ -2,6 +2,10 @@ package com.dhx.apicore.mapper;
 
 import com.dhx.apicore.model.DO.InterfaceEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
 * @author dhx
@@ -11,6 +15,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface InterfaceEntityMapper extends BaseMapper<InterfaceEntity> {
 
+    @Select("SELECT tag FROM t_interface_entity GROUP BY tag")
+    List<String> getTags();
 }
 
 

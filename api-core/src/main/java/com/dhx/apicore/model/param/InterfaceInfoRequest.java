@@ -27,8 +27,9 @@ public class InterfaceInfoRequest implements Serializable {
     /**
      * 用户请求参数
      */
-    private Map<Object,Object> params;
+    private Map<Object,Object> paramsMap;
 //    private String userRequestParams;
 
+    private String params;
 
 }

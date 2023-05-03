@@ -101,6 +101,7 @@ public class InnerUserInterfaceInfoServiceImpl implements InnerUserInterfaceInfo
                 infoEntity.setLeftNum(100 - 1);
                 infoEntity.setStatus(1);
                 leftNum=DEFAULT_LEFT_NUM-1;
+                userInterfaceInfoEntityService.save(infoEntity);
             }else{
                 one.setLeftNum(one.getLeftNum()-1);
                 one.setTotalNum(one.getTotalNum()+1);
@@ -112,8 +113,15 @@ public class InnerUserInterfaceInfoServiceImpl implements InnerUserInterfaceInfo
             // redis中已经缓存了
             leftNum = Long.parseLong(cachedLeftNum );
             if (leftNum <= 0) {
+                UserInterfaceInfoEntity infoEntity = new UserInterfaceInfoEntity();
+                infoEntity.setUserId(userId);
+                infoEntity.setInterfaceId(interfaceId);
+                infoEntity.setLeftNum(0);
+                infoEntity.setStatus(1);
+                userInterfaceInfoEntityService.updateById(infoEntity);
                 shouldUpdateCache = false;
             } else {
+                leftNum-=1;
                 shouldUpdateCache = true;
             }
         }
@@ -121,6 +129,7 @@ public class InnerUserInterfaceInfoServiceImpl implements InnerUserInterfaceInfo
         RLock lock = redissonClient.getLock(lockKey);
         try{
             boolean tryLock= lock.tryLock(10, TimeUnit.SECONDS);        // 缓存到redis
+            log.info("leftNum: {}",leftNum);
             if (tryLock && shouldUpdateCache) { // 只有获取到锁并且需要更新缓存才进行缓存操作
                 stringRedisTemplate.opsForValue().set(key, String.valueOf(leftNum), RedisConstant.LEFT_NUM_TTL, TimeUnit.HOURS);
             }

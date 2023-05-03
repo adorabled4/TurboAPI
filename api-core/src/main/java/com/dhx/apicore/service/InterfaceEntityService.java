@@ -7,6 +7,7 @@ import com.dhx.apicore.model.DO.InterfaceExampleEntity;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVo;
 import com.dhx.apicore.model.vo.InterfaceDetailVo;
 import com.dhx.apicore.model.vo.InterfaceRankInfoVo;
+import com.dhx.apicore.model.vo.InterfaceTagVo;
 
 import java.util.List;
 
@@ -60,4 +61,6 @@ public interface InterfaceEntityService extends IService<InterfaceEntity> {
      * @return
      */
     BaseResponse<List<InterfaceRankInfoVo>> getRank5Interface();
+
+    BaseResponse<List<InterfaceTagVo>> getInterfaceByTag();
 }

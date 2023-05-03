@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dhx.core.mapper.InterfaceEntityMapper">
 
-    <resultMap id="BaseResultMap" type="com.dhx.core.generator.InterfaceEntity">
+    <resultMap id="BaseResultMap" type="com.dhx.apicore.model.DO.InterfaceEntity">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="description" column="description" jdbcType="VARCHAR"/>
@@ -32,4 +32,10 @@
         status,user_id,create_time,
         update_time,is_delete
     </sql>
+
+    <select id="getTags" resultType="java.lang.String">
+        SELECT tag
+        FROM   t_interface_entity
+        GROUP BY tag
+    </select>
 </mapper>
