@@ -46,6 +46,16 @@ public class UserVo implements Serializable {
     private String avatarUrl;
 
     /**
+     * AK
+     */
+    private String accessKey;
+
+    /**
+     * SK
+     */
+    private String secretKey;
+
+    /**
      * 手机号
      */
     @Pattern(regexp = "^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\\\\d{8}$",message = "手机号不符合规范")
