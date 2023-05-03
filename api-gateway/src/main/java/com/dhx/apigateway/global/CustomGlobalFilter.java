@@ -2,6 +2,7 @@ package com.dhx.apigateway.global;
 
 import cn.hutool.json.JSONUtil;
 import com.dhx.apicommon.common.BaseResponse;
+import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.constant.MQConstant;
 import com.dhx.apicommon.model.to.InterfaceTo;
 import com.dhx.apicommon.model.to.UserTo;
@@ -144,7 +145,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
             // 获取路径以及 method
             InterfaceTo interfaceInfo = innerInterfaceService.getInterfaceInfo(path.value(), request.getMethodValue());
             if (interfaceInfo == null) { // 请求的接口 没找到 或者 不存在
-                return handleSystemError(exchange.getResponse());
+                return handleNoInterfaceError(exchange.getResponse());
             }
             if (user.getUserId() == null) {
                 return handleNoAuth(exchange.getResponse());
@@ -154,7 +155,6 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
             if (count <= 0) {
                 return handleNoLeftNum(exchange.getResponse());
             }
-//            rabbitTemplate.
             // path映射到交换机
             // ! 这里request.getPath().toString() 必须要toString 否则会 获取不到 QUEUE
             String queueName = Path2Queue.data.get(request.getPath().toString());
@@ -176,15 +176,19 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
             ServerHttpResponse response = exchange.getResponse();
             String s = new String(interfaceModuleResult.getBody(),StandardCharsets.UTF_8);
             BaseResponse baseResponse = JSONUtil.toBean(s, BaseResponse.class);
-            System.out.println("返回值 "+ s);
             if(baseResponse.getCode()==200){
-                // 正常返回 , 响应成功 => 调用成功, 统计用户调用次数
+                // 正常返回 , 响应成功 => 调用成功, 统计用户的调用次数
                 innerUserInterfaceInfoService.invokeCount(user.getUserId(), interfaceInfo.getId());
+                // 统计接口的调用次数
+                innerInterfaceService.interfaceCallCount(interfaceInfo.getId());
                 response.setStatusCode(HttpStatus.OK);
                 response.getHeaders ().setContentType(MediaType.APPLICATION_JSON);
                 return response.writeWith(Mono.just(response.bufferFactory().wrap(interfaceModuleResult.getBody())));
             }else{
                 // * 调用失败 , 不统计次数
+                if(baseResponse.getCode()==500000){
+                    baseResponse.setCode(500);
+                }
                 response.setStatusCode(HttpStatus.valueOf(baseResponse.getCode()));
                 return response.writeWith(Mono.just(response.bufferFactory().wrap(interfaceModuleResult.getBody())));
             }
@@ -214,29 +218,39 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         // 拿到缓存数据的工厂
         DataBufferFactory bufferFactory = originalResponse.bufferFactory();
 
-        // 拿到响应码
+        // ! 拿到响应码 :  注意响应的结果并不是我们的接口的返回结果, 如果接口返回了500 , 那么其实在网关看来还是200 (只要成功响应了, 都是200)
         HttpStatus statusCode = originalResponse.getStatusCode();
         if (statusCode != HttpStatus.OK) {
             return chain.filter(exchange);
         }
         // 装饰, 增强能力
-        ServerHttpResponseDecorator decoratedResponse = new ServerHttpResponseDecorator(originalResponse) {
+        ServerHttpResponseDecorator successDecoratedResponse = new ServerHttpResponseDecorator(originalResponse) {
             // 等调用完转发的接口后才会执行
             @Override
             public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
-
                 if (body instanceof Flux) {
                     return super.writeWith(Mono.fromDirect(body).map(dataBuffer -> {
-                        innerUserInterfaceInfoService.invokeCount(userId, interfaceInfoId);
+                        executor.submit(()->{
+                            innerUserInterfaceInfoService.invokeCount(userId, interfaceInfoId);
+                        });
+                        // 统计接口的调用次数
+                        innerInterfaceService.interfaceCallCount(interfaceInfoId);
                         byte[] content = new byte[dataBuffer.readableByteCount()];
                         dataBuffer.read(content);
                         DataBufferUtils.release(dataBuffer);
-
-                        log.info("[接口调用成功],ip:{} ,用户ID:{},  接口ID: {}, 请求参数:{}, 响应结果：{}",
-                                request.getRemoteAddress().getHostString(),
-                                userId, interfaceInfoId, request.getQueryParams(), new String(content, StandardCharsets.UTF_8));
-
-                        return bufferFactory.wrap(content);
+                        String responseStr= new String(content, StandardCharsets.UTF_8);
+                        BaseResponse baseResponse = JSONUtil.toBean(responseStr, BaseResponse.class);
+                        if(baseResponse.getCode()==200){
+                            log.info("[callSuccess],ip:{} ,用户ID:{},  接口ID: {}, 请求参数:{}, 响应结果：{}",
+                                    request.getRemoteAddress().getHostString(),
+                                    userId, interfaceInfoId, request.getQueryParams(), new String(content, StandardCharsets.UTF_8));
+                            return bufferFactory.wrap(content);
+                        }else{
+                            log.info("[callFailed],ip:{} ,用户ID:{},  接口ID: {}, 请求参数:{}, 响应结果：{}",
+                                    request.getRemoteAddress().getHostString(),
+                                    userId, interfaceInfoId, request.getQueryParams(), new String(content, StandardCharsets.UTF_8));
+                            return bufferFactory.wrap(content);
+                        }
                     }));
                 } else {
                     log.error("<--- {} 响应code异常", getStatusCode());
@@ -244,8 +258,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
                 return super.writeWith(body);
             }
         };
-
-        return chain.filter(exchange.mutate().response(decoratedResponse).build());
+        return chain.filter(exchange.mutate().response(successDecoratedResponse).build());
     }
 
 
@@ -296,7 +309,10 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
      */
     public Mono<Void> handleNoAuth(ServerHttpResponse response) {
         response.setStatusCode(HttpStatus.FORBIDDEN);
-        return response.setComplete();
+        BaseResponse baseResponse = new BaseResponse<>(ErrorCode.NO_AUTH);
+        byte[] bytes = JSONUtil.toJsonStr(baseResponse).getBytes(StandardCharsets.UTF_8);
+        DataBuffer buffer = response.bufferFactory().wrap(bytes); // 创建数据缓冲区
+        return response.writeWith(Mono.just(buffer)); // 写入响应内容
     }
 
 
@@ -307,7 +323,10 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
      */
     private Mono<Void> handleNoLeftNum(ServerHttpResponse response) {
         response.setStatusCode(HttpStatus.PAYMENT_REQUIRED);
-        return response.setComplete();
+        BaseResponse baseResponse = new BaseResponse<>(ErrorCode.POOR_LEFT_NUM);
+        byte[] bytes = JSONUtil.toJsonStr(baseResponse).getBytes(StandardCharsets.UTF_8);
+        DataBuffer buffer = response.bufferFactory().wrap(bytes); // 创建数据缓冲区
+        return response.writeWith(Mono.just(buffer)); // 写入响应内容
     }
     /**
      * 处理内部异常
@@ -317,6 +336,23 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
      */
     public Mono<Void> handleSystemError(ServerHttpResponse response) {
         response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
-        return response.setComplete();
+        BaseResponse baseResponse = new BaseResponse<>(ErrorCode.SYSTEM_ERROR);
+        byte[] bytes = JSONUtil.toJsonStr(baseResponse).getBytes(StandardCharsets.UTF_8);
+        DataBuffer buffer = response.bufferFactory().wrap(bytes); // 创建数据缓冲区
+        return response.writeWith(Mono.just(buffer)); // 写入响应内容
     }
+    /**
+     * 处理内部异常
+     *
+     * @param response
+     * @return
+     */
+    public Mono<Void> handleNoInterfaceError(ServerHttpResponse response) {
+        response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+        BaseResponse baseResponse = new BaseResponse<>(ErrorCode.PARAMS_ERROR,"请求错误，接口不存在！");
+        byte[] bytes = JSONUtil.toJsonStr(baseResponse).getBytes(StandardCharsets.UTF_8);
+        DataBuffer buffer = response.bufferFactory().wrap(bytes); // 创建数据缓冲区
+        return response.writeWith(Mono.just(buffer)); // 写入响应内容
+    }
+
 }

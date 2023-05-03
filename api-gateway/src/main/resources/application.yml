@@ -20,8 +20,8 @@ spring:
           filters:
             - name: RequestRateLimiter
               args:
-                redis-rate-limiter.replenishRate: 10   # 令牌桶每秒填充速率 生产令牌速度，每秒多少个令牌
-                redis-rate-limiter.burstCapacity: 20   # 令牌桶总容量
+                redis-rate-limiter.replenishRate: 100   # 令牌桶每秒填充速率 生产令牌速度，每秒多少个令牌
+                redis-rate-limiter.burstCapacity: 200   # 令牌桶总容量
                 keyResolver: '#{@myKeyResolver}'  # 使用SpringEL表达式，从Spring容器中找对象，并赋值。 '#{@beanName}'
             - RewritePath=/dev-api/api/?(?<segment>.*),/api/$\{segment}
         - id: api_route2 # 接口路由
@@ -76,5 +76,7 @@ dubbo:
     port: -1
   registry:
     id: nacos-registry
-    address: nacos://8.130.79.173:8848?register-consumer-url=true
+#    address: nacos://8.130.79.173:8848?register-consumer-url=true
+    address: nacos://192.168.159.134:8848?register-consumer-url=true
+
     # #Dubbo3.0.0版本以后，增加了是否注册消费者的参数，如果需要将消费者注册到nacos注册中心上，需要将参数(register-consumer-url)设置为true，默认是false。
