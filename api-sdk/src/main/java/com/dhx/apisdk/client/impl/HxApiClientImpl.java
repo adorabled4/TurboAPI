@@ -3,17 +3,17 @@ package com.dhx.apisdk.client.impl;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpRequest;
-import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONUtil;
+import com.dhx.apicommon.common.BaseResponse;
+import com.dhx.apicommon.common.exception.ErrorCode;
+import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apisdk.client.HxApiClient;
-import com.dhx.apisdk.model.BaseResponse;
 import com.dhx.apisdk.model.TO.ComputerSuffix;
 import com.dhx.apisdk.model.TO.LovelornSentence;
 import com.dhx.apisdk.model.TO.Poet;
 import com.dhx.apisdk.model.TO.WeatherInfo;
-import com.dhx.apisdk.model.exception.BusinessException;
-import com.dhx.apisdk.model.exception.ErrorCode;
-import com.dhx.apisdk.util.ResultUtil;
+import com.dhx.apicommon.common.exception.BusinessException;
 import com.dhx.apisdk.util.SignUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -173,12 +173,12 @@ public class HxApiClientImpl implements HxApiClient {
             try{
                 BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
                 if(baseResponse.getMessage()==null && baseResponse.getDescription()==null ||baseResponse.getCode()!=200){
-                    return ResultUtil.error();
+                    return baseResponse;
                 }
                 return baseResponse;
-            }catch(RuntimeException e){
+            }catch(JSONException e){
                 log.error("接口调用失败, result: {}",result);
-                return ResultUtil.error(HttpStatus.TOO_MANY_REQUESTS.value(),"请求次数过多!");
+                return ResultUtil.error(HttpStatus.INTERNAL_SERVER_ERROR.value(),"服务器内部异常!");
             }
         } catch (URISyntaxException e) {
             return ResultUtil.error(ErrorCode.SYSTEM_ERROR);

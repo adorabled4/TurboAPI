@@ -1,6 +1,6 @@
 package com.dhx.apisdk.client;
 
-import com.dhx.apisdk.model.BaseResponse;
+import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apisdk.model.TO.ComputerSuffix;
 import com.dhx.apisdk.model.TO.LovelornSentence;
 import com.dhx.apisdk.model.TO.Poet;
