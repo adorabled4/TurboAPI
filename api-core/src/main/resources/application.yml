@@ -10,12 +10,11 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
     # Redis服务器连接端口
-    host: 8.130.79.173
+    host: 192.168.159.134
+    password: adorabled4
     # Redis数据库索引（默认为0）
     database: 1
     port: 6379
-    password: r324fhh2n3084brj2w
-    #    password: r324fhh2n3084brj2w
     # 连接超时时间
     timeout: 10s
     lettuce:
