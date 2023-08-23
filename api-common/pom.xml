@@ -66,6 +66,12 @@
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
 
+
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <version>2021.0.4.0</version>
+        </dependency>
     </dependencies>
 
 <!--    <build> 被依赖的模块不能有这个插件-->

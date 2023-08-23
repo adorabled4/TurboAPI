@@ -60,6 +60,12 @@ spring:
     host: 8.130.79.173
     port: 5672 # 端口
     virtual-host: / # 虚拟主机
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.159.134:8848
+  application:
+    name: api-interface
 #    password:
 # MyBatis配置
 mybatis:

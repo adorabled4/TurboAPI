@@ -8,13 +8,14 @@ spring:
       routes:
         # 需要添加 三个 , 一个是主要的管理系统,另一个是后台通往的接口模块的CRUD , 以及之后前端访问的接口(或者通过dubbo远程调用)
         - id: frontend_route
-          uri: http://127.0.0.1:9001
+          uri: lb://api-core
           predicates:
             - Path=/apicore/** # 符合 /api开头的地址就会被路由
           filters:
             - RewritePath=/apicore/?(?<segment>.*),/apicore/$\{segment}
         - id: api_route # 接口路由
-          uri: http://127.0.0.1:8123
+          uri: lb://api-interface
+#          uri: http://127.0.0.1:8123
           predicates:
             - Path=/dev-api/api/** # 符合 /api开头的地址就会被路由
           filters:
@@ -36,6 +37,9 @@ spring:
           - Path=/dev-api/admin/** # 符合 /api开头的地址就会被路由
           filters:
             - RewritePath=/dev-api/admin/?(?<segment>.*),/dev-api/$\{segment}
+    nacos:
+      discovery:
+        server-addr: 192.168.159.134:8848
   application:
     name: api-gateway
   rabbitmq:
@@ -68,5 +72,4 @@ dubbo:
   registry:
     id: nacos-registry
     address: nacos://192.168.159.134:8848?register-consumer-url=true
-
     # #Dubbo3.0.0版本以后，增加了是否注册消费者的参数，如果需要将消费者注册到nacos注册中心上，需要将参数(register-consumer-url)设置为true，默认是false。

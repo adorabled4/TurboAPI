@@ -26,12 +26,12 @@ spring:
             - Path=/dev-api/admin/api/** # 符合 /api开头的地址就会被路由
           filters:
             - RewritePath=/dev-api/admin/api/?(?<segment>.*),/api/$\{segment}
-        - id: admin_route # ry路由
-          uri: http://39.105.61.0:8080
-          predicates:
-            - Path=/dev-api/admin/** # 符合 /api开头的地址就会被路由
-          filters:
-            - RewritePath=/dev-api/admin/?(?<segment>.*),/dev-api/$\{segment}
+#        - id: admin_route # ry路由
+#          uri: http://39.105.61.0:8080
+#          predicates:
+#            - Path=/dev-api/admin/** # 符合 /api开头的地址就会被路由
+#          filters:
+#            - RewritePath=/dev-api/admin/?(?<segment>.*),/dev-api/$\{segment}
   application:
     name: api-gateway
 server:

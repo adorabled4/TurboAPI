@@ -5,7 +5,7 @@
  Source Server Type    : MySQL
  Source Server Version : 50741
  Source Host           : 39.105.61.0:1227
- Source Schema         : ry
+ Source Schema         : api-plantform
 
  Target Server Type    : MySQL
  Target Server Version : 50741
