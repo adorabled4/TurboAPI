@@ -4,11 +4,13 @@ import cn.hutool.json.JSONUtil;
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.constant.MQConstant;
+import com.dhx.apicommon.model.bo.UserInterfaceInfo;
 import com.dhx.apicommon.model.to.InterfaceTo;
 import com.dhx.apicommon.model.to.UserTo;
 import com.dhx.apicommon.service.InnerInterfaceService;
 import com.dhx.apicommon.service.InnerUserInterfaceInfoService;
 import com.dhx.apicommon.service.InnerUserService;
+import com.dhx.apicommon.util.ServerMetricsUtil;
 import com.dhx.apicommon.util.SignUtil;
 import com.dhx.apigateway.constant.Path2Queue;
 import lombok.extern.slf4j.Slf4j;
@@ -155,62 +157,84 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
             if (count <= 0) {
                 return handleNoLeftNum(exchange.getResponse());
             }
-            // path映射到交换机
-            // ! 这里request.getPath().toString() 必须要toString 否则会 获取不到 QUEUE
-            String queueName = Path2Queue.data.get(request.getPath().toString());
-            // 找不到 请求的队列(可能是没有加入流量削峰的接口 : 比如解析用户自己的IP)
-            if(StringUtils.isEmpty(queueName)){
-                return handleInvokeInterfaceResponse(exchange, chain, interfaceInfo.getId(), user.getUserId());
-            }
-            String paramJson = JSONUtil.toJsonStr(request.getQueryParams());
-            Message message = new Message(paramJson.getBytes());
-            // 设置消息属性
-            MessageProperties messageProperties = new MessageProperties();
-            
-            Message interfaceModuleResult = rabbitTemplate.sendAndReceive(MQConstant.INTERFACE_ROUTE_EXCHANGE, queueName, message);
-            if(interfaceModuleResult==null){
-                ServerHttpResponse response = exchange.getResponse();
-                return handleSystemError(response);
-            }
-            // 响应数据
-            ServerHttpResponse response = exchange.getResponse();
-            String s = new String(interfaceModuleResult.getBody(),StandardCharsets.UTF_8);
-            BaseResponse baseResponse = JSONUtil.toBean(s, BaseResponse.class);
-            if(baseResponse.getCode()==200){
-                // 正常返回 , 响应成功 => 调用成功, 统计用户的调用次数
-                innerUserInterfaceInfoService.invokeCount(user.getUserId(), interfaceInfo.getId());
-                // 统计接口的调用次数
-                innerInterfaceService.interfaceCallCount(interfaceInfo.getId());
-                response.setStatusCode(HttpStatus.OK);
-                response.getHeaders ().setContentType(MediaType.APPLICATION_JSON);
-                return response.writeWith(Mono.just(response.bufferFactory().wrap(interfaceModuleResult.getBody())));
-            }else{
-                // * 调用失败 , 不统计次数
-                if(baseResponse.getCode()==500000){
-                    baseResponse.setCode(500);
-                }
-                response.setStatusCode(HttpStatus.valueOf(baseResponse.getCode()));
-                return response.writeWith(Mono.just(response.bufferFactory().wrap(interfaceModuleResult.getBody())));
+            UserInterfaceInfo userInterfaceInfo = new UserInterfaceInfo(interfaceInfo.getId(), user.getUserId());
+            // 进行服务
+            boolean shouldSync = ServerMetricsUtil.shouldProvideSync();
+            if (shouldSync) {
+                // 添加结果处理逻辑
+                handleInvokeInterfaceResponse(exchange, chain, userInterfaceInfo);
+                return chain.filter(exchange);
+            } else {
+                return serveAsync(exchange, userInterfaceInfo, chain);
             }
         } else {
             return chain.filter(exchange);
         }
     }
 
+    /**
+     * 通过消息队列进行削峰服务
+     *
+     * @param exchange          交换
+     * @param userInterfaceInfo 用户界面信息
+     * @param chain             链
+     * @return {@link Mono}<{@link Void}>
+     */
+    private Mono<Void> serveAsync(ServerWebExchange exchange, UserInterfaceInfo userInterfaceInfo, GatewayFilterChain chain) {
+        long interfaceId = userInterfaceInfo.getInterfaceId();
+        long userId = userInterfaceInfo.getUserId();
+        ServerHttpRequest request = exchange.getRequest();
+        ServerHttpResponse response = exchange.getResponse();
+        // path映射到交换机
+        // ! 这里request.getPath().toString() 必须要toString 否则会 获取不到 QUEUE
+        String queueName = Path2Queue.data.get(request.getPath().toString());
+        // 找不到 请求的队列(可能是没有加入流量削峰的接口 : 比如解析用户自己的IP)
+        if (StringUtils.isEmpty(queueName)) {
+            return chain.filter(exchange);
+        }
+        String paramJson = JSONUtil.toJsonStr(request.getQueryParams());
+        Message message = new Message(paramJson.getBytes());
+        // 设置消息属性
+        MessageProperties messageProperties = new MessageProperties();
+
+        Message interfaceModuleResult = rabbitTemplate.sendAndReceive(MQConstant.INTERFACE_ROUTE_EXCHANGE, queueName, message);
+        if (interfaceModuleResult == null) {
+            return handleSystemError(response);
+        }
+        String s = new String(interfaceModuleResult.getBody(), StandardCharsets.UTF_8);
+        BaseResponse baseResponse = JSONUtil.toBean(s, BaseResponse.class);
+        if (baseResponse.getCode() == 200) {
+            // 正常返回 , 响应成功 => 调用成功, 统计用户的调用次数
+            innerUserInterfaceInfoService.invokeCount(userId, interfaceId);
+            // 统计接口的调用次数
+            innerInterfaceService.interfaceCallCount(interfaceId);
+            response.setStatusCode(HttpStatus.OK);
+            response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+            return response.writeWith(Mono.just(response.bufferFactory().wrap(interfaceModuleResult.getBody())));
+        } else {
+            // * 调用失败 , 不统计次数
+            if (baseResponse.getCode() == 500000) {
+                baseResponse.setCode(500);
+            }
+            response.setStatusCode(HttpStatus.valueOf(baseResponse.getCode()));
+            return response.writeWith(Mono.just(response.bufferFactory().wrap(interfaceModuleResult.getBody())));
+        }
+    }
 
     /**
      * 进行用户调用统计 => 执行这个方法的时候, 实际上还没有进行路由, 这里只是添加了(处理响应的)逻辑, 并没有执行
      * 具体来说，当一个请求到达网关服务后，会先经过一系列的过滤器处理，最终被转发到指定的服务提供者。
      * 服务提供者处理完请求后，将响应结果返回给网关服务，此时 handleInvokeInterfaceResponse 方法就会被调用。
      * 该方法对响应结果进行了封装和增强，包括对响应内容进行日志记录、接口调用次数统计等操作。增强后的响应结果会被返回给客户端，完成整个路由请求的过程。
+     *
      * @param exchange
      * @param chain
-     * @param interfaceInfoId
-     * @param userId
+     * @param userInterfaceInfo
      * @return
      */
-    public Mono<Void> handleInvokeInterfaceResponse(ServerWebExchange exchange, GatewayFilterChain chain, long interfaceInfoId,
-                                                    long userId) {
+    public Mono<Void> handleInvokeInterfaceResponse(ServerWebExchange exchange, GatewayFilterChain chain, UserInterfaceInfo userInterfaceInfo) {
+        long interfaceInfoId = userInterfaceInfo.getInterfaceId();
+        long userId = userInterfaceInfo.getUserId();
         //拿到 requet
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse originalResponse = exchange.getResponse();
@@ -221,7 +245,8 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         // ! 拿到响应码 :  注意响应的结果并不是我们的接口的返回结果, 如果接口返回了500 , 那么其实在网关看来还是200 (只要成功响应了, 都是200)
         HttpStatus statusCode = originalResponse.getStatusCode();
         if (statusCode != HttpStatus.OK) {
-            return chain.filter(exchange);
+            return handleSystemError(exchange.getResponse());
+//            return chain.filter(exchange);
         }
         // 装饰, 增强能力
         ServerHttpResponseDecorator successDecoratedResponse = new ServerHttpResponseDecorator(originalResponse) {
@@ -230,7 +255,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
             public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
                 if (body instanceof Flux) {
                     return super.writeWith(Mono.fromDirect(body).map(dataBuffer -> {
-                        executor.submit(()->{
+                        executor.submit(() -> {
                             innerUserInterfaceInfoService.invokeCount(userId, interfaceInfoId);
                         });
                         // 统计接口的调用次数
@@ -238,14 +263,14 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
                         byte[] content = new byte[dataBuffer.readableByteCount()];
                         dataBuffer.read(content);
                         DataBufferUtils.release(dataBuffer);
-                        String responseStr= new String(content, StandardCharsets.UTF_8);
+                        String responseStr = new String(content, StandardCharsets.UTF_8);
                         BaseResponse baseResponse = JSONUtil.toBean(responseStr, BaseResponse.class);
-                        if(baseResponse.getCode()==200){
+                        if (baseResponse.getCode() == 200) {
                             log.info("[callSuccess],ip:{} ,用户ID:{},  接口ID: {}, 请求参数:{}, 响应结果：{}",
                                     request.getRemoteAddress().getHostString(),
                                     userId, interfaceInfoId, request.getQueryParams(), new String(content, StandardCharsets.UTF_8));
                             return bufferFactory.wrap(content);
-                        }else{
+                        } else {
                             log.info("[callFailed],ip:{} ,用户ID:{},  接口ID: {}, 请求参数:{}, 响应结果：{}",
                                     request.getRemoteAddress().getHostString(),
                                     userId, interfaceInfoId, request.getQueryParams(), new String(content, StandardCharsets.UTF_8));
@@ -317,7 +342,8 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
 
 
     /**
-     *  处理用户次数不足
+     * 处理用户次数不足
+     *
      * @param response
      * @return
      */
@@ -328,6 +354,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         DataBuffer buffer = response.bufferFactory().wrap(bytes); // 创建数据缓冲区
         return response.writeWith(Mono.just(buffer)); // 写入响应内容
     }
+
     /**
      * 处理内部异常
      *
@@ -341,6 +368,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         DataBuffer buffer = response.bufferFactory().wrap(bytes); // 创建数据缓冲区
         return response.writeWith(Mono.just(buffer)); // 写入响应内容
     }
+
     /**
      * 处理内部异常
      *
@@ -349,7 +377,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
      */
     public Mono<Void> handleNoInterfaceError(ServerHttpResponse response) {
         response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
-        BaseResponse baseResponse = new BaseResponse<>(ErrorCode.PARAMS_ERROR,"请求错误，接口不存在！");
+        BaseResponse baseResponse = new BaseResponse<>(ErrorCode.PARAMS_ERROR, "请求错误，接口不存在！");
         byte[] bytes = JSONUtil.toJsonStr(baseResponse).getBytes(StandardCharsets.UTF_8);
         DataBuffer buffer = response.bufferFactory().wrap(bytes); // 创建数据缓冲区
         return response.writeWith(Mono.just(buffer)); // 写入响应内容

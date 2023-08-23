@@ -23,8 +23,8 @@ public class ApiGatewayApplication {
 
     @Bean
     ThreadPoolExecutor executor(){
-        return new ThreadPoolExecutor(10,30,10, TimeUnit.SECONDS,
-                new LinkedBlockingDeque<>(100000),
+        return new ThreadPoolExecutor(4,8,10, TimeUnit.SECONDS,
+                new LinkedBlockingDeque<>(8),
                 Executors.defaultThreadFactory(),
                 new ThreadPoolExecutor.AbortPolicy());
     }
