@@ -15,20 +15,19 @@ public class Poet
     private Long id;
 
     /** 作者 */
-//    @Excel(name = "作者")
     private String author;
 
     /** 朝代 */
-//    @Excel(name = "朝代")
     private String dynasty;
 
     /** 题目 */
-//    @Excel(name = "题目")
     private String title;
 
     /** 诗句 */
 //    @Excel(name = "诗句")
     private String poetry;
+
+    private String createTime;
 
     public void setId(Long id) 
     {

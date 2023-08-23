@@ -37,6 +37,10 @@ spring:
   jackson:
     serialization:
       FAIL_ON_EMPTY_BEANS: false
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.159.134:8848
 server:
   port: 9001
   servlet:
@@ -65,7 +69,6 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.dhx.apicore.controller
-
 api:
   thread:
     core-size: 20
@@ -85,7 +88,8 @@ dubbo:
 #    # 配置 隔离组，有配置 group 的需要指定 group
 #    group: ucp
   application:
-    name: api-core-provider
+    name: api-core
+#    name: api-core-provider
   protocol:
     name: dubbo
     port: 20880

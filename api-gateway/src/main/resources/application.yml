@@ -1,42 +1,42 @@
 spring:
   redis:
-    host: 8.130.79.173
+    host: 192.168.159.134
     port: 6379
-    password: r324fhh2n3084brj2w
+    password: adorabeld4
   cloud:
     gateway:
       routes:
         # 需要添加 三个 , 一个是主要的管理系统,另一个是后台通往的接口模块的CRUD , 以及之后前端访问的接口(或者通过dubbo远程调用)
-        - id: frontend_route
+        - id: core_route
           uri: lb://api-core
           predicates:
             - Path=/apicore/** # 符合 /api开头的地址就会被路由
           filters:
             - RewritePath=/apicore/?(?<segment>.*),/apicore/$\{segment}
-        - id: api_route # 接口路由
+        - id: serve_route # 接口路由
           uri: lb://api-interface
 #          uri: http://127.0.0.1:8123
           predicates:
-            - Path=/dev-api/api/** # 符合 /api开头的地址就会被路由
+            - Path=/api/** # 符合 /api开头的地址就会被路由
           filters:
             - name: RequestRateLimiter
               args:
                 redis-rate-limiter.replenishRate: 100   # 令牌桶每秒填充速率 生产令牌速度，每秒多少个令牌
                 redis-rate-limiter.burstCapacity: 200   # 令牌桶总容量
                 keyResolver: '#{@myKeyResolver}'  # 使用SpringEL表达式，从Spring容器中找对象，并赋值。 '#{@beanName}'
-            - RewritePath=/dev-api/api/?(?<segment>.*),/api/$\{segment}
-        - id: api_route2 # 接口路由
-          uri: http://127.0.0.1:8123
-          predicates:
-            - Path=/dev-api/admin/api/** # 符合 /api开头的地址就会被路由
-          filters:
-            - RewritePath=/dev-api/admin/api/?(?<segment>.*),/api/$\{segment}
-        - id: admin_route # ry路由
-          uri: http://127.0.0.1:8080
-          predicates:
-          - Path=/dev-api/admin/** # 符合 /api开头的地址就会被路由
-          filters:
-            - RewritePath=/dev-api/admin/?(?<segment>.*),/dev-api/$\{segment}
+            - RewritePath=/api/?(?<segment>.*),/api/$\{segment}
+#        - id: api_route2 # 接口路由
+#          uri: http://127.0.0.1:8123
+#          predicates:
+#            - Path=/dev-api/admin/api/** # 符合 /api开头的地址就会被路由
+#          filters:
+#            - RewritePath=/dev-api/admin/api/?(?<segment>.*),/api/$\{segment}
+#        - id: admin_route # ry路由
+#          uri: http://127.0.0.1:8080
+#          predicates:
+#          - Path=/dev-api/admin/** # 符合 /api开头的地址就会被路由
+#          filters:
+#            - RewritePath=/dev-api/admin/?(?<segment>.*),/dev-api/$\{segment}
     nacos:
       discovery:
         server-addr: 192.168.159.134:8848

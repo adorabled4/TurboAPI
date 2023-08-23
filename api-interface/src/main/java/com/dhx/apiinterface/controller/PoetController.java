@@ -11,23 +11,22 @@ import com.dhx.apiinterface.service.IPoetService;
 
 /**
  * 随机诗词Controller
- * 
+ *
  * @author adorabled4
  * @date 2023-03-11
  */
 @RestController
-@RequestMapping("/apiinterface/poet")
-public class PoetController
-{
+@RequestMapping("/poet")
+public class PoetController {
     @Autowired
     private IPoetService poetService;
 
     @GetMapping("/random")
-    public BaseResponse<PoetVO> getRandomPoet(){
+    public BaseResponse<PoetVO> getRandomPoet() {
         long total = poetService.getTotal();
-        long id = (long) (Math.random()*total+1);
-        while(id<0 || id >= total){
-            id = (long) (Math.random()*total+1);
+        long id = (long) (Math.random() * total + 1);
+        while (id < 0 || id >= total) {
+            id = (long) (Math.random() * total + 1);
         }
         return poetService.getPoetVO(id);
     }
