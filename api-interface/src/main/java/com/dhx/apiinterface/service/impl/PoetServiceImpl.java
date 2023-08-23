@@ -9,8 +9,7 @@ import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apiinterface.constant.RedisConstant;
 import com.dhx.apiinterface.vo.PoetVO;
-import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -100,7 +99,6 @@ public class PoetServiceImpl implements IPoetService {
      */
     @Override
     public int insertPoet(Poet poet) {
-        poet.setCreateTime(DateUtils.getNowDate());
         return poetMapper.insertPoet(poet);
     }
 

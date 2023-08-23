@@ -1,6 +1,5 @@
 package com.dhx.apiinterface.domain;
 
-import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 诗句对象 t_poet
@@ -8,7 +7,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author adorabled4
  * @date 2023-03-11
  */
-public class Poet extends BaseEntity
+public class Poet
 {
     private static final long serialVersionUID = 1L;
 
