@@ -30,7 +30,6 @@ public class RedissonConfig {
     RedissonClient redissonClient(){
         Config config = new Config();
 //        config.setTransportMode(TransportMode.EPOLL); // 默认是NIO的方式
-        log.error(host+":"+port+password);
         config.useSingleServer()
                 //可以用"rediss://"来启用SSL连接，前缀必须是redis:// or rediss://
                 .setAddress("redis://"+ host+ ":"+port).setPassword(password);

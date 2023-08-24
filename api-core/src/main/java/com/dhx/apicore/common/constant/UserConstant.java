@@ -44,7 +44,8 @@ public class UserConstant {
     /**
      * 密码正则 包含至少一个数字、一个小写字母、一个大写字母，并且长度至少为8个字符。
      */
-    public static final String PASSWORD_REGEX="^(?=.*[a-zA-Z])(?=.*\\d).{6,18}$";
+    public static final String PASSWORD_REGEX="^[a-zA-Z0-9_]{4,20}$";
+//    public static final String PASSWORD_REGEX="^(?=.*[a-zA-Z])(?=.*\\d).{6,18}$";
 
     /**
      * 电话正则

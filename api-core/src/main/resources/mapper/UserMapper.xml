@@ -15,7 +15,7 @@
             <result property="email" column="email" jdbcType="VARCHAR"/>
             <result property="accessKey" column="access_key" jdbcType="VARCHAR"/>
             <result property="secretKey" column="secret_key" jdbcType="VARCHAR"/>
-            <result property="userRole" column="user_role" jdbcType="VARCHAR"/>
+            <result property="userRole" column="user_role" jdbcType="TINYINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="isDelete" column="is_delete" jdbcType="TINYINT"/>

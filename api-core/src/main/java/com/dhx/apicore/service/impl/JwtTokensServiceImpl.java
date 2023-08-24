@@ -34,6 +34,7 @@ public class JwtTokensServiceImpl implements JwtTokensService {
     public String generateAccessToken(UserEntity user) {
         Claims claims = Jwts.claims().setSubject(String.valueOf(user.getUserId()));
         claims.put("avatar", user.getAvatarUrl());
+        claims.put("role", user.getUserRole());
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + EXPIRATION_TIME * 1000);
         String token = Jwts.builder()
@@ -80,12 +81,13 @@ public class JwtTokensServiceImpl implements JwtTokensService {
             String userName = claims.getSubject();
             String userId = getUserIdFromToken(token);
             String avatarUrl = (String) claims.get("avatar") ;
+            String userRole = (String) claims.get("role") ;
             String key = ACCESS_TOKEN_PREFIX + userId;
             String storedToken = stringRedisTemplate.opsForValue().get(key);
 
             if (storedToken != null && storedToken.equals(token)) {
                 // 如果Redis中存储的令牌与传入的令牌匹配，则验证通过
-                return new UserEntity(Long.parseLong(userId), userName ,avatarUrl);
+                return new UserEntity(Long.parseLong(userId), userName ,avatarUrl,userRole);
             }
         } catch (Exception e) {
             // 解析过程中发生异常，验证失败

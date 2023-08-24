@@ -1,5 +1,6 @@
 package com.dhx.apicore.model.vo;
 
+import com.dhx.apicore.common.constant.UserConstant;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -30,7 +31,7 @@ public class UserVo implements Serializable {
     /**
      * 账户名 : 4到16位（字母，数字，下划线，减号）
      */
-    @Pattern(regexp = "^[a-zA-Z0-9_-]{4,16}$",message = "账户名不符合规范")
+    @Pattern(regexp = UserConstant.USER_ACCOUNT_REGEX,message = "账户名不符合规范")
     private String userAccount;
 
     /**
@@ -58,13 +59,13 @@ public class UserVo implements Serializable {
     /**
      * 手机号
      */
-    @Pattern(regexp = "^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\\\\d{8}$",message = "手机号不符合规范")
+    @Pattern(regexp = UserConstant.PHONE_REGEX,message = "手机号不符合规范")
     private String phone;
 
     /**
      * 电子邮箱
      */
-    @Email(message = "邮箱格式不符合规范")
+    @Email(regexp = UserConstant.EMAIL_REGEX,message = "邮箱格式不符合规范")
     private String email;
 
     /**

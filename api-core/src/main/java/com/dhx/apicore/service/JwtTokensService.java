@@ -3,7 +3,6 @@ package com.dhx.apicore.service;
 
 import com.dhx.apicore.model.DO.UserEntity;
 import com.dhx.apicore.model.DTO.JwtToken;
-import com.dhx.apicore.model.DTO.UserDTO;
 
 /**
 * @author dhx

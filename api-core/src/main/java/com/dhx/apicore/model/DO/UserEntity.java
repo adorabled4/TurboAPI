@@ -1,18 +1,16 @@
 package com.dhx.apicore.model.DO;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
 
 /**
  * 
- * @TableName t_user_entity
+ * @TableName t_user
  */
-@TableName(value ="t_user_entity")
+@TableName(value ="t_user")
 @Data
 public class UserEntity implements Serializable {
     /**
@@ -69,7 +67,7 @@ public class UserEntity implements Serializable {
     /**
      * 0-用户 1-管理员
      */
-    private Integer userRole;
+    private String userRole;
 
     /**
      * 创建时间
@@ -84,15 +82,17 @@ public class UserEntity implements Serializable {
     /**
      * 逻辑删除(1删除)
      */
+    @TableLogic
     private Integer isDelete;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
-    public UserEntity(long userId, String userName, String avatarUrl) {
+    public UserEntity(long userId, String userName, String avatarUrl,String userRole) {
         this.userId=userId;
         this.userName=userName;
         this.avatarUrl=avatarUrl;
+        this.userRole=userRole;
     }
 
     public UserEntity(){}

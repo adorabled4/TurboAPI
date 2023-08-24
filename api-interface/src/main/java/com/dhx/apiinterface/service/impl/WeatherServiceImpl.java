@@ -2,6 +2,8 @@ package com.dhx.apiinterface.service.impl;
 
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
+import com.dhx.apicommon.common.BaseResponse;
+import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apiinterface.domain.City;
 import com.dhx.apiinterface.domain.WeatherInfo;

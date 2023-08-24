@@ -32,6 +32,10 @@ public class UserDTO {
      */
     private String avatarUrl;
 
+    /**
+     * 用户角色
+     */
+    private String userRole;
 //    /**
 //     * 性别：0-男，1-女
 //     */

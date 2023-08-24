@@ -12,7 +12,7 @@ import lombok.Data;
  * 
  * @TableName t_interface_example_entity
  */
-@TableName(value ="t_interface_example_entity")
+@TableName(value ="t_interface_example")
 @Data
 public class InterfaceExampleEntity implements Serializable {
     /**

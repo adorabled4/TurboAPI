@@ -9,12 +9,11 @@ import java.util.List;
 
 /**
 * @author dhx
-* @description 针对表【user(用户)】的数据库操作Service
-* @createDate 2023-04-10 15:56:46
+* @description 针对表【t_user】的数据库操作Service
+* @createDate 2023-08-24 12:31:33
 */
 public interface UserService extends IService<UserEntity> {
-
-    BaseResponse<Boolean> deleteUserById(Long userId);
+    Boolean deleteUserById(Long userId);
 
     BaseResponse<List<UserVo>> getUserList(int pageSize, int current);
 
@@ -38,4 +37,6 @@ public interface UserService extends IService<UserEntity> {
      * @return 返回token
      */
     BaseResponse login(String userAccount, String password);
+
+    boolean deleteUserByAccount(String userAccount);
 }

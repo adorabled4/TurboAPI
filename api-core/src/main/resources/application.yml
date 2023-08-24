@@ -2,10 +2,10 @@ spring:
   application:
     name: api-core
   datasource:
-    url: jdbc:mysql://8.130.79.173:4234/api-core
-    password: 324rfwefefg3f
-#    url: jdbc:mysql://192.168.159.134:3306/ry
-#    password: root
+#    url: jdbc:mysql://8.130.79.173:4234/api-core
+#    password: 324rfwefefg3f
+    url: jdbc:mysql://192.168.159.134:3306/api-platform
+    password: root
     username: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
@@ -48,13 +48,13 @@ server:
 mybatis-plus:
   global-config:
     db-config:
-      logic-not-delete-value: 1 # mybatis-plus 逻辑删除
-#  configuration:
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 打印sql
+      logic-not-delete-value: 0 # mybatis-plus 逻辑删除
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 打印sql
 knife4j:
   enable: true
   openapi:
-    title: api-plantform_bankend
+    title: api-platform_bankend
     description: 后端接口文档
     email: dhx2648466390@163.com
     concat: adorabled4
@@ -102,3 +102,9 @@ dhx:
   client:
     access-key: r3242rfj3w9r
     secret-key: g45hg34wrxsa
+
+# 阿里云 sms
+sms:
+  endpoint: dysmsapi.aliyuncs.com
+  accessId: LTAI5t5tbAuGcFH8EtiepHQj
+  accessKey: UJ6l8PO9eRZmrMWT4N96Ta3X9Tj6Sz
