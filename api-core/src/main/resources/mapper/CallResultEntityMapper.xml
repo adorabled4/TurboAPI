@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhx.apicore.mapper.CallResultMapper">
+    <resultMap id="BaseResultMap" type="com.dhx.apicore.model.DO.CallResultEntity">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <id property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="interfaceId" column="interface_id" jdbcType="BIGINT"/>
+        <result property="succeed" column="succeed" jdbcType="TINYINT"/>
+        <result property="callTime" column="call_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_id,interface_id,succeed,
+        call_time
+    </sql>
+</mapper>
