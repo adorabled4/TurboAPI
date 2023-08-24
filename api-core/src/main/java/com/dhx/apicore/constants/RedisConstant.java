@@ -33,7 +33,7 @@ public class RedisConstant {
     /**
      * 缓存用户剩余次数
      */
-    public static final String USER_INTERFACE_INFO_PREFIX= "user:interface:";
+    public static final String USER_CALL_LEFTNUM_KEY = "user:interface:";
 
     /**
      *
@@ -45,4 +45,9 @@ public class RedisConstant {
      * 是一个集合
      */
     public static final String INTERFACE_RANK_KEY = "interface:rank";
+
+    /**
+     * leftnum key
+     */
+    public static final String LEFTNUM_LOCK_KEY = "lock:leftnum";
 }

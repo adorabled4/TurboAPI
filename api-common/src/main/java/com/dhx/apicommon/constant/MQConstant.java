@@ -16,4 +16,8 @@ public class MQConstant {
 
     public static final String INTERFACE_COUNT_QUEUE="call.count";
 
+    public static final String CALL_RESULT_EXCHANGE = "call.result";
+
+    public static final String CALL_RESULT_QUEUE="call.result.queue";
+
 }

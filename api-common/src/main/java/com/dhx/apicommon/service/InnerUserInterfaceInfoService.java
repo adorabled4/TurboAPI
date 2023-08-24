@@ -1,5 +1,7 @@
 package com.dhx.apicommon.service;
 
+import com.dhx.apicommon.common.BaseResponse;
+
 /**
  * @author adorabled4
  * @className InnerUserInterfaceInfoService
@@ -7,7 +9,20 @@ package com.dhx.apicommon.service;
  **/
 public interface InnerUserInterfaceInfoService {
 
-    boolean invokeCount(Long userId, Long interfaceId);
+    /**
+     * 接口调用统计
+     *
+     * @param userId      用户id
+     * @param interfaceId 接口id
+     * @return boolean
+     */
+    boolean invokeCount(Long userId, Long interfaceId, BaseResponse baseResponse);
 
-    int getUserLeftNum(Long userId, Long interfaceId);
+    /**
+     * 获取用户剩余调用次数
+     *
+     * @param userId      用户id
+     * @return int
+     */
+    int getUserLeftNum(Long userId);
 }

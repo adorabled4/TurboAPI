@@ -153,7 +153,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
                 return handleNoAuth(exchange.getResponse());
             }
             // 查看用户的剩余可用次数
-            int count = innerUserInterfaceInfoService.getUserLeftNum(user.getUserId(), interfaceInfo.getId());
+            int count = innerUserInterfaceInfoService.getUserLeftNum(user.getUserId());
             if (count <= 0) {
                 return handleNoLeftNum(exchange.getResponse());
             }
@@ -205,7 +205,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         BaseResponse baseResponse = JSONUtil.toBean(s, BaseResponse.class);
         if (baseResponse.getCode() == 200) {
             // 正常返回 , 响应成功 => 调用成功, 统计用户的调用次数
-            innerUserInterfaceInfoService.invokeCount(userId, interfaceId);
+            innerUserInterfaceInfoService.invokeCount(userId, interfaceId,baseResponse);
             // 统计接口的调用次数
             innerInterfaceService.interfaceCallCount(interfaceId);
             response.setStatusCode(HttpStatus.OK);
@@ -255,16 +255,16 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
             public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
                 if (body instanceof Flux) {
                     return super.writeWith(Mono.fromDirect(body).map(dataBuffer -> {
-                        executor.submit(() -> {
-                            innerUserInterfaceInfoService.invokeCount(userId, interfaceInfoId);
-                        });
-                        // 统计接口的调用次数
+                        // 统计接口调用
                         innerInterfaceService.interfaceCallCount(interfaceInfoId);
                         byte[] content = new byte[dataBuffer.readableByteCount()];
                         dataBuffer.read(content);
                         DataBufferUtils.release(dataBuffer);
                         String responseStr = new String(content, StandardCharsets.UTF_8);
                         BaseResponse baseResponse = JSONUtil.toBean(responseStr, BaseResponse.class);
+                        executor.submit(() -> {
+                            innerUserInterfaceInfoService.invokeCount(userId, interfaceInfoId,baseResponse);
+                        });
                         if (baseResponse.getCode() == 200) {
                             log.info("[callSuccess],ip:{} ,用户ID:{},  接口ID: {}, 请求参数:{}, 响应结果：{}",
                                     request.getRemoteAddress().getHostString(),

@@ -2,6 +2,7 @@ package com.dhx.apicore.task;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dhx.apicore.model.DO.UserInterfaceInfoEntity;
+import com.dhx.apicore.model.enums.DayStatus;
 import com.dhx.apicore.service.UserInterfaceInfoEntityService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -70,10 +71,7 @@ public class RefreshLeftNumTask {
         concurrentMap.forEach( (id, entity) -> {
             executor.submit(() -> {
                 userInterfaceInfoEntityService.updateById(
-                        new UserInterfaceInfoEntity()
-                                .setId(id)
-                                .setLeftNum(DEFAULT_FREE_LEFT_NUM)
-                                .setTotalNum(DEFAULT_FREE_TOTAL_NUM)
+                    new UserInterfaceInfoEntity(entity.getUserId(), DayStatus.UNUSED)
                 );
             });
         });

@@ -21,8 +21,8 @@ spring:
           filters:
             - name: RequestRateLimiter
               args:
-                redis-rate-limiter.replenishRate: 100   # 令牌桶每秒填充速率 生产令牌速度，每秒多少个令牌
-                redis-rate-limiter.burstCapacity: 200   # 令牌桶总容量
+                redis-rate-limiter.replenishRate: 1   # 令牌桶每秒填充速率 生产令牌速度，每秒多少个令牌
+                redis-rate-limiter.burstCapacity: 4   # 令牌桶总容量
                 keyResolver: '#{@myKeyResolver}'  # 使用SpringEL表达式，从Spring容器中找对象，并赋值。 '#{@beanName}'
             - RewritePath=/api/?(?<segment>.*),/api/$\{segment}
 #        - id: api_route2 # 接口路由
