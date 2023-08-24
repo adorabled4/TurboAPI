@@ -47,7 +47,7 @@ public class HxApiClientImpl implements HxApiClient {
         this.secretKey = secretKey;
     }
 
-    public HxApiClientImpl(){
+    public HxApiClientImpl() {
 
     }
 
@@ -71,114 +71,114 @@ public class HxApiClientImpl implements HxApiClient {
     }
 
     @Override
-    public Poet getRandomPoet(){
-        try{
+    public Poet getRandomPoet() {
+        try {
             //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
             String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
-            String result =  HttpRequest.get(SERVER_HOST + "/dev-api/api/apiinterface/poet/random").header("dhx.sdk",nowTime).addHeaders(getHeaderMap()).execute().body();
+            String result = HttpRequest.get(SERVER_HOST + "/dev-api/api/apiinterface/poet/random").header("dhx.sdk", nowTime).addHeaders(getHeaderMap()).execute().body();
             BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
-            if(baseResponse.getCode()==200){
+            if (baseResponse.getCode() == 200) {
                 String dataStr = JSONUtil.toJsonStr(baseResponse.getData());
-                if(dataStr==null || dataStr.equals("") ){
+                if (dataStr == null || dataStr.equals("")) {
                     throw new RuntimeException();
                 }
                 Poet poet = JSONUtil.toBean(dataStr, Poet.class);
                 return poet;
-            }else{
-                throw new BusinessException(baseResponse.getCode(), baseResponse.getDescription(), baseResponse.getMessage());
+            } else {
+                throw new BusinessException(baseResponse.getCode(), baseResponse.getMessage());
             }
-        }catch (IORuntimeException e){
-            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 访问服务器失败 --"+e.getMessage() );
-        }catch(RuntimeException e){
-            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 调用接口失败 --"+e.getMessage() );
+        } catch (IORuntimeException e) {
+            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 访问服务器失败 --" + e.getMessage());
+        } catch (RuntimeException e) {
+            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + e.getMessage());
         }
         return null;
     }
 
     @Override
     public String analyseIP(String ipv4) {
-        try{
+        try {
             HashMap<String, Object> paramMap = new HashMap<>();
             paramMap.put("ip", ipv4);
             //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
             String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
-            String result =  HttpRequest.get(SERVER_HOST + "/dev-api/api/ip/ana").header("dhx.sdk",nowTime).addHeaders(getHeaderMap()).form(paramMap).execute().body();
+            String result = HttpRequest.get(SERVER_HOST + "/dev-api/api/ip/ana").header("dhx.sdk", nowTime).addHeaders(getHeaderMap()).form(paramMap).execute().body();
             BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
-            if(baseResponse.getCode()==200){
+            if (baseResponse.getCode() == 200) {
                 String dataStr = JSONUtil.toJsonStr(baseResponse.getData());
-                if(dataStr==null || dataStr.equals("") ){
+                if (dataStr == null || dataStr.equals("")) {
                     throw new RuntimeException();
-                }else{
+                } else {
                     return dataStr;
                 }
-            }else{
-                throw new BusinessException(baseResponse.getCode(), baseResponse.getDescription(), baseResponse.getMessage());
+            } else {
+                throw new BusinessException(baseResponse.getCode(), baseResponse.getMessage());
             }
-        }catch (IORuntimeException e){
-            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 访问服务器失败 --"+e.getMessage() );
-        }catch(RuntimeException e){
-            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 调用接口失败 --"+e.getMessage() );
+        } catch (IORuntimeException e) {
+            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 访问服务器失败 --" + e.getMessage());
+        } catch (RuntimeException e) {
+            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + e.getMessage());
         }
         return null;
     }
 
     @Override
     public WeatherInfo getNowWeather(String cityName) {
-        try{
+        try {
 
             HashMap<String, Object> paramMap = new HashMap<>();
-            if(cityName!=null && !cityName.equals("")){
+            if (cityName != null && !cityName.equals("")) {
                 paramMap.put("cityName", cityName);
             }
             //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
             String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
-            String result =  HttpRequest.get(SERVER_HOST + "/dev-api/api/weather/now").header("dhx.sdk",nowTime).addHeaders(getHeaderMap()).execute().body();
+            String result = HttpRequest.get(SERVER_HOST + "/dev-api/api/weather/now").header("dhx.sdk", nowTime).addHeaders(getHeaderMap()).execute().body();
             BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
-            if(baseResponse.getCode()==200){
+            if (baseResponse.getCode() == 200) {
                 String dataStr = JSONUtil.toJsonStr(baseResponse.getData());
-                if(dataStr==null || dataStr.equals("") ){
+                if (dataStr == null || dataStr.equals("")) {
                     throw new RuntimeException();
-                }else{
+                } else {
                     WeatherInfo weatherInfo = JSONUtil.toBean(dataStr, WeatherInfo.class);
                     return weatherInfo;
                 }
-            }else{
-                throw new BusinessException(baseResponse.getCode(), baseResponse.getDescription(), baseResponse.getMessage());
+            } else {
+                throw new BusinessException(baseResponse.getCode(), baseResponse.getMessage());
             }
-        }catch (IORuntimeException e){
-            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 访问服务器失败 --"+e.getMessage() );
-        }catch(RuntimeException e){
-            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 调用接口失败 --"+e.getMessage() );
+        } catch (IORuntimeException e) {
+            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 访问服务器失败 --" + e.getMessage());
+        } catch (RuntimeException e) {
+            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + e.getMessage());
         }
         return null;
     }
 
     @Override
     public BaseResponse invokeInterface(String method, Map params, String url, HttpServletRequest request) {
-        try{
+        try {
             // 处理url , 通过uri 类, 获取path
             URI uri = new URI(url);
             // 转换数据格式
-            String paramsStr= JSONUtil.toJsonStr(params);
+            String paramsStr = JSONUtil.toJsonStr(params);
 //            String authorization = request.getHeader("Authorization"); // 如果在发送的请求中添加这个,那么会被拦截(被网关识别为非前端来源)
             //准备httpRequest
             // 判断请求方式
-            String result="";
+            String result = "";
             String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
-            if(method.equalsIgnoreCase("GET")){
-                result= HttpRequest.get(SERVER_HOST + uri.getPath()).header("dhx.SDK",nowTime).addHeaders(getHeaderMap()).form(params).execute().body();
-            }else if(method.equalsIgnoreCase("POST")){
-                result= HttpRequest.get(SERVER_HOST + uri.getPath()).header("dhx.SDK",nowTime).addHeaders(getHeaderMap(paramsStr)).form(params).execute().body();
+            if (method.equalsIgnoreCase("GET")) {
+                result = HttpRequest.get(SERVER_HOST + uri.getPath()).header("dhx.SDK", nowTime).addHeaders(getHeaderMap()).form(params).execute().body();
+            } else if (method.equalsIgnoreCase("POST")) {
+                result = HttpRequest.get(SERVER_HOST + uri.getPath()).header("dhx.SDK", nowTime).addHeaders(getHeaderMap(paramsStr)).form(params).execute().body();
             }
-            try{
+            try {
                 BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
-                if(baseResponse.getMessage()==null && baseResponse.getDescription()==null ||baseResponse.getCode()!=200){
+                if (baseResponse.getMessage() == null || baseResponse.getCode() != 200) {
                     return baseResponse;
                 }
                 return baseResponse;
-            }catch(JSONException e){
-                log.error("接口调用失败, result: {}",result);
-                return ResultUtil.error(HttpStatus.INTERNAL_SERVER_ERROR.value(),"服务器内部异常!");
+            } catch (JSONException e) {
+                log.error("接口调用失败, result: {}", result);
+                return ResultUtil.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "服务器内部异常!");
             }
         } catch (URISyntaxException e) {
             return ResultUtil.error(ErrorCode.SYSTEM_ERROR);
@@ -187,26 +187,26 @@ public class HxApiClientImpl implements HxApiClient {
 
 
     @Override
-    public LovelornSentence getRandomLovelornSentence (){
-        try{
+    public LovelornSentence getRandomLovelornSentence() {
+        try {
             //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
             String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
-            String result =  HttpRequest.get(SERVER_HOST + "/dev-api/api/apiinterface/common/lovelorn").header("dhx.sdk",nowTime).addHeaders(getHeaderMap()).execute().body();
+            String result = HttpRequest.get(SERVER_HOST + "/dev-api/api/apiinterface/common/lovelorn").header("dhx.sdk", nowTime).addHeaders(getHeaderMap()).execute().body();
             BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
-            if(baseResponse.getCode()==200){
+            if (baseResponse.getCode() == 200) {
                 String dataStr = JSONUtil.toJsonStr(baseResponse.getData());
-                if(dataStr==null || dataStr.equals("") ){
+                if (dataStr == null || dataStr.equals("")) {
                     throw new RuntimeException();
                 }
                 LovelornSentence lovelornSentence = JSONUtil.toBean(dataStr, LovelornSentence.class);
                 return lovelornSentence;
-            }else{
-                throw new BusinessException(baseResponse.getCode(), baseResponse.getDescription(), baseResponse.getMessage());
+            } else {
+                throw new BusinessException(baseResponse.getCode(), baseResponse.getMessage());
             }
-        }catch (IORuntimeException e){
-            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 访问服务器失败 --"+e.getMessage() );
-        }catch(RuntimeException e){
-            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 调用接口失败 --"+e.getMessage() );
+        } catch (IORuntimeException e) {
+            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 访问服务器失败 --" + e.getMessage());
+        } catch (RuntimeException e) {
+            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + e.getMessage());
         }
         return null;
     }
@@ -214,30 +214,30 @@ public class HxApiClientImpl implements HxApiClient {
 
     @Override
     public ComputerSuffix getDescriptionOfSuffix(String suffix) {
-        try{
+        try {
             HashMap<String, Object> paramMap = new HashMap<>();
-            if(suffix!=null && !suffix.equals("")){
+            if (suffix != null && !suffix.equals("")) {
                 paramMap.put("cityName", suffix);
             }
             //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
             String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
-            String result =  HttpRequest.get(SERVER_HOST + "/dev-api/api/common/suffix").header("dhx.sdk",nowTime).addHeaders(getHeaderMap()).execute().body();
+            String result = HttpRequest.get(SERVER_HOST + "/dev-api/api/common/suffix").header("dhx.sdk", nowTime).addHeaders(getHeaderMap()).execute().body();
             BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
-            if(baseResponse.getCode()==200){
+            if (baseResponse.getCode() == 200) {
                 String dataStr = JSONUtil.toJsonStr(baseResponse.getData());
-                if(dataStr==null || dataStr.equals("") ){
+                if (dataStr == null || dataStr.equals("")) {
                     throw new RuntimeException();
-                }else{
+                } else {
                     ComputerSuffix computerSuffix = JSONUtil.toBean(dataStr, ComputerSuffix.class);
                     return computerSuffix;
                 }
-            }else{
-                throw new BusinessException(baseResponse.getCode(), baseResponse.getDescription(), baseResponse.getMessage());
+            } else {
+                throw new BusinessException(baseResponse.getCode(), baseResponse.getMessage());
             }
-        }catch (IORuntimeException e){
-            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 访问服务器失败 --"+e.getMessage() );
-        }catch(RuntimeException e){
-            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " +"[HxApiClient] 调用接口失败 --"+e.getMessage() );
+        } catch (IORuntimeException e) {
+            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 访问服务器失败 --" + e.getMessage());
+        } catch (RuntimeException e) {
+            log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + e.getMessage());
         }
         return null;
     }

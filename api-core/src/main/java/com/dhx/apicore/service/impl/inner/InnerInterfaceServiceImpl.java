@@ -1,7 +1,6 @@
 package com.dhx.apicore.service.impl.inner;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dhx.apicommon.common.exception.BusinessException;
@@ -14,8 +13,6 @@ import com.dhx.apicore.service.InterfaceEntityService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageProperties;
-import org.springframework.amqp.core.MessagePropertiesBuilder;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import javax.annotation.Resource;
 import java.util.HashMap;

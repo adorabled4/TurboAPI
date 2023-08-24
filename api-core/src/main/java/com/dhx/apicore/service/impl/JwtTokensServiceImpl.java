@@ -13,10 +13,10 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import static com.dhx.apicore.constants.JwtConstant.EXPIRATION_TIME;
-import static com.dhx.apicore.constants.JwtConstant.SECRET_KEY;
-import static com.dhx.apicore.constants.RedisConstant.ACCESS_TOKEN_PREFIX;
-import static com.dhx.apicore.constants.RedisConstant.REFRESH_TOKEN_PREFIX;
+import static com.dhx.apicore.common.constant.JwtConstant.EXPIRATION_TIME;
+import static com.dhx.apicore.common.constant.JwtConstant.SECRET_KEY;
+import static com.dhx.apicore.common.constant.RedisConstant.ACCESS_TOKEN_PREFIX;
+import static com.dhx.apicore.common.constant.RedisConstant.REFRESH_TOKEN_PREFIX;
 
 /**
  * @author dhx

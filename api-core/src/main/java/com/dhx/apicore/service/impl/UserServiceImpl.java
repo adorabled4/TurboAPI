@@ -15,7 +15,6 @@ import com.dhx.apicore.mapper.UserEntityMapper;
 import com.dhx.apicore.model.DO.UserEntity;
 import com.dhx.apicore.model.vo.UserVo;
 import com.dhx.apicore.service.UserService;
-import org.apache.commons.lang3.RegExUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

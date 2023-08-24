@@ -4,7 +4,7 @@ services:
     image: api-core:v1
     container_name: api-core
     volumes:
-      - /app/api-plantform/services/api-core:/jar
+      - /app/api-platform/services/api-core:/jar
     ports:
       - "9001:9001"
     depends_on:
@@ -13,7 +13,7 @@ services:
     image: api-interface:v1
     container_name: api-interface
     volumes:
-      - /app/api-plantform/services/api-interface:/jar
+      - /app/api-platform/services/api-interface:/jar
     ports:
       - "8123:8123"
     depends_on:
@@ -22,6 +22,6 @@ services:
     image: api-gateway:v1
     container_name: api-gateway
     volumes:
-      - /app/api-plantform/services/api-gateway:/jar
+      - /app/api-platform/services/api-gateway:/jar
     ports:
       - "88:88"

@@ -7,7 +7,6 @@ import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionFailedException;
-import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -19,10 +18,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import reactor.core.publisher.Mono;
 
 import javax.validation.ConstraintViolationException;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -57,8 +54,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BusinessException.class)
     public BaseResponse<Object> handleRRException(BusinessException e){
-        log.error(e.getDescription(), e);
-        return ResultUtil.error(e.getCode(),e.getMessage(),e.getDescription());
+        log.error(e.getMessage(), e);
+        return ResultUtil.error(e.getCode(),e.getMessage());
     }
 
 

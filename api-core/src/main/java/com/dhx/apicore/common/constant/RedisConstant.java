@@ -1,4 +1,4 @@
-package com.dhx.apicore.constants;
+package com.dhx.apicore.common.constant;
 
 import java.util.concurrent.TimeUnit;
 

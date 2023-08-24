@@ -4,7 +4,6 @@ import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apiinterface.domain.WeatherInfo;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * @author adorabled4

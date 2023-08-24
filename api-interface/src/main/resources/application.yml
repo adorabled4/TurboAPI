@@ -96,7 +96,7 @@ weather:
 knife4j:
   enable: true
   openapi:
-    title: api-plantform_bankend
+    title: api-platform_bankend
     description: 接口模块文档
     email: dhx2648466390@163.com
     concat: adorabled4

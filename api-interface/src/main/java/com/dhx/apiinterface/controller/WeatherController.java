@@ -1,6 +1,5 @@
 package com.dhx.apiinterface.controller;
 
-import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apiinterface.domain.WeatherInfo;
 import com.dhx.apiinterface.service.WeatherService;
 import org.apache.commons.lang3.StringUtils;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * @author adorabled4

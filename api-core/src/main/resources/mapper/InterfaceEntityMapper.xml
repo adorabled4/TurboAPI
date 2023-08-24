@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.dhx.core.mapper.InterfaceEntityMapper">
+<mapper namespace="com.dhx.apicore.mapper.InterfaceEntityMapper">
 
     <resultMap id="BaseResultMap" type="com.dhx.apicore.model.DO.InterfaceEntity">
             <id property="id" column="id" jdbcType="BIGINT"/>

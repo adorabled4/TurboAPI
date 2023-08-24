@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.constant.MQConstant;
 import com.dhx.apicommon.service.InnerUserInterfaceInfoService;
-import com.dhx.apicore.constants.RedisConstant;
+import com.dhx.apicore.common.constant.RedisConstant;
 import com.dhx.apicore.model.DO.UserInterfaceInfoEntity;
 import com.dhx.apicore.model.DTO.CallResultDTO;
 import com.dhx.apicore.service.UserInterfaceInfoEntityService;
@@ -21,7 +21,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
-import static com.dhx.apicore.constants.InterfaceConstant.DEFAULT_LEFT_NUM;
+import static com.dhx.apicore.common.constant.InterfaceConstant.DEFAULT_LEFT_NUM;
 
 /**
  * @author adorabled4

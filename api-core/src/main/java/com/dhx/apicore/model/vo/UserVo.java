@@ -9,7 +9,7 @@ import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
 
-import static com.dhx.apicore.constants.UserConstant.USER_NAME_REGEX;
+import static com.dhx.apicore.common.constant.UserConstant.USER_NAME_REGEX;
 
 /**
  * @author adorabled4

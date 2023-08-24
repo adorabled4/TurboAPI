@@ -1,6 +1,6 @@
 package com.dhx.apicore.model.param;
 
-import com.dhx.apicore.constants.UserConstant;
+import com.dhx.apicore.common.constant.UserConstant;
 import lombok.Data;
 
 import javax.validation.constraints.Pattern;

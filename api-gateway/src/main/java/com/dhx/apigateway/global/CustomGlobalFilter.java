@@ -77,7 +77,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         RequestPath path = request.getPath();
         List<String> sdkList = request.getHeaders().get("dhx.SDK");
         List<String> authorization = request.getHeaders().get("Authorization");
-        List<String> apiPlantform = request.getHeaders().get("apiplantform");
+        List<String> apiplatform = request.getHeaders().get("apiplatform");
         if (path.toString().startsWith(API_ADMIN_MODULE_PATH)
                 || path.toString().contains("doc")
                 || path.toString().contains("apicore")) {
@@ -86,7 +86,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         }
         boolean isFromSDK = false;
         UserTo user = null;
-        if (apiPlantform != null) {
+        if (apiplatform != null) {
             // 请求来自前端 : 通过DUBBO RPC查询用户信息
             if (authorization != null && authorization.size() > 0) { //
                 String token = authorization.get(0);
@@ -334,7 +334,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
      */
     public Mono<Void> handleNoAuth(ServerHttpResponse response) {
         response.setStatusCode(HttpStatus.FORBIDDEN);
-        BaseResponse baseResponse = new BaseResponse<>(ErrorCode.NO_AUTH);
+        BaseResponse baseResponse = new BaseResponse<>(ErrorCode.NO_AUTH_ERROR);
         byte[] bytes = JSONUtil.toJsonStr(baseResponse).getBytes(StandardCharsets.UTF_8);
         DataBuffer buffer = response.bufferFactory().wrap(bytes); // 创建数据缓冲区
         return response.writeWith(Mono.just(buffer)); // 写入响应内容

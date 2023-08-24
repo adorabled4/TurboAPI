@@ -6,7 +6,6 @@ import com.dhx.apicore.model.DTO.UserDTO;
 import com.dhx.apicore.util.UserHolder;
 import com.dhx.apisdk.client.HxApiClient;
 import com.dhx.apisdk.model.TO.WeatherInfo;
-import io.lettuce.core.api.reactive.BaseRedisReactiveCommands;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
