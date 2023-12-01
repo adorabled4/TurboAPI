@@ -1,5 +1,6 @@
 package com.dhx.apiinterface.controller;
 
+import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apiinterface.domain.WeatherInfo;
 import com.dhx.apiinterface.service.WeatherService;
 import org.apache.commons.lang3.StringUtils;

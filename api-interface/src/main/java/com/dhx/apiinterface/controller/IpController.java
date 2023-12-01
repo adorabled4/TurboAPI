@@ -1,6 +1,8 @@
 package com.dhx.apiinterface.controller;
 
+import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.common.exception.BusinessException;
+import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apiinterface.util.IpUtil;
 import org.springframework.web.bind.annotation.GetMapping;
