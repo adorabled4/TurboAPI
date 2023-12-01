@@ -92,7 +92,7 @@ dubbo:
 #    name: api-core-provider
   protocol:
     name: dubbo
-    port: 20880
+    port: -1
   registry:
     id: nacos-registry
     address: nacos://192.168.159.134:8848
