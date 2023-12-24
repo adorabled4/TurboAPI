@@ -15,6 +15,7 @@
     <description>api-core</description>
     <properties>
         <java.version>1.8</java.version>
+        <spring-cloud.version>2021.0.7</spring-cloud.version>
     </properties>
     <dependencies>
         <dependency>
@@ -82,11 +83,27 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>org.apache.dubbo</groupId>-->
+<!--            <artifactId>dubbo</artifactId>-->
+<!--            <version>3.0.13</version>-->
+<!--        </dependency>-->
+
+        <!-- Apache Dubbo 配置 -->
         <dependency>
             <groupId>org.apache.dubbo</groupId>
-            <artifactId>dubbo</artifactId>
-            <version>3.0.13</version>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+            <version>3.1.6</version>
         </dependency>
+
+<!--这个依赖主要是负责处理兼容 Feign 的 Dubbo 代理配置 通过 Feign 做服务发现
+项目中 如果统一使用 Dubbo 则不需要使用这个依赖 在后续版本 官方也宣布此模块从主分支移除
+况且 Dubbo 3.0 已经支持 基于应用服务的发现机制 故完全没必要与 Feign 做兼容处理-->
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-dubbo</artifactId>-->
+<!--            <version>2.2.5.RELEASE</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>com.alibaba.nacos</groupId>
@@ -121,13 +138,60 @@
             <artifactId>gson</artifactId>
             <version>2.9.1</version>
         </dependency>
+
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>dysmsapi20170525</artifactId>
             <version>2.0.7</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+            <version>2021.0.4.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba.nacos</groupId>
+                    <artifactId>nacos-client</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <version>2021.0.4.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba.nacos</groupId>
+                    <artifactId>nacos-client</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--需要引入该jar才能使bootstrap配置文件生效-->
+        <!--        新版的SpringCloud默认没有安装bootstrap依赖，因此不能读取项目bootstrap.yml文件内容-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+            <version>3.1.2</version>
+        </dependency>
+
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+
+        </dependencies>
+
+    </dependencyManagement>
 
     <build>
         <finalName>${name}</finalName>

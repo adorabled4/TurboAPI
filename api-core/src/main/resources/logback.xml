@@ -1,4 +1,5 @@
-<configuration debug="false" scan="true" scanPeriod="10 seconds">
+<configuration debug="false" scan="false" scanPeriod="10 seconds">
+<!--   解决nacos与logback冲突 : https://blog.csdn.net/qq_42543063/article/details/129876312-->
     <contextName>logback</contextName>
 
     <!--  自定义变量  -->

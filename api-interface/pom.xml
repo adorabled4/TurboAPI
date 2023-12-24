@@ -10,11 +10,11 @@
     </parent>
     <groupId>com.api</groupId>
     <artifactId>api-interface</artifactId>
-<!--    <version>0.0.1-SNAPSHOT</version>-->
     <name>api-interface</name>
     <description>api-interface</description>
     <properties>
         <java.version>1.8</java.version>
+        <spring-cloud.version>2021.0.7</spring-cloud.version>
     </properties>
     <dependencies>
 
@@ -81,7 +81,40 @@
             <version>2.11.0</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-alibaba-nacos-config</artifactId>
+            <version>2.1.0.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-alibaba-nacos-discovery</artifactId>
+            <version>2.1.0.RELEASE</version>
+        </dependency>
+
+        <!--需要引入该jar才能使bootstrap配置文件生效-->
+        <!--        新版的SpringCloud默认没有安装bootstrap依赖，因此不能读取项目bootstrap.yml文件内容-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+            <version>3.1.2</version>
+        </dependency>
+
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <finalName>${name}</finalName>

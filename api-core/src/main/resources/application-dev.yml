@@ -1,16 +1,15 @@
+host: 192.168.159.134
 spring:
   application:
     name: api-core
   datasource:
-#    url: jdbc:mysql://8.130.79.173:4234/api-core
-#    password: 324rfwefefg3f
-    url: jdbc:mysql://192.168.159.134:3306/api-platform
+    url: jdbc:mysql://${host}:3306/api-platform
     password: root
     username: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
     # Redis服务器连接端口
-    host: 192.168.159.134
+    host: ${host}
     password: adorabled4
     # Redis数据库索引（默认为0）
     database: 1
@@ -29,22 +28,17 @@ spring:
         min-idle: 0
   rabbitmq:
     username: dhx
-    password: r324fhh2n3084brj2w
-    host: 8.130.79.173
+    password: qwer
+    host: ${host}
     port: 5672 # 端口
     virtual-host: / # 虚拟主机
-
   jackson:
     serialization:
       FAIL_ON_EMPTY_BEANS: false
   cloud:
     nacos:
       discovery:
-        server-addr: 192.168.159.134:8848
-server:
-  port: 9001
-  servlet:
-    context-path: /apicore
+        server-addr: ${host}:8848
 mybatis-plus:
   global-config:
     db-config:
@@ -76,27 +70,46 @@ api:
     keep-alive-time: 10
 
 dubbo:
-  # 配置元数据中心
-#  metadata-report:
-##    address: nacos://8.130.79.173:8848
-#    address: nacos://192.168.159.134:8848
-#    username: adorabled4
-#    password: r324fhh2n3084brj2w
-#    # 配置 namespace，有namespace需要指定namespace
-#    parameters:
-#      namespace: 1bd50375-01d2-4e47-ac7b-0cc9a91a8dde
-#    # 配置 隔离组，有配置 group 的需要指定 group
-#    group: ucp
   application:
-    name: api-core
-#    name: api-core-provider
+    # logger: logback
+    # 元数据中心 local 本地 remote 远程 这里使用远程便于其他服务获取
+    # 注意 这里不能使用 本地 local 会读取不到元数据
+    metadataType: remote
+    # 可选值 interface、instance、all，默认是 all，即接口级地址、应用级地址都注册
+    register-mode: all
+    service-discovery:
+      # FORCE_INTERFACE，只消费接口级地址，如无地址则报错，单订阅 2.x 地址
+      # APPLICATION_FIRST，智能决策接口级/应用级地址，双订阅
+      # FORCE_APPLICATION，只消费应用级地址，如无地址则报错，单订阅 3.x 地址
+      migration: FORCE_APPLICATION
   protocol:
+    # 设置为 tri 即可使用 Triple 3.0 新协议
+    # 性能对比 dubbo 协议并没有提升 但基于 http2 用于多语言异构等 http 交互场景
+    # 使用 dubbo 协议通信
     name: dubbo
+    # dubbo 协议端口(-1表示自增端口,从20880开始)
     port: -1
+  # 注册中心配置
   registry:
-    id: nacos-registry
-    address: nacos://192.168.159.134:8848
-#    address: nacos://8.130.79.173:8848
+    address: nacos://${host}:8848
+    # 这里注意 由于 3.X 的 bug 导致注册组不生效
+    group: dev
+    # 由于 group 不生效 这里使用 namespace 将 dubbo 服务与 cloud 服务隔离
+    # 否则会导致正常请求路由到 dubbo 服务报错
+    parameters:
+      # 注意 这里要在 nacos 创建名为 dubbo 的 namespace 环境
+      namespace: b9970d70-8f1c-402e-b139-4a98f487c197
+  # 消费者相关配置
+  consumer:
+    # 支持校验注解
+    validation: true
+    # 超时时间
+    timeout: 3000
+    # 初始化检查
+    check: false
+  scan:
+    # 接口实现类扫描
+    base-packages: com.dhx.apicore.service
 
 dhx:
   client:
