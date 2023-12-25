@@ -4,7 +4,7 @@ spring:
   cloud:
     gateway:
       routes:
-        # 需要添加 三个 , 一个是主要的管理系统,另一个是后台通往的接口模块的CRUD , 以及之后前端访问的接口(或者通过dubbo远程调用)
+        # 需要添加2个 , ,另一个是后台通往的接口模块的CRUD , 以及之后前端访问的接口(或者通过dubbo远程调用)
         - id: core_route
           uri: lb://api-core
           predicates:
@@ -23,18 +23,6 @@ spring:
                 redis-rate-limiter.burstCapacity: 4   # 令牌桶总容量
                 keyResolver: '#{@myKeyResolver}'  # 使用SpringEL表达式，从Spring容器中找对象，并赋值。 '#{@beanName}'
             - RewritePath=/api/?(?<segment>.*),/api/$\{segment}
-#        - id: api_route2 # 接口路由
-#          uri: http://127.0.0.1:8123
-#          predicates:
-#            - Path=/dev-api/admin/api/** # 符合 /api开头的地址就会被路由
-#          filters:
-#            - RewritePath=/dev-api/admin/api/?(?<segment>.*),/api/$\{segment}
-#        - id: admin_route # ry路由
-#          uri: http://127.0.0.1:8080
-#          predicates:
-#          - Path=/dev-api/admin/** # 符合 /api开头的地址就会被路由
-#          filters:
-#            - RewritePath=/dev-api/admin/?(?<segment>.*),/dev-api/$\{segment}
 
 dubbo:
   application:
@@ -42,16 +30,6 @@ dubbo:
     shutwait: 1000000
   reference:
     timeout: 3000
-  # 配置元数据中心
-  #  metadata-report:
-  #    address: nacos://8.130.79.173:8848
-  #    username: test
-  #    password: 123456
-  #    # 配置 namespace，有namespace需要指定namespace
-  #    parameters:
-  #      namespace: 88b66463-1685-40b3-ba9c-7b25e526dcfb
-  #    # 配置 隔离组，有配置 group 的需要指定 group
-  #    group: ucp
   protocol:
     name: dubbo
     port: -1

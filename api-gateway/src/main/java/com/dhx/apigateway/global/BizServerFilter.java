@@ -43,7 +43,7 @@ public class BizServerFilter implements GlobalFilter, Ordered {
         ServerHttpResponse response = exchange.getResponse();
         HttpHeaders headers = request.getHeaders();
         String accessKey = headers.getFirst("accessKey");
-        if (accessKey == null) {
+        if (accessKey != null) {
             // 初步判断请求来自前端
             String token = headers.getFirst("Authorization");
             UserTo user = innerUserService.getUserEntityByAccessToken(token, response.getHeaders());
