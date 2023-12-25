@@ -1,4 +1,4 @@
-package com.dhx.apicore.model.param;
+package com.dhx.apicore.model.query;
 
 import com.dhx.apicore.common.constant.UserConstant;
 import lombok.Data;
@@ -13,12 +13,12 @@ import javax.validation.constraints.Pattern;
  **/
 @Data
 @Valid
-public class RegisterParam {
+public class RegisterQuery {
     /**
      * 4~16位 数字,大小写字母组成
      */
     @Pattern(regexp = UserConstant.USER_NAME_REGEX,message = "用户名不符合规范")
-    private String userName;
+    private String userAccount;
 
 
     /**

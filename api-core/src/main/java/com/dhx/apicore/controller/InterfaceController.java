@@ -8,7 +8,7 @@ import com.dhx.apicore.model.DO.InterfaceEntity;
 import com.dhx.apicore.model.DO.InterfaceExampleEntity;
 import com.dhx.apicore.model.DO.UserEntity;
 import com.dhx.apicore.model.DTO.UserDTO;
-import com.dhx.apicore.model.param.InterfaceInfoRequest;
+import com.dhx.apicore.model.query.InterfaceInfoQuery;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVo;
 import com.dhx.apicore.model.vo.InterfaceDetailVo;
 import com.dhx.apicore.model.vo.InterfaceRankInfoVo;
@@ -49,14 +49,14 @@ public class InterfaceController {
     UserService userService;
 
     @PostMapping("/invoke")
-    public BaseResponse invokeInterfaceOL(@Valid @RequestBody InterfaceInfoRequest interfaceInfoRequest, HttpServletRequest request){
-        if(interfaceInfoRequest==null || interfaceInfoRequest.getInterfaceId()==null){
+    public BaseResponse invokeInterfaceOL(@Valid @RequestBody InterfaceInfoQuery interfaceInfoQuery, HttpServletRequest request){
+        if(interfaceInfoQuery ==null || interfaceInfoQuery.getInterfaceId()==null){
             return ResultUtil.error(ErrorCode.PARAMS_ERROR);
         }
-        long id = interfaceInfoRequest.getInterfaceId();
+        long id = interfaceInfoQuery.getInterfaceId();
         Gson gson = new Gson();
         try{
-            Map<String, Object> requestParams = gson.fromJson(interfaceInfoRequest.getParams(), new TypeToken<Map<String, Object>>(){}.getType());
+            Map<String, Object> requestParams = gson.fromJson(interfaceInfoQuery.getParams(), new TypeToken<Map<String, Object>>(){}.getType());
             boolean validInterface=  interfaceEntityService.isValidInterfaceId(id);
             if(!validInterface){
                 return ResultUtil.error(ErrorCode.PARAMS_ERROR,"接口已关闭!");

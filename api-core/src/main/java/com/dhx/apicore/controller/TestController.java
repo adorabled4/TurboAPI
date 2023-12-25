@@ -6,7 +6,9 @@ import com.dhx.apicore.model.DTO.UserDTO;
 import com.dhx.apicore.util.UserHolder;
 import com.dhx.apisdk.client.HxApiClient;
 import com.dhx.apisdk.model.TO.WeatherInfo;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,13 +20,13 @@ import javax.annotation.Resource;
  * @date : 2023/04/11/ 11:34
  **/
 @RestController
-//@Api(tags = "测试接口,请忽视",hidden = true)
+@Api(tags = "测试接口")
 public class TestController {
 
     @Resource
     HxApiClient hxApiClient;
 
-    @RequestMapping("/test")
+    @GetMapping("/test")
     @ApiOperation(hidden = true,value = "测试用户登录")
     public BaseResponse<UserDTO> loginTest(){
         UserDTO user = UserHolder.getUser();
@@ -36,14 +38,14 @@ public class TestController {
      * @param ip
      * @return
      */
-    @RequestMapping("/ip")
+    @GetMapping("/ip")
     public BaseResponse<String> ipTest(String ip){
         String s = hxApiClient.analyseIP(ip);
         System.out.println(s);
         return ResultUtil.success(s);
     }
 
-    @RequestMapping("/weather")
+    @GetMapping("/weather")
     public BaseResponse<WeatherInfo> weatherTest(String cityName){
         WeatherInfo nowWeather = hxApiClient.getNowWeather(cityName);
         return ResultUtil.success(nowWeather);

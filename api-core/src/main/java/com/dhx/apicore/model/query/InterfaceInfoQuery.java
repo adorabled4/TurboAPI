@@ -1,4 +1,4 @@
-package com.dhx.apicore.model.param;
+package com.dhx.apicore.model.query;
 
 import lombok.Data;
 
@@ -13,7 +13,7 @@ import java.util.Map;
  * @date : 2023/04/18/ 11:31
  **/
 @Data
-public class InterfaceInfoRequest implements Serializable {
+public class InterfaceInfoQuery implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -12,9 +12,15 @@ import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apicore.mapper.UserEntityMapper;
 import com.dhx.apicore.model.DO.UserEntity;
 import com.dhx.apicore.model.DTO.JwtToken;
+import com.dhx.apicore.model.DTO.UserDTO;
+import com.dhx.apicore.model.query.LoginQuery;
+import com.dhx.apicore.model.query.PageQuery;
+import com.dhx.apicore.model.query.RegisterQuery;
 import com.dhx.apicore.model.vo.UserVo;
 import com.dhx.apicore.service.JwtTokensService;
 import com.dhx.apicore.service.UserService;
+import com.dhx.apicore.util.ThrowUtil;
+import com.dhx.apicore.util.UserHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -37,16 +43,14 @@ public class UserServiceImpl extends ServiceImpl<UserEntityMapper, UserEntity> i
 
 
     @Override
-    public BaseResponse login(String userAccount, String password) {
+    public BaseResponse<String> login(LoginQuery param) {
         //1. 获取的加密密码
-        UserEntity user = query().eq("user_account", userAccount).one();
+        UserEntity user = query().eq("user_account", param.getUserAccount()).one();
         String handlerPassword = user.getPassword();
 
         //2. 查询用户密码是否正确
-        boolean checkpw = BCrypt.checkpw(password, handlerPassword);
-        if (!checkpw) {
-            return ResultUtil.error(ErrorCode.PARAMS_ERROR, "账户名或密码错误!");
-        }
+        boolean checkpw = BCrypt.checkpw(param.getPassword(), handlerPassword);
+        ThrowUtil.throwIf(!checkpw,ErrorCode.PARAMS_ERROR, "账户名或密码错误!");
         //3. 获取jwt的token并将token写入Redis
         String token = jwtTokensService.generateAccessToken(user);
         String refreshToken = jwtTokensService.generateRefreshToken(user);
@@ -57,7 +61,10 @@ public class UserServiceImpl extends ServiceImpl<UserEntityMapper, UserEntity> i
     }
 
     @Override
-    public BaseResponse register(String userAccount, String password, String checkPassword) {
+    public BaseResponse<Long> register(RegisterQuery param) {
+        String password = param.getPassword();
+        String checkPassword = param.getCheckPassword();
+        String userAccount = param.getUserAccount();
         if (!password.equals(checkPassword)) {
             return ResultUtil.error(ErrorCode.PARAMS_ERROR, "两次输入的密码不一致!");
         }
@@ -92,9 +99,9 @@ public class UserServiceImpl extends ServiceImpl<UserEntityMapper, UserEntity> i
     }
 
     @Override
-    public BaseResponse<List<UserVo>> getUserList(int pageSize, int current) {
+    public BaseResponse<List<UserVo>> getUserList(PageQuery pageQuery) {
         // 分页查询数据
-        List<UserEntity> records = query().page(new Page<>(current, pageSize)).getRecords();
+        List<UserEntity> records = query().page(new Page<>(pageQuery.getCurrentPage(), pageQuery.getPageSize())).getRecords();
         // 转换为userVO
         List<UserVo> userVoList = records.stream().map(item -> BeanUtil.copyProperties(item, UserVo.class)).collect(Collectors.toList());
         return ResultUtil.success(userVoList);
@@ -102,15 +109,22 @@ public class UserServiceImpl extends ServiceImpl<UserEntityMapper, UserEntity> i
 
 
     @Override
-    public BaseResponse addUser(UserVo userVo) {
+    public BaseResponse<Long> addUser(UserVo userVo) {
         UserEntity user = BeanUtil.copyProperties(userVo, UserEntity.class);
         save(user);
-        return ResultUtil.success();
+        return ResultUtil.success(user.getUserId());
     }
 
     @Override
-    public boolean deleteUserByAccount(String userAccount) {
+    public Boolean deleteUserByAccount(String userAccount) {
         return remove(new QueryWrapper<UserEntity>().eq("userAccount", userAccount));
+    }
+
+    @Override
+    public UserVo getCurrentUser() {
+        UserDTO user = UserHolder.getUser();
+        UserEntity userEntity = getById(user.getUserId());
+        return BeanUtil.copyProperties(userEntity, UserVo.class);
     }
 }
 

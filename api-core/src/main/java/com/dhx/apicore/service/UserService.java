@@ -3,6 +3,9 @@ package com.dhx.apicore.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicore.model.DO.UserEntity;
+import com.dhx.apicore.model.query.LoginQuery;
+import com.dhx.apicore.model.query.PageQuery;
+import com.dhx.apicore.model.query.RegisterQuery;
 import com.dhx.apicore.model.vo.UserVo;
 
 import java.util.List;
@@ -15,28 +18,29 @@ import java.util.List;
 public interface UserService extends IService<UserEntity> {
     Boolean deleteUserById(Long userId);
 
-    BaseResponse<List<UserVo>> getUserList(int pageSize, int current);
+    BaseResponse<List<UserVo>> getUserList(PageQuery pageQuery);
 
     BaseResponse<UserVo> getUserById(Long userId);
 
-    BaseResponse addUser(UserVo userVo);
+    BaseResponse<Long> addUser(UserVo userVo);
 
     /**
      * 用户注册
-     * @param userAccount 用户账户名
-     * @param password
-     * @param checkPassword
-     * @return
+     *
+     * @param param 参数
+     * @return {@link BaseResponse}
      */
-    BaseResponse register(String userAccount, String password, String checkPassword);
+    BaseResponse<Long> register(RegisterQuery param);
 
     /**
      * 用户登录
-     * @param userAccount 账户
-     * @param password 密码
+     *
+     * @param param 参数
      * @return 返回token
      */
-    BaseResponse login(String userAccount, String password);
+    BaseResponse<String> login(LoginQuery param);
 
-    boolean deleteUserByAccount(String userAccount);
+    Boolean deleteUserByAccount(String userAccount);
+
+    UserVo getCurrentUser();
 }
