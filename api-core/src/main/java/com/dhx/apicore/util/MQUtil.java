@@ -1,4 +1,4 @@
-package com.dhx.apicommon.util;
+package com.dhx.apicore.util;
 
 import cn.hutool.json.JSONUtil;
 import com.dhx.apicommon.common.BaseResponse;

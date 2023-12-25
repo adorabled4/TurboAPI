@@ -1,11 +1,10 @@
 package com.dhx.apicore.listener;
 
-import cn.hutool.json.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.dhx.apicommon.constant.MQConstant;
-import com.dhx.apicommon.util.MQUtil;
 import com.dhx.apicore.model.DO.InterfaceEntity;
 import com.dhx.apicore.service.InterfaceEntityService;
+import com.dhx.apicore.util.MQUtil;
 import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.Exchange;
