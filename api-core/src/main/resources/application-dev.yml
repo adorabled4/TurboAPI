@@ -124,3 +124,5 @@ sms:
   endpoint: dysmsapi.aliyuncs.com
   accessId: LTAI5t5tbAuGcFH8EtiepHQj
   accessKey: UJ6l8PO9eRZmrMWT4N96Ta3X9Tj6Sz
+  commonSignName: 1111111111
+  templateCodeTwo: 1111111111

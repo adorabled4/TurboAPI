@@ -83,19 +83,12 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.apache.dubbo</groupId>-->
-<!--            <artifactId>dubbo-spring-boot-starter</artifactId>-->
-<!--            <version>3.1.6</version>-->
-<!--        </dependency>-->
-<!--这个依赖主要是负责处理兼容 Feign 的 Dubbo 代理配置 通过 Feign 做服务发现
-项目中 如果统一使用 Dubbo 则不需要使用这个依赖 在后续版本 官方也宣布此模块从主分支移除
-况且 Dubbo 3.0 已经支持 基于应用服务的发现机制 故完全没必要与 Feign 做兼容处理-->
-<!--        <dependency>-->
-<!--            <groupId>com.alibaba.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-dubbo</artifactId>-->
-<!--            <version>2.2.5.RELEASE</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+            <version>3.1.6</version>
+        </dependency>
+
 
         <dependency>
             <groupId>com.alibaba.nacos</groupId>

@@ -102,21 +102,17 @@
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
             <version>3.1.2</version>
         </dependency>
-<!--Feign默认是POST请求，如果要支持带参数的GET请求，那么还需要引入feign-httpclient依赖-->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-httpclient</artifactId>
-        </dependency>
 
 <!--解决feign无法将服务名称解析为IP-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+            <version>3.1.6</version>
         </dependency>
 
     </dependencies>

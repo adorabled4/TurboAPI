@@ -1,4 +1,4 @@
-package com.dhx.apicore.service.impl.inner;
+package com.dhx.apicore.service.inner;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
@@ -11,6 +11,7 @@ import com.dhx.apicommon.service.InnerInterfaceService;
 import com.dhx.apicore.model.DO.InterfaceEntity;
 import com.dhx.apicore.service.InterfaceEntityService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ import java.util.HashMap;
  * @className InnerInterfaceServiceImpl
  * @date : 2023/04/19/ 14:36
  **/
-@Service
+@DubboService
 public class InnerInterfaceServiceImpl implements InnerInterfaceService {
 
     @Resource
