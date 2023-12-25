@@ -7,15 +7,12 @@ import com.dhx.apicommon.constant.MQConstant;
 import com.dhx.apicommon.model.bo.UserInterfaceInfo;
 import com.dhx.apicommon.model.to.InterfaceTo;
 import com.dhx.apicommon.model.to.UserTo;
-import com.dhx.apicommon.service.InnerInterfaceService;
-import com.dhx.apicommon.service.InnerUserInterfaceInfoService;
-import com.dhx.apicommon.service.InnerUserService;
 import com.dhx.apicommon.util.ServerMetricsUtil;
 import com.dhx.apicommon.util.SignUtil;
+import com.dhx.apigateway.client.CoreFeignService;
 import com.dhx.apigateway.constant.Path2Queue;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.dubbo.config.annotation.DubboReference;
 import org.reactivestreams.Publisher;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
@@ -54,15 +51,8 @@ import static com.dhx.apigateway.constant.PathConstant.API_ADMIN_MODULE_PATH;
 @Slf4j
 @Component
 public class CustomGlobalFilter implements GlobalFilter, Ordered {
-
-    @DubboReference
-    InnerUserService innerUserService;
-
-    @DubboReference
-    InnerInterfaceService innerInterfaceService;
-
-    @DubboReference
-    InnerUserInterfaceInfoService innerUserInterfaceInfoService;
+    @Resource
+    CoreFeignService coreFeignService;
 
     @Resource
     RabbitTemplate rabbitTemplate;
@@ -93,7 +83,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
                 // exchange 没有实现Serializable , 不能用来传输, 因此这里需要使用HttpHeaders
                 ServerHttpResponse response = exchange.getResponse();
                 HttpHeaders responseHeaders = response.getHeaders();
-                user = innerUserService.getUserEntityByAccessToken(token, responseHeaders);
+                user = coreFeignService.getUserByToken(token, responseHeaders);
             }
         } else if (sdkList != null && sdkList.size() != 0) {
             // 请求来自SDK , 用户鉴权
@@ -103,7 +93,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
             String timestamp = headers.getFirst("timestamp");
             String sign = headers.getFirst("sign");
             String body = headers.getFirst("body");
-            user = innerUserService.getUserEntityByAccessKey(accessKey);
+            user = coreFeignService.getUserByAK(accessKey);
             if (StringUtils.isAnyBlank(timestamp, nonce, accessKey, sign)) {
                 return handleNoAuth(exchange.getResponse());
             }
@@ -145,7 +135,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         // 3. 统计调用信息 写数据库 => 通过DUBBO 远程调用 api-core
         if (isFromSDK) {
             // 获取路径以及 method
-            InterfaceTo interfaceInfo = innerInterfaceService.getInterfaceInfo(path.value(), request.getMethodValue());
+            InterfaceTo interfaceInfo = coreFeignService.getInterfaceInfo(path.value(), request.getMethodValue());
             if (interfaceInfo == null) { // 请求的接口 没找到 或者 不存在
                 return handleNoInterfaceError(exchange.getResponse());
             }
@@ -153,7 +143,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
                 return handleNoAuth(exchange.getResponse());
             }
             // 查看用户的剩余可用次数
-            int count = innerUserInterfaceInfoService.getUserLeftNum(user.getUserId());
+            int count = coreFeignService.getUserLeftNum(user.getUserId());
             if (count <= 0) {
                 return handleNoLeftNum(exchange.getResponse());
             }
@@ -205,9 +195,9 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         BaseResponse baseResponse = JSONUtil.toBean(s, BaseResponse.class);
         if (baseResponse.getCode() == 200) {
             // 正常返回 , 响应成功 => 调用成功, 统计用户的调用次数
-            innerUserInterfaceInfoService.invokeCount(userId, interfaceId,baseResponse);
+            coreFeignService.invokeCount(userId, interfaceId,baseResponse);
             // 统计接口的调用次数
-            innerInterfaceService.interfaceCallCount(interfaceId);
+            coreFeignService.interfaceCallCount(interfaceId);
             response.setStatusCode(HttpStatus.OK);
             response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
             return response.writeWith(Mono.just(response.bufferFactory().wrap(interfaceModuleResult.getBody())));
@@ -256,14 +246,14 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
                 if (body instanceof Flux) {
                     return super.writeWith(Mono.fromDirect(body).map(dataBuffer -> {
                         // 统计接口调用
-                        innerInterfaceService.interfaceCallCount(interfaceInfoId);
+                        coreFeignService.interfaceCallCount(interfaceInfoId);
                         byte[] content = new byte[dataBuffer.readableByteCount()];
                         dataBuffer.read(content);
                         DataBufferUtils.release(dataBuffer);
                         String responseStr = new String(content, StandardCharsets.UTF_8);
                         BaseResponse baseResponse = JSONUtil.toBean(responseStr, BaseResponse.class);
                         executor.submit(() -> {
-                            innerUserInterfaceInfoService.invokeCount(userId, interfaceInfoId,baseResponse);
+                            coreFeignService.invokeCount(userId, interfaceInfoId,baseResponse);
                         });
                         if (baseResponse.getCode() == 200) {
                             log.info("[callSuccess],ip:{} ,用户ID:{},  接口ID: {}, 请求参数:{}, 响应结果：{}",

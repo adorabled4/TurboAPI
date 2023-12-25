@@ -31,6 +31,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/**/register",
                         "/**/interface/list",
                         "/**/interface/detail/**",
+                        "/**/test/**",
                         "/**/interface/example/**",
                         "/**/interface/list/**",
                         "/**/doc.html/**",

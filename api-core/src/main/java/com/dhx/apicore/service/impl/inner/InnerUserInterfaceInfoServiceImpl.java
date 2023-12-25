@@ -11,12 +11,12 @@ import com.dhx.apicore.model.DTO.CallResultDTO;
 import com.dhx.apicore.service.UserInterfaceInfoEntityService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.dubbo.config.annotation.DubboService;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
@@ -28,8 +28,8 @@ import static com.dhx.apicore.common.constant.InterfaceConstant.DEFAULT_LEFT_NUM
  * @className InnerUserInterfaceInfoServiceImpl
  * @date : 2023/04/19/ 14:49
  **/
-@DubboService
 @Slf4j
+@Service
 public class InnerUserInterfaceInfoServiceImpl implements InnerUserInterfaceInfoService {
 
     @Resource

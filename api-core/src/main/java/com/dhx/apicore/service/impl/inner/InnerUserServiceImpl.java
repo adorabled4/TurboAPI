@@ -10,9 +10,9 @@ import com.dhx.apicore.model.DO.UserEntity;
 import com.dhx.apicore.service.JwtTokensService;
 import com.dhx.apicore.service.UserService;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * @className InnerUserServiceImpl
  * @date : 2023/04/19/ 13:56
  **/
-@DubboService
+@Service
 public class InnerUserServiceImpl implements InnerUserService {
 
     @Resource
