@@ -14,7 +14,7 @@ spring:
       discovery:
         server-addr: 192.168.159.134:8848
         group: ${spring.profiles.active}
-        namespace: 3374ce95-52dd-419e-8ede-cc4aba7665a6
+        namespace: d67f22fd-85b4-4f7d-be13-c48c6bbbfebb
   main:
     allow-bean-definition-overriding: true
 server:

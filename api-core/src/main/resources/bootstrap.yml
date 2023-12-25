@@ -1,6 +1,6 @@
 spring:
   application:
-    name: 'api-core'
+    name: api-core
   profiles:
     active: dev
   cloud:
@@ -14,7 +14,7 @@ spring:
       discovery:
         server-addr: 192.168.159.134:8848
         group: ${spring.profiles.active}
-        namespace: 294353ee-680c-462e-a646-f58c71add098
+        namespace: d67f22fd-85b4-4f7d-be13-c48c6bbbfebb
   main:
     allow-bean-definition-overriding: true
 #        ext-config:

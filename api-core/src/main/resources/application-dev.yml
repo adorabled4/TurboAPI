@@ -39,6 +39,9 @@ spring:
     nacos:
       discovery:
         server-addr: ${host}:8848
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 mybatis-plus:
   global-config:
     db-config:

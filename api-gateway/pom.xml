@@ -113,6 +113,11 @@
             <artifactId>feign-httpclient</artifactId>
         </dependency>
 
+<!--解决feign无法将服务名称解析为IP-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
 
     </dependencies>
 
