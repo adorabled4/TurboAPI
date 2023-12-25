@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: 'api-gateway'
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: 192.168.159.134:8848
+        namespace: 3374ce95-52dd-419e-8ede-cc4aba7665a6
+        group: ${spring.profiles.active}
+        file-extension: yml
+        prefix: application-${spring.profiles.active}
+      discovery:
+        server-addr: 192.168.159.134:8848
+        group: ${spring.profiles.active}
+        namespace: 3374ce95-52dd-419e-8ede-cc4aba7665a6
+  main:
+    allow-bean-definition-overriding: true
+server:
+  port: 88

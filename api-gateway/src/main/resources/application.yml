@@ -1,8 +1,6 @@
 spring:
-  redis:
-    host: 192.168.159.134
-    port: 6379
-    password: adorabeld4
+  application:
+    name: api-gateway
   cloud:
     gateway:
       routes:
@@ -37,39 +35,3 @@ spring:
 #          - Path=/dev-api/admin/** # 符合 /api开头的地址就会被路由
 #          filters:
 #            - RewritePath=/dev-api/admin/?(?<segment>.*),/dev-api/$\{segment}
-    nacos:
-      discovery:
-        server-addr: 192.168.159.134:8848
-  application:
-    name: api-gateway
-  rabbitmq:
-    username: dhx
-    password: r324fhh2n3084brj2w
-    host: 192.168.159.134
-#    host: 8.130.79.173
-    port: 5672 # 端口
-    virtual-host: / # 虚拟主机
-server:
-  port: 88
-logging:
-#  config: D:\j2ee_project\api-platform\api-gateway\src\main\resources\logback.xml # 日志配置文件
-  config: classpath:logback.xml
-  level:
-    org:
-      springframework:
-        cloud:
-          gateway: trace # 设置日志级别
-
-dubbo:
-  application:
-    name: api-core-consumer
-    shutwait: 1000000
-  reference:
-    timeout: 3000
-  protocol:
-    name: dubbo
-    port: -1
-  registry:
-    id: nacos-registry
-    address: nacos://192.168.159.134:8848?register-consumer-url=true
-    # #Dubbo3.0.0版本以后，增加了是否注册消费者的参数，如果需要将消费者注册到nacos注册中心上，需要将参数(register-consumer-url)设置为true，默认是false。

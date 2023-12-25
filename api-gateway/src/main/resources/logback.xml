@@ -1,4 +1,4 @@
-<configuration debug="false" scan="true" scanPeriod="10 seconds">
+<configuration debug="false" scan="false" scanPeriod="10 seconds">
     <contextName>logback</contextName>
 
     <!--  自定义变量  -->

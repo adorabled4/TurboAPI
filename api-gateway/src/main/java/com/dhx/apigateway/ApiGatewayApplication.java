@@ -1,6 +1,5 @@
 package com.dhx.apigateway;
 
-import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +11,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
-@EnableDubbo
 @ComponentScan(value = "com.dhx.apigateway.global")
 public class ApiGatewayApplication {
 

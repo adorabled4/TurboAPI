@@ -1,0 +1,18 @@
+spring:
+  redis:
+    host: 192.168.159.134
+    port: 6379
+    password: adorabeld4
+  rabbitmq:
+    username: dhx
+    host: 192.168.159.134
+    port: 5672 # 端口
+    virtual-host: / # 虚拟主机
+    password: qwer
+logging:
+  config: classpath:logback.xml
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway: trace # 设置日志级别
