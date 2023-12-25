@@ -30,7 +30,7 @@ hs_err_pid*
 .idea/
 
 ### Maven template
-/**/target
+/**/target/**
 target/
 pom.xml.tag
 pom.xml.releaseBackup
