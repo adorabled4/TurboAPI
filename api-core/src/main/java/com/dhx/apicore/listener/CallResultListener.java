@@ -3,7 +3,7 @@ package com.dhx.apicore.listener;
 import com.dhx.apicommon.common.exception.BusinessException;
 import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.constant.MQConstant;
-import com.dhx.apicommon.util.MQUtil;
+import com.dhx.apicore.util.MQUtil;
 import com.dhx.apicore.model.DO.CallResultEntity;
 import com.dhx.apicore.model.DTO.CallResultDTO;
 import com.dhx.apicore.model.enums.CallResultEnum;
