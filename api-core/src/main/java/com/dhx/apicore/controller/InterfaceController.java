@@ -9,6 +9,7 @@ import com.dhx.apicore.model.DO.InterfaceExampleEntity;
 import com.dhx.apicore.model.DO.UserEntity;
 import com.dhx.apicore.model.DTO.UserDTO;
 import com.dhx.apicore.model.query.InterfaceInfoQuery;
+import com.dhx.apicore.model.query.PageQuery;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVo;
 import com.dhx.apicore.model.vo.InterfaceDetailVo;
 import com.dhx.apicore.model.vo.InterfaceRankInfoVo;
@@ -75,30 +76,18 @@ public class InterfaceController {
     }
 
     @GetMapping("/list")
-    public BaseResponse<List<InterfaceBasicInfoVo>> getInterfaceList(@RequestParam("pageSize")int pageSize, @RequestParam("current")int current) {
-        if(pageSize <= 0 ){
-            pageSize=5;
-        }
-        if(current<0){
-            current=1;
-        }
-        List<InterfaceBasicInfoVo> list = interfaceEntityService.getInterfaceList(pageSize,current);
+    public BaseResponse<List<InterfaceBasicInfoVo>> getInterfaceList(PageQuery pageQuery) {
+        List<InterfaceBasicInfoVo> list = interfaceEntityService.getInterfaceList(pageQuery);
         return ResultUtil.success(list);
     }
 
     @GetMapping("/detail/{id}")
     public BaseResponse<InterfaceDetailVo> getInterfaceDetail(@PathVariable("id")Long id){
-        if(id<0){
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
         return interfaceEntityService.getInterfaceDetail(id);
     }
 
     @GetMapping("/example/{id}")
     public BaseResponse<InterfaceExampleEntity> getInterfaceExample(@PathVariable("id")Long id){
-        if(id<0){
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
         return interfaceEntityService.getInterfaceExample(id);
     }
 

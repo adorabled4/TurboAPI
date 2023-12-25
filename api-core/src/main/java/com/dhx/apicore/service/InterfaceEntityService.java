@@ -4,6 +4,7 @@ import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicore.model.DO.InterfaceEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.dhx.apicore.model.DO.InterfaceExampleEntity;
+import com.dhx.apicore.model.query.PageQuery;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVo;
 import com.dhx.apicore.model.vo.InterfaceDetailVo;
 import com.dhx.apicore.model.vo.InterfaceRankInfoVo;
@@ -19,12 +20,12 @@ import java.util.List;
 public interface InterfaceEntityService extends IService<InterfaceEntity> {
 
     /**
-     * 获取接口列表(首页)
-     * @param pageSize
-     * @param current
-     * @return
+     * 获取接口列表
+     *
+     * @param pageQuery 页面查询
+     * @return {@link List}<{@link InterfaceBasicInfoVo}>
      */
-    List<InterfaceBasicInfoVo> getInterfaceList(int pageSize, int current);
+    List<InterfaceBasicInfoVo> getInterfaceList(PageQuery pageQuery);
 
     /**
      * 获取接口详细信息

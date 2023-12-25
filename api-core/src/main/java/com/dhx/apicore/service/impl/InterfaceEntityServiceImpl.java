@@ -12,6 +12,7 @@ import com.dhx.apicore.mapper.InterfaceExampleEntityMapper;
 import com.dhx.apicore.model.DO.InterfaceEntity;
 import com.dhx.apicore.model.DO.InterfaceExampleEntity;
 import com.dhx.apicore.model.DO.UserEntity;
+import com.dhx.apicore.model.query.PageQuery;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVo;
 import com.dhx.apicore.model.vo.InterfaceDetailVo;
 import com.dhx.apicore.model.vo.InterfaceRankInfoVo;
@@ -48,8 +49,9 @@ public class InterfaceEntityServiceImpl extends ServiceImpl<InterfaceEntityMappe
     InterfaceExampleEntityMapper interfaceExampleEntityMapper;
 
     @Override
-    public List<InterfaceBasicInfoVo> getInterfaceList(int pageSize, int current) {
-        Page<InterfaceEntity> page = query().ne("status", 0).page(new Page<InterfaceEntity>(current, pageSize));
+    public List<InterfaceBasicInfoVo> getInterfaceList(PageQuery pageQuery) {
+        Page<InterfaceEntity> page = query().ne("status", 0).page(new Page<InterfaceEntity>(pageQuery.getCurrentPage(),
+                pageQuery.getCurrentPage()));
         List<InterfaceBasicInfoVo> voList = page.getRecords().stream()
                 .filter(item -> item.getStatus() != InterfaceConstant.CLOSED_STATUS)
                 .map(item -> {
