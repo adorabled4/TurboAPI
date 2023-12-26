@@ -41,7 +41,6 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 **/.mvn/
-**/test
 ## File-based project format:
 *.iws
 *.iml
