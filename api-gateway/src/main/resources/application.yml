@@ -4,16 +4,28 @@ spring:
   cloud:
     gateway:
       routes:
-        # 需要添加2个 , ,另一个是后台通往的接口模块的CRUD , 以及之后前端访问的接口(或者通过dubbo远程调用)
+        # 在线调用接口路由
+        - id: call_online_route # 接口路由
+          uri: lb://api-interface
+          predicates:
+            - Path=/apicore/call/ol/** # 符合 /apicore/call/ol/** 的地址会被路由
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter.burstCapacity: 4
+                keyResolver: '#{@myKeyResolver}'
+            - RewritePath=/apicore/call/ol/(?<segment>.*),/api/${segment}
+        # apicore 路由
         - id: core_route
           uri: lb://api-core
           predicates:
             - Path=/apicore/** # 符合 /api开头的地址就会被路由
           filters:
             - RewritePath=/apicore/?(?<segment>.*),/apicore/$\{segment}
+        # 接口服务路由
         - id: serve_route # 接口路由
           uri: lb://api-interface
-#          uri: http://127.0.0.1:8123
           predicates:
             - Path=/api/** # 符合 /api开头的地址就会被路由
           filters:

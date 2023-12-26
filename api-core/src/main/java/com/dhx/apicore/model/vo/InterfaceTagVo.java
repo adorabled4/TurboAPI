@@ -20,6 +20,6 @@ public class InterfaceTagVo {
     /**
      * 接口列表
      */
-    List<InterfaceBasicInfoVo> interfaceBasicInfoVos;
+    List<InterfaceBasicInfoVO> interfaceBasicInfoVOS;
 }
 
