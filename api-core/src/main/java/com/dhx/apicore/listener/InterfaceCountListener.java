@@ -3,7 +3,7 @@ package com.dhx.apicore.listener;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.dhx.apicommon.constant.MQConstant;
 import com.dhx.apicore.model.DO.InterfaceEntity;
-import com.dhx.apicore.service.InterfaceEntityService;
+import com.dhx.apicore.service.InterfaceInfoService;
 import com.dhx.apicore.util.MQUtil;
 import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.core.Message;
@@ -25,7 +25,7 @@ import java.util.Map;
 public class InterfaceCountListener {
 
     @Resource
-    InterfaceEntityService interfaceEntityService;
+    InterfaceInfoService interfaceInfoService;
 
     /**
      * 更新 接口 的总调用次数
@@ -46,9 +46,9 @@ public class InterfaceCountListener {
             wrapper.setSql("call_times = call_times +1");
             wrapper.eq("id",id);
             // 更新调用次数
-            interfaceEntityService.update(wrapper);
+            interfaceInfoService.update(wrapper);
             // 更新redis排行榜
-            interfaceEntityService.addRankScore(id);
+            interfaceInfoService.addRankScore(id);
         }
     }
 

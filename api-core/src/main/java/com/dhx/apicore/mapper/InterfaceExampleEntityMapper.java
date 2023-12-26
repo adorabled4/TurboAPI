@@ -1,6 +1,5 @@
 package com.dhx.apicore.mapper;
 
-import com.dhx.apicore.model.DO.InterfaceExampleEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

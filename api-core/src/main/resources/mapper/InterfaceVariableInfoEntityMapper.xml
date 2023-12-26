@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhx.apicore.mapper.InterfaceVariableInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.dhx.apicore.model.DO.InterfaceVariableInfoEntity">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="requestParam" column="request_param" jdbcType="VARCHAR"/>
+            <result property="requestHeaders" column="request_headers" jdbcType="VARCHAR"/>
+            <result property="requestExample" column="request_example" jdbcType="VARCHAR"/>
+            <result property="responseExample" column="response_example" jdbcType="VARCHAR"/>
+            <result property="totalCallCount" column="total_call_count" jdbcType="BIGINT"/>
+            <result property="callPath" column="call_path" jdbcType="VARCHAR"/>
+            <result property="serviceAddress" column="service_address" jdbcType="VARCHAR"/>
+            <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
+            <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,request_param,request_headers,
+        request_example,response_example,total_call_count,
+        call_path,service_address,created_time,
+        updated_time,is_deleted
+    </sql>
+</mapper>

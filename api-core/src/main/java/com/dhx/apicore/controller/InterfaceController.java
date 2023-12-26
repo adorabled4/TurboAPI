@@ -5,7 +5,7 @@ import com.dhx.apicommon.common.exception.BusinessException;
 import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apicore.model.DO.InterfaceEntity;
-import com.dhx.apicore.model.DO.InterfaceExampleEntity;
+import com.dhx.apicore.model.DO.InterfaceVariableInfoEntity;
 import com.dhx.apicore.model.DO.UserEntity;
 import com.dhx.apicore.model.DTO.UserDTO;
 import com.dhx.apicore.model.query.InterfaceInfoQuery;
@@ -14,7 +14,8 @@ import com.dhx.apicore.model.vo.InterfaceBasicInfoVo;
 import com.dhx.apicore.model.vo.InterfaceDetailVo;
 import com.dhx.apicore.model.vo.InterfaceRankInfoVo;
 import com.dhx.apicore.model.vo.InterfaceTagVo;
-import com.dhx.apicore.service.InterfaceEntityService;
+import com.dhx.apicore.service.InterfaceInfoService;
+import com.dhx.apicore.service.InterfaceVariableInfoService;
 import com.dhx.apicore.service.UserService;
 import com.dhx.apicore.util.UserHolder;
 import com.dhx.apisdk.client.HxApiClient;
@@ -41,13 +42,16 @@ import java.util.Map;
 public class InterfaceController {
 
     @Resource
-    InterfaceEntityService interfaceEntityService;
+    InterfaceInfoService interfaceInfoService;
 
     @Resource
     HxApiClient hxApiClient;
 
     @Resource
     UserService userService;
+
+    @Resource
+    InterfaceVariableInfoService interfaceVariableInfoService;
 
     @PostMapping("/invoke")
     public BaseResponse invokeInterfaceOL(@Valid @RequestBody InterfaceInfoQuery interfaceInfoQuery, HttpServletRequest request){
@@ -58,12 +62,12 @@ public class InterfaceController {
         Gson gson = new Gson();
         try{
             Map<String, Object> requestParams = gson.fromJson(interfaceInfoQuery.getParams(), new TypeToken<Map<String, Object>>(){}.getType());
-            boolean validInterface=  interfaceEntityService.isValidInterfaceId(id);
+            boolean validInterface=  interfaceInfoService.isValidInterfaceId(id);
             if(!validInterface){
                 return ResultUtil.error(ErrorCode.PARAMS_ERROR,"接口已关闭!");
             }
             // 获取接口相关的信息 : 包括 请求方式, 请求路径等
-            InterfaceEntity interfaceEntity = interfaceEntityService.getById(id);
+            InterfaceEntity interfaceEntity = interfaceInfoService.getById(id);
             String method = interfaceEntity.getMethod();
             String url = interfaceEntity.getUrl();
             UserDTO userDTO = UserHolder.getUser();
@@ -77,28 +81,28 @@ public class InterfaceController {
 
     @GetMapping("/list")
     public BaseResponse<List<InterfaceBasicInfoVo>> getInterfaceList(PageQuery pageQuery) {
-        List<InterfaceBasicInfoVo> list = interfaceEntityService.getInterfaceList(pageQuery);
+        List<InterfaceBasicInfoVo> list = interfaceInfoService.getInterfaceList(pageQuery);
         return ResultUtil.success(list);
     }
 
     @GetMapping("/detail/{id}")
     public BaseResponse<InterfaceDetailVo> getInterfaceDetail(@PathVariable("id")Long id){
-        return interfaceEntityService.getInterfaceDetail(id);
+        return interfaceInfoService.getInterfaceDetail(id);
     }
 
     @GetMapping("/example/{id}")
-    public BaseResponse<InterfaceExampleEntity> getInterfaceExample(@PathVariable("id")Long id){
-        return interfaceEntityService.getInterfaceExample(id);
+    public BaseResponse<InterfaceVariableInfoEntity> getInterfaceExample(@PathVariable("id")Long id){
+        return ResultUtil.success(interfaceVariableInfoService.findById(id));
     }
 
     @GetMapping("/list/rank")
     public BaseResponse<List<InterfaceRankInfoVo>> getRankInterfaces(){
-        return interfaceEntityService.getRank5Interface();
+        return interfaceInfoService.getRank5Interface();
     }
 
     @GetMapping("/list/tag")
     public BaseResponse<List<InterfaceTagVo>> getInterfaceByTag(){
-        return interfaceEntityService.getInterfaceByTag();
+        return interfaceInfoService.getInterfaceByTag();
     }
 
 }
