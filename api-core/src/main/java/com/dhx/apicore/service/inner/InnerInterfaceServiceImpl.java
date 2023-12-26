@@ -8,13 +8,12 @@ import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.constant.MQConstant;
 import com.dhx.apicommon.model.to.InterfaceTo;
 import com.dhx.apicommon.service.InnerInterfaceService;
-import com.dhx.apicore.model.DO.InterfaceEntity;
-import com.dhx.apicore.service.InterfaceEntityService;
+import com.dhx.apicore.model.DO.InterfaceInfoEntity;
+import com.dhx.apicore.service.InterfaceInfoService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -28,7 +27,7 @@ import java.util.HashMap;
 public class InnerInterfaceServiceImpl implements InnerInterfaceService {
 
     @Resource
-    InterfaceEntityService interfaceEntityService;
+    InterfaceInfoService interfaceInfoService;
 
     @Resource
     RabbitTemplate rabbitTemplate;
@@ -38,10 +37,10 @@ public class InnerInterfaceServiceImpl implements InnerInterfaceService {
         if(StringUtils.isAnyBlank(method,url)){
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        QueryWrapper<InterfaceEntity> wrapper = new QueryWrapper<>();
+        QueryWrapper<InterfaceInfoEntity> wrapper = new QueryWrapper<>();
         wrapper.like("url", url);
         wrapper.eq("method", method);
-        InterfaceEntity one = interfaceEntityService.getOne(wrapper);
+        InterfaceInfoEntity one = interfaceInfoService.getOne(wrapper);
         InterfaceTo interfaceTo = BeanUtil.copyProperties(one, InterfaceTo.class);
         return interfaceTo;
     }

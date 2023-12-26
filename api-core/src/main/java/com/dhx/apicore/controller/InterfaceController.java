@@ -1,33 +1,24 @@
 package com.dhx.apicore.controller;
 
 import com.dhx.apicommon.common.BaseResponse;
-import com.dhx.apicommon.common.exception.BusinessException;
-import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.util.ResultUtil;
-import com.dhx.apicore.model.DO.InterfaceEntity;
-import com.dhx.apicore.model.DO.InterfaceExampleEntity;
-import com.dhx.apicore.model.DO.UserEntity;
-import com.dhx.apicore.model.DTO.UserDTO;
-import com.dhx.apicore.model.query.InterfaceInfoQuery;
-import com.dhx.apicore.model.vo.InterfaceBasicInfoVo;
-import com.dhx.apicore.model.vo.InterfaceDetailVo;
+import com.dhx.apicore.model.DO.InterfaceVariableInfoEntity;
+import com.dhx.apicore.model.enums.InterfaceCategoryEnum;
+import com.dhx.apicore.model.query.InterfaceCategoryQuery;
+import com.dhx.apicore.model.query.InterfacePubQuery;
+import com.dhx.apicore.model.query.PageQuery;
+import com.dhx.apicore.model.vo.InterfaceBasicInfoVO;
+import com.dhx.apicore.model.vo.InterfaceDetailVO;
 import com.dhx.apicore.model.vo.InterfaceRankInfoVo;
-import com.dhx.apicore.model.vo.InterfaceTagVo;
-import com.dhx.apicore.service.InterfaceEntityService;
-import com.dhx.apicore.service.UserService;
-import com.dhx.apicore.util.UserHolder;
-import com.dhx.apisdk.client.HxApiClient;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
+import com.dhx.apicore.service.InterfaceInfoService;
+import com.dhx.apicore.service.InterfaceVariableInfoService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author adorabled4
@@ -40,76 +31,53 @@ import java.util.Map;
 public class InterfaceController {
 
     @Resource
-    InterfaceEntityService interfaceEntityService;
-
+    InterfaceInfoService interfaceInfoService;
     @Resource
-    HxApiClient hxApiClient;
+    InterfaceVariableInfoService interfaceVariableInfoService;
 
-    @Resource
-    UserService userService;
+    @GetMapping("/categories")
+    @ApiOperation(value = "查看所有接口标签")
+    public BaseResponse getInterfaceCategories() {
+        return ResultUtil.success(InterfaceCategoryEnum.values());
+    }
 
-    @PostMapping("/invoke")
-    public BaseResponse invokeInterfaceOL(@Valid @RequestBody InterfaceInfoQuery interfaceInfoQuery, HttpServletRequest request){
-        if(interfaceInfoQuery ==null || interfaceInfoQuery.getInterfaceId()==null){
-            return ResultUtil.error(ErrorCode.PARAMS_ERROR);
-        }
-        long id = interfaceInfoQuery.getInterfaceId();
-        Gson gson = new Gson();
-        try{
-            Map<String, Object> requestParams = gson.fromJson(interfaceInfoQuery.getParams(), new TypeToken<Map<String, Object>>(){}.getType());
-            boolean validInterface=  interfaceEntityService.isValidInterfaceId(id);
-            if(!validInterface){
-                return ResultUtil.error(ErrorCode.PARAMS_ERROR,"接口已关闭!");
-            }
-            // 获取接口相关的信息 : 包括 请求方式, 请求路径等
-            InterfaceEntity interfaceEntity = interfaceEntityService.getById(id);
-            String method = interfaceEntity.getMethod();
-            String url = interfaceEntity.getUrl();
-            UserDTO userDTO = UserHolder.getUser();
-            UserEntity user = userService.getById(userDTO.getUserId());
-            // 调用SDK 来调用接口
-            return hxApiClient.invokeInterface(method, requestParams, interfaceEntity.getUrl(),request);
-        }catch (JsonSyntaxException e){
-            throw new BusinessException(ErrorCode.PARAMS_ERROR,"参数格式错误，请输入JSON格式参数！");
-        }
+    @PostMapping("/publish")
+    @ApiOperation(value = "发布接口服务")
+    public BaseResponse publishInterface(@RequestBody @Validated InterfacePubQuery query) {
+        interfaceInfoService.publishInterface(query);
+        return ResultUtil.success("发布成功");
     }
 
     @GetMapping("/list")
-    public BaseResponse<List<InterfaceBasicInfoVo>> getInterfaceList(@RequestParam("pageSize")int pageSize, @RequestParam("current")int current) {
-        if(pageSize <= 0 ){
-            pageSize=5;
-        }
-        if(current<0){
-            current=1;
-        }
-        List<InterfaceBasicInfoVo> list = interfaceEntityService.getInterfaceList(pageSize,current);
+    @ApiOperation(value = "获取接口列表")
+    public BaseResponse<List<InterfaceBasicInfoVO>> getInterfaceList(PageQuery pageQuery) {
+        List<InterfaceBasicInfoVO> list = interfaceInfoService.getInterfaceList(pageQuery);
         return ResultUtil.success(list);
     }
 
     @GetMapping("/detail/{id}")
-    public BaseResponse<InterfaceDetailVo> getInterfaceDetail(@PathVariable("id")Long id){
-        if(id<0){
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        return interfaceEntityService.getInterfaceDetail(id);
+    @ApiOperation(value = "查看接口详情")
+    public BaseResponse<InterfaceDetailVO> getInterfaceDetail(@PathVariable("id") Long id) {
+        return interfaceInfoService.getInterfaceDetail(id);
     }
 
     @GetMapping("/example/{id}")
-    public BaseResponse<InterfaceExampleEntity> getInterfaceExample(@PathVariable("id")Long id){
-        if(id<0){
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        return interfaceEntityService.getInterfaceExample(id);
+    @ApiOperation(value = "查看接口示例")
+    public BaseResponse<InterfaceVariableInfoEntity> getInterfaceExample(@PathVariable("id") Long id) {
+        return ResultUtil.success(interfaceVariableInfoService.findById(id));
     }
 
     @GetMapping("/list/rank")
-    public BaseResponse<List<InterfaceRankInfoVo>> getRankInterfaces(){
-        return interfaceEntityService.getRank5Interface();
+    @ApiOperation(value = "查看调用量TOP接口")
+    public BaseResponse<List<InterfaceRankInfoVo>> getRankInterfaces() {
+        return interfaceInfoService.getRank5Interface();
     }
 
-    @GetMapping("/list/tag")
-    public BaseResponse<List<InterfaceTagVo>> getInterfaceByTag(){
-        return interfaceEntityService.getInterfaceByTag();
+
+    @GetMapping("/list/categories")
+    @ApiOperation(value = "通过标签查询接口")
+    public BaseResponse<List<InterfaceBasicInfoVO>> getInterfaceByCategories(InterfaceCategoryQuery query){
+        return interfaceInfoService.getInterfaceByCategories(query);
     }
 
 }
