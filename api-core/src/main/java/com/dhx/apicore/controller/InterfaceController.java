@@ -49,28 +49,33 @@ public class InterfaceController {
     }
 
     @GetMapping("/list")
+    @ApiOperation(value = "获取接口列表")
     public BaseResponse<List<InterfaceBasicInfoVO>> getInterfaceList(PageQuery pageQuery) {
         List<InterfaceBasicInfoVO> list = interfaceInfoService.getInterfaceList(pageQuery);
         return ResultUtil.success(list);
     }
 
     @GetMapping("/detail/{id}")
+    @ApiOperation(value = "查看接口详情")
     public BaseResponse<InterfaceDetailVO> getInterfaceDetail(@PathVariable("id") Long id) {
         return interfaceInfoService.getInterfaceDetail(id);
     }
 
     @GetMapping("/example/{id}")
+    @ApiOperation(value = "查看接口示例")
     public BaseResponse<InterfaceVariableInfoEntity> getInterfaceExample(@PathVariable("id") Long id) {
         return ResultUtil.success(interfaceVariableInfoService.findById(id));
     }
 
     @GetMapping("/list/rank")
+    @ApiOperation(value = "查看调用量TOP接口")
     public BaseResponse<List<InterfaceRankInfoVo>> getRankInterfaces() {
         return interfaceInfoService.getRank5Interface();
     }
 
 
     @GetMapping("/list/categories")
+    @ApiOperation(value = "通过标签查询接口")
     public BaseResponse<List<InterfaceBasicInfoVO>> getInterfaceByCategories(InterfaceCategoryQuery query){
         return interfaceInfoService.getInterfaceByCategories(query);
     }
