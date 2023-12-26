@@ -6,8 +6,8 @@ import com.dhx.apicore.model.DO.InterfaceVariableInfoEntity;
 import com.dhx.apicore.model.enums.InterfaceCategoryEnum;
 import com.dhx.apicore.model.query.InterfacePubQuery;
 import com.dhx.apicore.model.query.PageQuery;
-import com.dhx.apicore.model.vo.InterfaceBasicInfoVo;
-import com.dhx.apicore.model.vo.InterfaceDetailVo;
+import com.dhx.apicore.model.vo.InterfaceBasicInfoVO;
+import com.dhx.apicore.model.vo.InterfaceDetailVO;
 import com.dhx.apicore.model.vo.InterfaceRankInfoVo;
 import com.dhx.apicore.service.InterfaceInfoService;
 import com.dhx.apicore.service.InterfaceVariableInfoService;
@@ -48,13 +48,13 @@ public class InterfaceController {
     }
 
     @GetMapping("/list")
-    public BaseResponse<List<InterfaceBasicInfoVo>> getInterfaceList(PageQuery pageQuery) {
-        List<InterfaceBasicInfoVo> list = interfaceInfoService.getInterfaceList(pageQuery);
+    public BaseResponse<List<InterfaceBasicInfoVO>> getInterfaceList(PageQuery pageQuery) {
+        List<InterfaceBasicInfoVO> list = interfaceInfoService.getInterfaceList(pageQuery);
         return ResultUtil.success(list);
     }
 
     @GetMapping("/detail/{id}")
-    public BaseResponse<InterfaceDetailVo> getInterfaceDetail(@PathVariable("id") Long id) {
+    public BaseResponse<InterfaceDetailVO> getInterfaceDetail(@PathVariable("id") Long id) {
         return interfaceInfoService.getInterfaceDetail(id);
     }
 

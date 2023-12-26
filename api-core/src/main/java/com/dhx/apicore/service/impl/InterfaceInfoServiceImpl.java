@@ -6,20 +6,19 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.util.ResultUtil;
-import com.dhx.apicore.common.constant.InterfaceConstant;
 import com.dhx.apicore.common.constant.RedisConstant;
 import com.dhx.apicore.mapper.InterfaceInfoEntityMapper;
 import com.dhx.apicore.model.DO.InterfaceInfoEntity;
 import com.dhx.apicore.model.DO.InterfaceVariableInfoEntity;
 import com.dhx.apicore.model.enums.InterfaceCategoryEnum;
+import com.dhx.apicore.model.enums.InterfaceStatusEnum;
 import com.dhx.apicore.model.query.InterfacePubQuery;
 import com.dhx.apicore.model.query.PageQuery;
-import com.dhx.apicore.model.vo.InterfaceBasicInfoVo;
-import com.dhx.apicore.model.vo.InterfaceDetailVo;
+import com.dhx.apicore.model.vo.InterfaceBasicInfoVO;
+import com.dhx.apicore.model.vo.InterfaceDetailVO;
 import com.dhx.apicore.model.vo.InterfaceRankInfoVo;
 import com.dhx.apicore.service.InterfaceInfoService;
 import com.dhx.apicore.service.InterfaceVariableInfoService;
-import com.dhx.apicore.service.UserService;
 import com.dhx.apicore.util.CategoryBitMapUtil;
 import com.dhx.apicore.util.ThrowUtil;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -40,10 +39,6 @@ import java.util.stream.Collectors;
 @Service
 public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMapper, InterfaceInfoEntity>
         implements InterfaceInfoService {
-
-    @Resource
-    UserService userService;
-
     @Resource
     StringRedisTemplate stringRedisTemplate;
 
@@ -51,57 +46,43 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
     InterfaceVariableInfoService interfaceVariableInfoService;
 
     @Override
-    public List<InterfaceBasicInfoVo> getInterfaceList(PageQuery pageQuery) {
-        Page<InterfaceInfoEntity> page = query().ne("status", 0).page(new Page<InterfaceInfoEntity>(pageQuery.getCurrentPage(),
-                pageQuery.getCurrentPage()));
-        List<InterfaceBasicInfoVo> voList = page.getRecords().stream()
-                .filter(item -> item.getStatus() != InterfaceConstant.CLOSED_STATUS)
+    public List<InterfaceBasicInfoVO> getInterfaceList(PageQuery pageQuery) {
+        Page<InterfaceInfoEntity> page = query().ne("status", 0).page(new Page<>(pageQuery.getCurrentPage(),
+                pageQuery.getPageSize()));
+        return page.getRecords().stream()
+//                .filter(item -> item.getStatus() != InterfaceStatusEnum.DEVELOPING)
                 .map(item -> {
-                    InterfaceBasicInfoVo interfaceBasicInfoVo = BeanUtil.copyProperties(item, InterfaceBasicInfoVo.class);
-//                    Integer userId = item.getUserId(); // 创建者的id
-//                    UserEntity user = userService.getById(userId);
-//                    if(user!=null){
-//                        interfaceBasicInfoVo.setUserName(user.getUserName());
-//                    }else{
-                    interfaceBasicInfoVo.setUserName("adorabled4");
-//                    }
-                    return interfaceBasicInfoVo;
+                    InterfaceBasicInfoVO interfaceBasicInfoVO = BeanUtil.copyProperties(item, InterfaceBasicInfoVO.class);
+                    // 设置分类信息
+                    Long categoryBitMap = item.getCategoryBitMap();
+                    List<InterfaceCategoryEnum> interfaceCategoryEnums = CategoryBitMapUtil.parseCategoryValue(categoryBitMap);
+                    interfaceBasicInfoVO.setCategories(interfaceCategoryEnums);
+                    return interfaceBasicInfoVO;
                 }).collect(Collectors.toList());
-        return voList;
     }
 
 
     @Override
-    public BaseResponse<InterfaceDetailVo> getInterfaceDetail(Long id) {
-        InterfaceInfoEntity interfaceEntity = getById(id);
-        InterfaceDetailVo interfaceBasicInfoVo = BeanUtil.copyProperties(interfaceEntity, InterfaceDetailVo.class);
-        // 设置创建者相关的信息
-//        Integer userId = interfaceEntity.getUserId(); // 创建者的id
-//        UserEntity user = userService.getById(userId);
-//        if(user!=null){
-//            interfaceBasicInfoVo.setUserName(user.getUserName());
-//        }else{
-        interfaceBasicInfoVo.setUserName("adorabled4");
-//        }
-        return ResultUtil.success(interfaceBasicInfoVo);
+    public BaseResponse<InterfaceDetailVO> getInterfaceDetail(Long id) {
+        InterfaceInfoEntity interfaceEntity = findById(id);
+        InterfaceVariableInfoEntity variableInfo = interfaceVariableInfoService.findById(id);
+        InterfaceDetailVO interfaceDetailVO = BeanUtil.copyProperties(interfaceEntity, InterfaceDetailVO.class);
+        BeanUtil.copyProperties(variableInfo, interfaceDetailVO);
+        // 设置分类信息
+        Long categoryBitMap = interfaceEntity.getCategoryBitMap();
+        List<InterfaceCategoryEnum> interfaceCategoryEnums = CategoryBitMapUtil.parseCategoryValue(categoryBitMap);
+        interfaceDetailVO.setCategories(interfaceCategoryEnums);
+        return ResultUtil.success(interfaceDetailVO);
     }
 
-    @Override
-    public boolean isValidInterfaceId(long id) {
-        if (id < 0) {
-            return false;
-        }
-        InterfaceInfoEntity byId = getById(id);
-        if (byId == null || byId.getStatus() == InterfaceConstant.CLOSED_STATUS) {
-            return false;
-        }
-        return true;
+    private InterfaceInfoEntity findById(Long id) {
+        InterfaceInfoEntity interfaceInfo = getById(id);
+        ThrowUtil.throwIf(interfaceInfo == null, ErrorCode.NOT_FOUND_ERROR);
+        return interfaceInfo;
     }
-
 
     @Override
     public void addRankScore(Long interfaceId) {
-        System.out.println("addRankScore:" + interfaceId);
         stringRedisTemplate.opsForZSet().incrementScore(RedisConstant.INTERFACE_RANK_KEY, String.valueOf(interfaceId), 1);
     }
 
@@ -116,65 +97,21 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
         // 封装vo
         if (ids.size() >= 5) {
             List<InterfaceInfoEntity> interfaceEntities = listByIds(ids);
-            List<InterfaceRankInfoVo> collect = interfaceEntities.stream().map(item -> {
-                InterfaceRankInfoVo interfaceRankInfoVo = BeanUtil.copyProperties(item, InterfaceRankInfoVo.class);
-                return interfaceRankInfoVo;
-            }).collect(Collectors.toList());
+            List<InterfaceRankInfoVo> collect = interfaceEntities
+                    .stream().map(item -> BeanUtil.copyProperties(item, InterfaceRankInfoVo.class))
+                    .collect(Collectors.toList());
             return ResultUtil.success(collect);
         } else {
             // 从数据库中查询
-//            QueryWrapper<InterfaceInfoEntity> wrapper = new QueryWrapper<>();
-//            wrapper.ne("status",0).orderByAsc("call_times");
-            List<InterfaceInfoEntity> interfaceEntities = query().gt("status", 0).orderByDesc("call_times").page(new Page<>(1, 5)).getRecords();
-            List<InterfaceRankInfoVo> collect = interfaceEntities.stream().map(item -> {
-                InterfaceRankInfoVo interfaceRankInfoVo = BeanUtil.copyProperties(item, InterfaceRankInfoVo.class);
-                return interfaceRankInfoVo;
-            }).collect(Collectors.toList());
+            List<InterfaceInfoEntity> interfaceEntities = query()
+                    .eq("status", InterfaceStatusEnum.AVAILABLE)
+                    .orderByDesc("call_times")
+                    .page(new Page<>(1, 5)).getRecords();
+            List<InterfaceRankInfoVo> collect = interfaceEntities
+                    .stream().map(item -> BeanUtil.copyProperties(item, InterfaceRankInfoVo.class))
+                    .collect(Collectors.toList());
             return ResultUtil.success(collect);
         }
-    }
-
-
-//    @Override
-//    public BaseResponse<List<InterfaceTagVo>> getInterfaceByTag() {
-//        List<String> tags = this.baseMapper.getTags();
-//        List<InterfaceTagVo> result = new ArrayList<>();
-//        List<InterfaceTagVo> tagVos = tags.stream().map(item -> {
-//            List<InterfaceInfoEntity> interfaceEntities = query().eq("tag", item).list();
-//            // 封装vo
-//            List<InterfaceBasicInfoVo> basicInfoVos = interfaceEntities.stream().map(interfaceEntity -> {
-//                InterfaceBasicInfoVo interfaceBasicInfoVo = BeanUtil.copyProperties(interfaceEntity, InterfaceBasicInfoVo.class);
-//                setUserName(interfaceEntity, interfaceBasicInfoVo);
-//                return interfaceBasicInfoVo;
-//            }).collect(Collectors.toList());
-//            // 封装tagVo
-//            InterfaceTagVo interfaceTagVo = new InterfaceTagVo();
-//            interfaceTagVo.setTag(item);
-//            interfaceTagVo.setInterfaceBasicInfoVos(basicInfoVos);
-//            return interfaceTagVo;
-//        }).collect(Collectors.toList());
-//        return ResultUtil.success(tagVos);
-//    }
-
-
-    /**
-     * 封装接口的创建者
-     *
-     * @param interfaceEntity
-     * @param interfaceBasicInfoVo
-     */
-    private void setUserName(InterfaceInfoEntity interfaceEntity, InterfaceBasicInfoVo interfaceBasicInfoVo) {
-//        if(interfaceEntity.getUserId()==null){
-        interfaceBasicInfoVo.setUserName("adorabled4");
-//        }else{
-//            UserEntity user = userService.getById(interfaceEntity.getUserId().longValue());
-//            if(user==null){
-//                interfaceBasicInfoVo.setUserName("adorabled4");
-//            }else{
-//                String userName = user.getUserName();
-//                interfaceBasicInfoVo.setUserName(userName);
-//            }
-//        }
     }
 
     @Override
@@ -189,7 +126,6 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
 
     private InterfaceInfoEntity getInterfaceEntity(InterfacePubQuery query) {
         InterfaceInfoEntity interfaceInfo = BeanUtil.copyProperties(query, InterfaceInfoEntity.class);
-//        List<InterfaceCategoryEnum> categories = query.getCategories().stream().map(InterfaceCategoryEnum::createByName).collect(Collectors.toList());
         List<InterfaceCategoryEnum> categories = query.getCategories();
         long combinedCategoryValue = CategoryBitMapUtil.getCombinedCategoryValue(categories);
         interfaceInfo.setCategoryBitMap(combinedCategoryValue);

@@ -2,7 +2,9 @@ package com.dhx.apicore.model.DO;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.dhx.apicore.model.query.InterfacePubQuery;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -12,6 +14,8 @@ import java.time.LocalDateTime;
  */
 @TableName(value = "interface_variable_info")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class InterfaceVariableInfoEntity implements Serializable {
     /**
      * 接口ID

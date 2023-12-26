@@ -5,8 +5,8 @@ import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicore.model.DO.InterfaceInfoEntity;
 import com.dhx.apicore.model.query.InterfacePubQuery;
 import com.dhx.apicore.model.query.PageQuery;
-import com.dhx.apicore.model.vo.InterfaceBasicInfoVo;
-import com.dhx.apicore.model.vo.InterfaceDetailVo;
+import com.dhx.apicore.model.vo.InterfaceBasicInfoVO;
+import com.dhx.apicore.model.vo.InterfaceDetailVO;
 import com.dhx.apicore.model.vo.InterfaceRankInfoVo;
 
 import java.util.List;
@@ -22,9 +22,9 @@ public interface InterfaceInfoService extends IService<InterfaceInfoEntity> {
      * 获取接口列表
      *
      * @param pageQuery 页面查询
-     * @return {@link List}<{@link InterfaceBasicInfoVo}>
+     * @return {@link List}<{@link InterfaceBasicInfoVO}>
      */
-    List<InterfaceBasicInfoVo> getInterfaceList(PageQuery pageQuery);
+    List<InterfaceBasicInfoVO> getInterfaceList(PageQuery pageQuery);
 
     /**
      * 获取接口详细信息
@@ -32,15 +32,7 @@ public interface InterfaceInfoService extends IService<InterfaceInfoEntity> {
      * @param id
      * @return
      */
-    BaseResponse<InterfaceDetailVo> getInterfaceDetail(Long id);
-
-    /**
-     * 是否是可用的接口id ( 接口状态 )
-     *
-     * @param id
-     * @return
-     */
-    boolean isValidInterfaceId(long id);
+    BaseResponse<InterfaceDetailVO> getInterfaceDetail(Long id);
 
     /**
      * 添加接口在排行榜中的分数
@@ -48,7 +40,6 @@ public interface InterfaceInfoService extends IService<InterfaceInfoEntity> {
      * @param id
      */
     void addRankScore(Long id);
-
 
     /**
      * 获取top 接口
