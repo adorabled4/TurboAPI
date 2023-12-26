@@ -3,6 +3,7 @@ package com.dhx.apicore.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicore.model.DO.InterfaceInfoEntity;
+import com.dhx.apicore.model.query.InterfaceCategoryQuery;
 import com.dhx.apicore.model.query.InterfacePubQuery;
 import com.dhx.apicore.model.query.PageQuery;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVO;
@@ -56,4 +57,11 @@ public interface InterfaceInfoService extends IService<InterfaceInfoEntity> {
      */
     void publishInterface(InterfacePubQuery query);
 
+    /**
+     * 按类别获取接口
+     *
+     * @param query 查询
+     * @return {@link BaseResponse}<{@link List}<{@link InterfaceBasicInfoVO}>>
+     */
+    BaseResponse<List<InterfaceBasicInfoVO>> getInterfaceByCategories(InterfaceCategoryQuery query);
 }

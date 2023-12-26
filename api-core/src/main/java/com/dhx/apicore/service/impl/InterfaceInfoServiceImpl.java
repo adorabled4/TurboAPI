@@ -12,6 +12,7 @@ import com.dhx.apicore.model.DO.InterfaceInfoEntity;
 import com.dhx.apicore.model.DO.InterfaceVariableInfoEntity;
 import com.dhx.apicore.model.enums.InterfaceCategoryEnum;
 import com.dhx.apicore.model.enums.InterfaceStatusEnum;
+import com.dhx.apicore.model.query.InterfaceCategoryQuery;
 import com.dhx.apicore.model.query.InterfacePubQuery;
 import com.dhx.apicore.model.query.PageQuery;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVO;
@@ -47,7 +48,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
 
     @Override
     public List<InterfaceBasicInfoVO> getInterfaceList(PageQuery pageQuery) {
-        Page<InterfaceInfoEntity> page = query().ne("status", 0).page(new Page<>(pageQuery.getCurrentPage(),
+        Page<InterfaceInfoEntity> page = query().ne("status", InterfaceStatusEnum.BANNED).page(new Page<>(pageQuery.getCurrentPage(),
                 pageQuery.getPageSize()));
         return page.getRecords().stream()
 //                .filter(item -> item.getStatus() != InterfaceStatusEnum.DEVELOPING)
@@ -133,6 +134,24 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
     }
 
 
+    @Override
+    public BaseResponse<List<InterfaceBasicInfoVO>> getInterfaceByCategories(InterfaceCategoryQuery query) {
+        List<InterfaceCategoryEnum> categories = query.getCategories();
+        long categoryBitMapValue = CategoryBitMapUtil.getCombinedCategoryValue(categories);
+        List<InterfaceBasicInfoVO> interfaceBasicInfoVOS = query()
+                .eq("category_bit_map", categoryBitMapValue)
+                .ne("status", InterfaceStatusEnum.BANNED)
+                .page(new Page<>(query.getCurrentPage(), query.getPageSize())).getRecords()
+                .stream().map(item -> {
+                    InterfaceBasicInfoVO interfaceBasicInfoVO = BeanUtil.copyProperties(item, InterfaceBasicInfoVO.class);
+                    // 设置分类信息
+                    Long categoryBitMap = item.getCategoryBitMap();
+                    List<InterfaceCategoryEnum> interfaceCategoryEnums = CategoryBitMapUtil.parseCategoryValue(categoryBitMap);
+                    interfaceBasicInfoVO.setCategories(interfaceCategoryEnums);
+                    return interfaceBasicInfoVO;
+                }).collect(Collectors.toList());
+        return ResultUtil.success(interfaceBasicInfoVOS);
+    }
 }
 
 

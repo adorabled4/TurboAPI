@@ -4,6 +4,7 @@ import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apicore.model.DO.InterfaceVariableInfoEntity;
 import com.dhx.apicore.model.enums.InterfaceCategoryEnum;
+import com.dhx.apicore.model.query.InterfaceCategoryQuery;
 import com.dhx.apicore.model.query.InterfacePubQuery;
 import com.dhx.apicore.model.query.PageQuery;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVO;
@@ -68,9 +69,10 @@ public class InterfaceController {
         return interfaceInfoService.getRank5Interface();
     }
 
-//    @GetMapping("/list/tag")
-//    public BaseResponse<List<InterfaceTagVo>> getInterfaceByTag(){
-//        return interfaceInfoService.getInterfaceByTag();
-//    }
+
+    @GetMapping("/list/categories")
+    public BaseResponse<List<InterfaceBasicInfoVO>> getInterfaceByCategories(InterfaceCategoryQuery query){
+        return interfaceInfoService.getInterfaceByCategories(query);
+    }
 
 }

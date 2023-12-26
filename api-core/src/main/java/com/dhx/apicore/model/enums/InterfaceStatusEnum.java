@@ -17,7 +17,8 @@ import java.util.Map;
 public enum InterfaceStatusEnum implements BaseEnum<Integer> {
     AVAILABLE(1, "可用"),
     CLOSED(2, "已关闭"),
-    DEVELOPING(3, "开发中");
+    DEVELOPING(3, "开发中"),
+    BANNED(4, "禁用");
 
     private final int index;
     private final String value;
