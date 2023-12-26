@@ -1,6 +1,7 @@
 package com.dhx.apicore.model.DO;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.dhx.apicore.model.enums.InterfaceStatusEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,14 +48,9 @@ public class InterfaceInfoEntity implements Serializable {
     private Long categoryBitMap;
 
     /**
-     * 接口类型(免费, 付费, 限时免费, 会员免费)
-     */
-    private Integer type;
-
-    /**
      * 接口状态
      */
-    private Integer status;
+    private InterfaceStatusEnum status;
 
     /**
      * 接口文档地址
@@ -103,7 +99,6 @@ public class InterfaceInfoEntity implements Serializable {
             && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()))
             && (this.getImageUrl() == null ? other.getImageUrl() == null : this.getImageUrl().equals(other.getImageUrl()))
             && (this.getCategoryBitMap() == null ? other.getCategoryBitMap() == null : this.getCategoryBitMap().equals(other.getCategoryBitMap()))
-            && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
             && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
             && (this.getDocUrl() == null ? other.getDocUrl() == null : this.getDocUrl().equals(other.getDocUrl()))
             && (this.getRequestMethod() == null ? other.getRequestMethod() == null : this.getRequestMethod().equals(other.getRequestMethod()))
@@ -121,7 +116,6 @@ public class InterfaceInfoEntity implements Serializable {
         result = prime * result + ((getDescription() == null) ? 0 : getDescription().hashCode());
         result = prime * result + ((getImageUrl() == null) ? 0 : getImageUrl().hashCode());
         result = prime * result + ((getCategoryBitMap() == null) ? 0 : getCategoryBitMap().hashCode());
-        result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
         result = prime * result + ((getDocUrl() == null) ? 0 : getDocUrl().hashCode());
         result = prime * result + ((getRequestMethod() == null) ? 0 : getRequestMethod().hashCode());
@@ -142,7 +136,6 @@ public class InterfaceInfoEntity implements Serializable {
         sb.append(", description=").append(description);
         sb.append(", imageUrl=").append(imageUrl);
         sb.append(", category=").append(categoryBitMap);
-        sb.append(", type=").append(type);
         sb.append(", status=").append(status);
         sb.append(", docUrl=").append(docUrl);
         sb.append(", requestMethod=").append(requestMethod);
