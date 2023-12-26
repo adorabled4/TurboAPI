@@ -1,14 +1,12 @@
 package com.dhx.apicore.service;
 
 import com.dhx.apicommon.common.BaseResponse;
-import com.dhx.apicore.model.DO.InterfaceEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.dhx.apicore.model.DO.InterfaceExampleEntity;
+import com.dhx.apicore.model.DO.InterfaceInfoEntity;
 import com.dhx.apicore.model.query.PageQuery;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVo;
 import com.dhx.apicore.model.vo.InterfaceDetailVo;
 import com.dhx.apicore.model.vo.InterfaceRankInfoVo;
-import com.dhx.apicore.model.vo.InterfaceTagVo;
 
 import java.util.List;
 
@@ -17,7 +15,7 @@ import java.util.List;
 * @description 针对表【t_interface_entity】的数据库操作Service
 * @createDate 2023-04-12 09:38:35
 */
-public interface InterfaceEntityService extends IService<InterfaceEntity> {
+public interface InterfaceInfoService extends IService<InterfaceInfoEntity> {
 
     /**
      * 获取接口列表
@@ -33,15 +31,6 @@ public interface InterfaceEntityService extends IService<InterfaceEntity> {
      * @return
      */
     BaseResponse<InterfaceDetailVo> getInterfaceDetail(Long id);
-
-
-    /**
-     * 获取接口调用示例
-     * @param id
-     * @return
-     */
-    BaseResponse<InterfaceExampleEntity> getInterfaceExample(Long id);
-
 
     /**
      * 是否是可用的接口id ( 接口状态 )
@@ -63,5 +52,5 @@ public interface InterfaceEntityService extends IService<InterfaceEntity> {
      */
     BaseResponse<List<InterfaceRankInfoVo>> getRank5Interface();
 
-    BaseResponse<List<InterfaceTagVo>> getInterfaceByTag();
+//    BaseResponse<List<InterfaceTagVo>> getInterfaceByTag();
 }

@@ -4,7 +4,7 @@ import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.common.exception.BusinessException;
 import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.util.ResultUtil;
-import com.dhx.apicore.model.DO.InterfaceEntity;
+import com.dhx.apicore.model.DO.InterfaceInfoEntity;
 import com.dhx.apicore.model.DO.InterfaceVariableInfoEntity;
 import com.dhx.apicore.model.DO.UserEntity;
 import com.dhx.apicore.model.DTO.UserDTO;
@@ -53,31 +53,29 @@ public class InterfaceController {
     @Resource
     InterfaceVariableInfoService interfaceVariableInfoService;
 
-    @PostMapping("/invoke")
-    public BaseResponse invokeInterfaceOL(@Valid @RequestBody InterfaceInfoQuery interfaceInfoQuery, HttpServletRequest request){
-        if(interfaceInfoQuery ==null || interfaceInfoQuery.getInterfaceId()==null){
-            return ResultUtil.error(ErrorCode.PARAMS_ERROR);
-        }
-        long id = interfaceInfoQuery.getInterfaceId();
-        Gson gson = new Gson();
-        try{
-            Map<String, Object> requestParams = gson.fromJson(interfaceInfoQuery.getParams(), new TypeToken<Map<String, Object>>(){}.getType());
-            boolean validInterface=  interfaceInfoService.isValidInterfaceId(id);
-            if(!validInterface){
-                return ResultUtil.error(ErrorCode.PARAMS_ERROR,"接口已关闭!");
-            }
-            // 获取接口相关的信息 : 包括 请求方式, 请求路径等
-            InterfaceEntity interfaceEntity = interfaceInfoService.getById(id);
-            String method = interfaceEntity.getMethod();
-            String url = interfaceEntity.getUrl();
-            UserDTO userDTO = UserHolder.getUser();
-            UserEntity user = userService.getById(userDTO.getUserId());
-            // 调用SDK 来调用接口
-            return hxApiClient.invokeInterface(method, requestParams, interfaceEntity.getUrl(),request);
-        }catch (JsonSyntaxException e){
-            throw new BusinessException(ErrorCode.PARAMS_ERROR,"参数格式错误，请输入JSON格式参数！");
-        }
-    }
+//    @PostMapping("/invoke")
+//    public BaseResponse invokeInterfaceOL(@Valid @RequestBody InterfaceInfoQuery interfaceInfoQuery, HttpServletRequest request){
+//        if(interfaceInfoQuery ==null || interfaceInfoQuery.getInterfaceId()==null){
+//            return ResultUtil.error(ErrorCode.PARAMS_ERROR);
+//        }
+//        long id = interfaceInfoQuery.getInterfaceId();
+//        Gson gson = new Gson();
+//        try{
+//            Map<String, Object> requestParams = gson.fromJson(interfaceInfoQuery.getParams(), new TypeToken<Map<String, Object>>(){}.getType());
+//            boolean validInterface=  interfaceInfoService.isValidInterfaceId(id);
+//            if(!validInterface){
+//                return ResultUtil.error(ErrorCode.PARAMS_ERROR,"接口已关闭!");
+//            }
+//            // 获取接口相关的信息 : 包括 请求方式, 请求路径等
+//            InterfaceInfoEntity interfaceInfo = interfaceInfoService.getById(id);
+//            String method = interfaceInfo.getRequestMethod();
+////            String method = interfaceInfo.get();
+//            // 调用SDK 来调用接口
+//            return hxApiClient.invokeInterface(method, requestParams, interfaceEntity.getUrl(),request);
+//        }catch (JsonSyntaxException e){
+//            throw new BusinessException(ErrorCode.PARAMS_ERROR,"参数格式错误，请输入JSON格式参数！");
+//        }
+//    }
 
     @GetMapping("/list")
     public BaseResponse<List<InterfaceBasicInfoVo>> getInterfaceList(PageQuery pageQuery) {
@@ -100,9 +98,9 @@ public class InterfaceController {
         return interfaceInfoService.getRank5Interface();
     }
 
-    @GetMapping("/list/tag")
-    public BaseResponse<List<InterfaceTagVo>> getInterfaceByTag(){
-        return interfaceInfoService.getInterfaceByTag();
-    }
+//    @GetMapping("/list/tag")
+//    public BaseResponse<List<InterfaceTagVo>> getInterfaceByTag(){
+//        return interfaceInfoService.getInterfaceByTag();
+//    }
 
 }

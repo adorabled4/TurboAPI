@@ -2,7 +2,7 @@ package com.dhx.apicore.listener;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.dhx.apicommon.constant.MQConstant;
-import com.dhx.apicore.model.DO.InterfaceEntity;
+import com.dhx.apicore.model.DO.InterfaceInfoEntity;
 import com.dhx.apicore.service.InterfaceInfoService;
 import com.dhx.apicore.util.MQUtil;
 import org.springframework.amqp.core.ExchangeTypes;
@@ -42,7 +42,7 @@ public class InterfaceCountListener {
         if(data instanceof Integer){
             Integer interfaceId = ((Integer) data);
             Long id = Long.valueOf(interfaceId);
-            UpdateWrapper<InterfaceEntity> wrapper = new UpdateWrapper<>();
+            UpdateWrapper<InterfaceInfoEntity> wrapper = new UpdateWrapper<>();
             wrapper.setSql("call_times = call_times +1");
             wrapper.eq("id",id);
             // 更新调用次数
