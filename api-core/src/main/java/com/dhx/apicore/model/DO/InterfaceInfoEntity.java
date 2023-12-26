@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -14,6 +15,7 @@ import lombok.Data;
  */
 @TableName(value ="interface_info")
 @Data
+@Builder
 public class InterfaceInfoEntity implements Serializable {
     /**
      * 接口id
@@ -39,7 +41,7 @@ public class InterfaceInfoEntity implements Serializable {
     /**
      * 接口分类
      */
-    private Integer category;
+    private Long categoryBitMap;
 
     /**
      * 接口类型(免费, 付费, 限时免费, 会员免费)
@@ -97,7 +99,7 @@ public class InterfaceInfoEntity implements Serializable {
             && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
             && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()))
             && (this.getImageUrl() == null ? other.getImageUrl() == null : this.getImageUrl().equals(other.getImageUrl()))
-            && (this.getCategory() == null ? other.getCategory() == null : this.getCategory().equals(other.getCategory()))
+            && (this.getCategoryBitMap() == null ? other.getCategoryBitMap() == null : this.getCategoryBitMap().equals(other.getCategoryBitMap()))
             && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
             && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
             && (this.getDocUrl() == null ? other.getDocUrl() == null : this.getDocUrl().equals(other.getDocUrl()))
@@ -115,7 +117,7 @@ public class InterfaceInfoEntity implements Serializable {
         result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
         result = prime * result + ((getDescription() == null) ? 0 : getDescription().hashCode());
         result = prime * result + ((getImageUrl() == null) ? 0 : getImageUrl().hashCode());
-        result = prime * result + ((getCategory() == null) ? 0 : getCategory().hashCode());
+        result = prime * result + ((getCategoryBitMap() == null) ? 0 : getCategoryBitMap().hashCode());
         result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
         result = prime * result + ((getDocUrl() == null) ? 0 : getDocUrl().hashCode());
@@ -136,7 +138,7 @@ public class InterfaceInfoEntity implements Serializable {
         sb.append(", name=").append(name);
         sb.append(", description=").append(description);
         sb.append(", imageUrl=").append(imageUrl);
-        sb.append(", category=").append(category);
+        sb.append(", category=").append(categoryBitMap);
         sb.append(", type=").append(type);
         sb.append(", status=").append(status);
         sb.append(", docUrl=").append(docUrl);

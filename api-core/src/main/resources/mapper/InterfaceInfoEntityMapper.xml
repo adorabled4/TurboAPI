@@ -9,7 +9,7 @@
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="description" column="description" jdbcType="VARCHAR"/>
             <result property="imageUrl" column="image_url" jdbcType="VARCHAR"/>
-            <result property="category" column="category" jdbcType="TINYINT"/>
+            <result property="categoryBitMap" column="category_bit_map" jdbcType="TINYINT"/>
             <result property="type" column="type" jdbcType="TINYINT"/>
             <result property="status" column="status" jdbcType="TINYINT"/>
             <result property="docUrl" column="doc_url" jdbcType="VARCHAR"/>
