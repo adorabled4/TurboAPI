@@ -4,27 +4,30 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dhx.apicommon.common.BaseResponse;
+import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apicore.common.constant.InterfaceConstant;
 import com.dhx.apicore.common.constant.RedisConstant;
 import com.dhx.apicore.mapper.InterfaceInfoEntityMapper;
 import com.dhx.apicore.model.DO.InterfaceInfoEntity;
-import com.dhx.apicore.model.DO.InterfaceInfoEntity;
-import com.dhx.apicore.model.DO.UserEntity;
+import com.dhx.apicore.model.DO.InterfaceVariableInfoEntity;
+import com.dhx.apicore.model.enums.InterfaceCategoryEnum;
+import com.dhx.apicore.model.query.InterfacePubQuery;
 import com.dhx.apicore.model.query.PageQuery;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVo;
 import com.dhx.apicore.model.vo.InterfaceDetailVo;
 import com.dhx.apicore.model.vo.InterfaceRankInfoVo;
-import com.dhx.apicore.model.vo.InterfaceTagVo;
 import com.dhx.apicore.service.InterfaceInfoService;
 import com.dhx.apicore.service.InterfaceVariableInfoService;
 import com.dhx.apicore.service.UserService;
+import com.dhx.apicore.util.CategoryBitMapUtil;
+import com.dhx.apicore.util.ThrowUtil;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -173,6 +176,27 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
 //            }
 //        }
     }
+
+    @Override
+    @Transactional
+    public void publishInterface(InterfacePubQuery query) {
+        InterfaceVariableInfoEntity variableInfo = new InterfaceVariableInfoEntity(query);
+        InterfaceInfoEntity interfaceInfo = getInterfaceEntity(query);
+        boolean update = saveOrUpdate(interfaceInfo);
+        boolean saveOrUpdate = interfaceVariableInfoService.saveOrUpdate(variableInfo);
+        ThrowUtil.throwIf(!update || !saveOrUpdate, ErrorCode.OPERATION_ERROR, "保存接口信息失败");
+    }
+
+    private InterfaceInfoEntity getInterfaceEntity(InterfacePubQuery query) {
+        InterfaceInfoEntity interfaceInfo = BeanUtil.copyProperties(query, InterfaceInfoEntity.class);
+//        List<InterfaceCategoryEnum> categories = query.getCategories().stream().map(InterfaceCategoryEnum::createByName).collect(Collectors.toList());
+        List<InterfaceCategoryEnum> categories = query.getCategories();
+        long combinedCategoryValue = CategoryBitMapUtil.getCombinedCategoryValue(categories);
+        interfaceInfo.setCategoryBitMap(combinedCategoryValue);
+        return interfaceInfo;
+    }
+
+
 }
 
 

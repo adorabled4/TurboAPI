@@ -1,14 +1,20 @@
 package com.dhx.apicore.model.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author adorabled4
  * @className InterfaceCategoryEnum
  * @date : 2023/12/26/ 09:50
  **/
+@Getter
 @AllArgsConstructor
-public enum InterfaceCategoryEnum {
+public enum InterfaceCategoryEnum implements BaseEnum<Integer> {
     LIFE_SERVICE(1, "生活服务"),
     FINTECH(2, "金融科技"),
     DATA_INTELLIGENCE(3, "数据智能"),
@@ -27,20 +33,31 @@ public enum InterfaceCategoryEnum {
     private int index;
     private String value;
 
-    public int getIndex() {
-        return index;
+    private static final Map<String, InterfaceCategoryEnum> MAP = new HashMap<>();
+
+    static {
+        for (InterfaceCategoryEnum status : InterfaceCategoryEnum.values()) {
+            MAP.put(status.getName(), status);
+        }
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
+    @JsonCreator
+    public static InterfaceCategoryEnum createByName(String name) {
+        InterfaceCategoryEnum interfaceCategoryEnum = MAP.get(name);
+        if (interfaceCategoryEnum == null) {
+            throw new IllegalArgumentException("InterfaceCategoryEnum not found. name=" + name);
+        }
+        return MAP.get(name);
     }
 
     @Override
-    public String toString() {
-        return this.getValue();
+    public Integer getValue() {
+        return this.index;
     }
+
+    @Override
+    public String getName() {
+        return this.value;
+    }
+
 }

@@ -1,13 +1,14 @@
 package com.dhx.apicore.model.DO;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
-import lombok.Data;
 
 /**
  * 
@@ -16,6 +17,8 @@ import lombok.Data;
 @TableName(value ="interface_info")
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class InterfaceInfoEntity implements Serializable {
     /**
      * 接口id

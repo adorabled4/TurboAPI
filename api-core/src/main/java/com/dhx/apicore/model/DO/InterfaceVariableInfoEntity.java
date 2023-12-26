@@ -1,18 +1,16 @@
 package com.dhx.apicore.model.DO;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.util.Date;
+import com.baomidou.mybatisplus.annotation.*;
+import com.dhx.apicore.model.query.InterfacePubQuery;
 import lombok.Data;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 /**
- * 
  * @TableName interface_variable_info
  */
-@TableName(value ="interface_variable_info")
+@TableName(value = "interface_variable_info")
 @Data
 public class InterfaceVariableInfoEntity implements Serializable {
     /**
@@ -59,20 +57,29 @@ public class InterfaceVariableInfoEntity implements Serializable {
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 逻辑删除字段
      */
+    @TableLogic
     private Integer isDeleted;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+    public InterfaceVariableInfoEntity(InterfacePubQuery query) {
+        this.serviceAddress = query.getServiceAddress();
+        this.callPath = query.getCallPath();
+        this.requestParam = query.getRequestParam();
+        this.requestHeaders = query.getRequestHeaders();
+        this.totalCallCount = 0L;
+    }
 
     @Override
     public boolean equals(Object that) {
@@ -87,16 +94,16 @@ public class InterfaceVariableInfoEntity implements Serializable {
         }
         InterfaceVariableInfoEntity other = (InterfaceVariableInfoEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getRequestParam() == null ? other.getRequestParam() == null : this.getRequestParam().equals(other.getRequestParam()))
-            && (this.getRequestHeaders() == null ? other.getRequestHeaders() == null : this.getRequestHeaders().equals(other.getRequestHeaders()))
-            && (this.getRequestExample() == null ? other.getRequestExample() == null : this.getRequestExample().equals(other.getRequestExample()))
-            && (this.getResponseExample() == null ? other.getResponseExample() == null : this.getResponseExample().equals(other.getResponseExample()))
-            && (this.getTotalCallCount() == null ? other.getTotalCallCount() == null : this.getTotalCallCount().equals(other.getTotalCallCount()))
-            && (this.getCallPath() == null ? other.getCallPath() == null : this.getCallPath().equals(other.getCallPath()))
-            && (this.getServiceAddress() == null ? other.getServiceAddress() == null : this.getServiceAddress().equals(other.getServiceAddress()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
-            && (this.getIsDeleted() == null ? other.getIsDeleted() == null : this.getIsDeleted().equals(other.getIsDeleted()));
+                && (this.getRequestParam() == null ? other.getRequestParam() == null : this.getRequestParam().equals(other.getRequestParam()))
+                && (this.getRequestHeaders() == null ? other.getRequestHeaders() == null : this.getRequestHeaders().equals(other.getRequestHeaders()))
+                && (this.getRequestExample() == null ? other.getRequestExample() == null : this.getRequestExample().equals(other.getRequestExample()))
+                && (this.getResponseExample() == null ? other.getResponseExample() == null : this.getResponseExample().equals(other.getResponseExample()))
+                && (this.getTotalCallCount() == null ? other.getTotalCallCount() == null : this.getTotalCallCount().equals(other.getTotalCallCount()))
+                && (this.getCallPath() == null ? other.getCallPath() == null : this.getCallPath().equals(other.getCallPath()))
+                && (this.getServiceAddress() == null ? other.getServiceAddress() == null : this.getServiceAddress().equals(other.getServiceAddress()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
+                && (this.getIsDeleted() == null ? other.getIsDeleted() == null : this.getIsDeleted().equals(other.getIsDeleted()));
     }
 
     @Override

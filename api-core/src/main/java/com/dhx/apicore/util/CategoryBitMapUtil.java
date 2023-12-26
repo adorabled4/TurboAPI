@@ -48,6 +48,9 @@ public class CategoryBitMapUtil {
      * @return int
      */
     public static long getCombinedCategoryValue(List<InterfaceCategoryEnum> categories) {
+        if(categories==null || categories.size()==0){
+            return 0L;
+        }
         long combinedValue = 0;
         for (InterfaceCategoryEnum category : categories) {
             combinedValue |= getCategoryValue(category);
