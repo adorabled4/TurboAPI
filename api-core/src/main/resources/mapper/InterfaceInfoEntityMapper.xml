@@ -14,8 +14,8 @@
             <result property="status" column="status" jdbcType="TINYINT"/>
             <result property="docUrl" column="doc_url" jdbcType="VARCHAR"/>
             <result property="requestMethod" column="request_method" jdbcType="VARCHAR"/>
-            <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
-            <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
     </resultMap>
 
@@ -23,6 +23,6 @@
         id,name,description,
         image_url,category,type,
         status,doc_url,request_method,
-        created_time,updated_time,is_deleted
+        create_time,update_time,is_deleted
     </sql>
 </mapper>

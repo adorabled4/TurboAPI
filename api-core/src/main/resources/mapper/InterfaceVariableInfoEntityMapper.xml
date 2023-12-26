@@ -13,15 +13,15 @@
             <result property="totalCallCount" column="total_call_count" jdbcType="BIGINT"/>
             <result property="callPath" column="call_path" jdbcType="VARCHAR"/>
             <result property="serviceAddress" column="service_address" jdbcType="VARCHAR"/>
-            <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
-            <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,request_param,request_headers,
         request_example,response_example,total_call_count,
-        call_path,service_address,created_time,
-        updated_time,is_deleted
+        call_path,service_address,create_time,
+        update_time,is_deleted
     </sql>
 </mapper>

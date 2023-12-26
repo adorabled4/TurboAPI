@@ -59,12 +59,12 @@ public class InterfaceVariableInfoEntity implements Serializable {
     /**
      * 创建时间
      */
-    private Date createdTime;
+    private Date createTime;
 
     /**
      * 更新时间
      */
-    private Date updatedTime;
+    private Date updateTime;
 
     /**
      * 逻辑删除字段
@@ -94,8 +94,8 @@ public class InterfaceVariableInfoEntity implements Serializable {
             && (this.getTotalCallCount() == null ? other.getTotalCallCount() == null : this.getTotalCallCount().equals(other.getTotalCallCount()))
             && (this.getCallPath() == null ? other.getCallPath() == null : this.getCallPath().equals(other.getCallPath()))
             && (this.getServiceAddress() == null ? other.getServiceAddress() == null : this.getServiceAddress().equals(other.getServiceAddress()))
-            && (this.getCreatedTime() == null ? other.getCreatedTime() == null : this.getCreatedTime().equals(other.getCreatedTime()))
-            && (this.getUpdatedTime() == null ? other.getUpdatedTime() == null : this.getUpdatedTime().equals(other.getUpdatedTime()))
+            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
             && (this.getIsDeleted() == null ? other.getIsDeleted() == null : this.getIsDeleted().equals(other.getIsDeleted()));
     }
 
@@ -111,8 +111,8 @@ public class InterfaceVariableInfoEntity implements Serializable {
         result = prime * result + ((getTotalCallCount() == null) ? 0 : getTotalCallCount().hashCode());
         result = prime * result + ((getCallPath() == null) ? 0 : getCallPath().hashCode());
         result = prime * result + ((getServiceAddress() == null) ? 0 : getServiceAddress().hashCode());
-        result = prime * result + ((getCreatedTime() == null) ? 0 : getCreatedTime().hashCode());
-        result = prime * result + ((getUpdatedTime() == null) ? 0 : getUpdatedTime().hashCode());
+        result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
+        result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
         result = prime * result + ((getIsDeleted() == null) ? 0 : getIsDeleted().hashCode());
         return result;
     }
@@ -131,8 +131,8 @@ public class InterfaceVariableInfoEntity implements Serializable {
         sb.append(", totalCallCount=").append(totalCallCount);
         sb.append(", callPath=").append(callPath);
         sb.append(", serviceAddress=").append(serviceAddress);
-        sb.append(", createdTime=").append(createdTime);
-        sb.append(", updatedTime=").append(updatedTime);
+        sb.append(", createTime=").append(createTime);
+        sb.append(", updateTime=").append(updateTime);
         sb.append(", isDeleted=").append(isDeleted);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
