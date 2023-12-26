@@ -38,7 +38,7 @@ public class ReFreshTokenInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("Authorization"); //从请求头中获取JWT access_token
         if(StringUtils.isEmpty(token)){
-            throw new BusinessException(ErrorCode.NOT_LOGIN,"missing jwt token");
+            throw new BusinessException(ErrorCode.NOT_LOGIN,"请先登录~");
         }
         try {
             // 解析并验证JWT token是否合法
@@ -71,7 +71,7 @@ public class ReFreshTokenInterceptor implements HandlerInterceptor {
             }
             return true;
         } catch (Exception e) {
-            throw new RuntimeException("Invalid JWT token");
+            throw new BusinessException(ErrorCode.FORBIDDEN_ERROR, "token错误, 请重新登录");
         }
     }
 }
