@@ -6,6 +6,7 @@ import com.dhx.apiinterface.gen.InterfaceMetadata;
 import com.dhx.apiinterface.service.AigcContentService;
 import com.dhx.apiinterface.service.InterfaceMetadataService;
 import com.dhx.apiinterface.service.InvokeInterfaceServiceV2;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -15,8 +16,8 @@ import javax.servlet.http.HttpServletRequest;
  * @className InvokeInterfaceServiceV2Impl
  * @date : 2023/12/27/ 15:23
  **/
+@Service
 public class InvokeInterfaceServiceV2Impl implements InvokeInterfaceServiceV2 {
-
     @Resource
     AigcContentService aigcContentService;
 
