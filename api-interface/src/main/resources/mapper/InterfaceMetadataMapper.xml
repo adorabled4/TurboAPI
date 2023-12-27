@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhx.apiinterface.mapper.InterfaceMetadataMapper">
+
+    <resultMap id="BaseResultMap" type="com.dhx.apiinterface.gen.InterfaceMetadata">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="interface_id" column="interface_id" jdbcType="BIGINT"/>
+            <result property="interface_name" column="interface_name" jdbcType="VARCHAR"/>
+            <result property="call_path" column="call_path" jdbcType="VARCHAR"/>
+            <result property="data_count" column="data_count" jdbcType="BIGINT"/>
+            <result property="is_cache" column="is_cache" jdbcType="TINYINT"/>
+            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="update_time" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="is_delete" column="is_delete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,interface_id,interface_name,
+        call_path,data_count,is_cache,
+        create_time,update_time,is_delete
+    </sql>
+</mapper>
