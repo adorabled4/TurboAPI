@@ -1,6 +1,8 @@
 package com.dhx.apicore.service.impl;
 
+import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.common.exception.BusinessException;
@@ -11,7 +13,9 @@ import com.dhx.apicore.common.constant.UserConstant;
 import com.dhx.apicore.manager.EmailManager;
 import com.dhx.apicore.model.DO.UserEntity;
 import com.dhx.apicore.model.DTO.JwtToken;
+import com.dhx.apicore.model.query.LoginQuery;
 import com.dhx.apicore.model.query.QuickLoginEmailRequest;
+import com.dhx.apicore.model.query.RegisterQuery;
 import com.dhx.apicore.service.JwtTokensService;
 import com.dhx.apicore.service.LoginService;
 import com.dhx.apicore.service.UserService;
@@ -80,6 +84,40 @@ public class LoginServiceImpl implements LoginService {
         String codeVal = now + "-" + code;
         // 存储
         stringRedisTemplate.opsForValue().set(codeKey, codeVal, RedisConstant.VERIFY_CODE_TTL, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public BaseResponse<String> login(LoginQuery param) {
+        //1. 获取的加密密码
+        UserEntity user = userService.findUserByAccount(param.getUserAccount());
+        String handlerPassword = user.getPassword();
+        //2. 查询用户密码是否正确
+        boolean checkpw = BCrypt.checkpw(param.getPassword(), handlerPassword);
+        ThrowUtil.throwIf(!checkpw, ErrorCode.PARAMS_ERROR, "账户名或密码错误!");
+        //3. 获取jwt的token并将token写入Redis
+        String token = jwtTokensService.generateAccessToken(user);
+        String refreshToken = jwtTokensService.generateRefreshToken(user);
+        JwtToken jwtToken = new JwtToken(token, refreshToken);
+        jwtTokensService.save2Redis(jwtToken, user);
+        // 返回jwtToken
+        return ResultUtil.success(token);
+    }
+
+    @Override
+    public BaseResponse<Long> register(RegisterQuery param) {
+        String password = param.getPassword();
+        String checkPassword = param.getCheckPassword();
+        String userAccount = param.getUserAccount();
+        ThrowUtil.throwIf(!password.equals(checkPassword), ErrorCode.PARAMS_ERROR, "两次输入的密码不一致!");
+        UserEntity user = userService.getUserByAccount(userAccount);
+        ThrowUtil.throwIf(user != null, ErrorCode.PARAMS_ERROR, "账户已被注册!");
+        user = new UserEntity();
+        String handlerPassword = BCrypt.hashpw(password);
+        user.setUserAccount(userAccount);
+        user.setUserName("user-" + UUID.randomUUID().toString().substring(0, 10));
+        user.setPassword(handlerPassword);
+        boolean save = userService.save(user);
+        return ResultUtil.success(user.getUserId());
     }
 
     /**

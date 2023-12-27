@@ -5,9 +5,7 @@ import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apicore.common.annotation.AuthCheck;
 import com.dhx.apicore.common.constant.UserConstant;
-import com.dhx.apicore.model.query.LoginQuery;
 import com.dhx.apicore.model.query.PageQuery;
-import com.dhx.apicore.model.query.RegisterQuery;
 import com.dhx.apicore.model.vo.UserVo;
 import com.dhx.apicore.service.UserService;
 import com.dhx.apicore.util.ThrowUtil;
@@ -19,7 +17,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -34,18 +31,6 @@ public class UserController {
 
     @Autowired
     UserService userService;
-
-    @PostMapping("/login")
-    @ApiOperation("用户登录")
-    public BaseResponse<String> login(@Valid @RequestBody LoginQuery param) {
-        return userService.login(param);
-    }
-
-    @PostMapping("/register")
-    @ApiOperation("用户注册")
-    public BaseResponse<Long> register(@Valid @RequestBody RegisterQuery param) {
-        return userService.register(param);
-    }
 
     @GetMapping("/{id}/info")
     @ApiOperation("通过用户id获取当前信息")

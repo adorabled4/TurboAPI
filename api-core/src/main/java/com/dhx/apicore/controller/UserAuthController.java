@@ -2,7 +2,9 @@ package com.dhx.apicore.controller;
 
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.util.ResultUtil;
+import com.dhx.apicore.model.query.LoginQuery;
 import com.dhx.apicore.model.query.QuickLoginEmailRequest;
+import com.dhx.apicore.model.query.RegisterQuery;
 import com.dhx.apicore.service.LoginService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,19 @@ public class UserAuthController {
     @Resource
     LoginService loginService;
 
+    @PostMapping("/login")
+    @ApiOperation("用户登录")
+    public BaseResponse<String> login(@Valid @RequestBody LoginQuery param) {
+        return loginService.login(param);
+    }
+
+    @PostMapping("/register")
+    @ApiOperation("用户注册")
+    public BaseResponse<Long> register(@Valid @RequestBody RegisterQuery param) {
+        return loginService.register(param);
+    }
+
+
     @PostMapping("/login/email/quick")
     @ApiOperation("邮箱验证码快速登录")
     public BaseResponse<String> quickLogin(@Valid @RequestBody QuickLoginEmailRequest param) {
@@ -37,7 +52,7 @@ public class UserAuthController {
     @GetMapping("/send/email/code")
     @ApiOperation("发送验证码")
     public BaseResponse<String> sendVerifyCode(@RequestParam("email") String email, HttpServletRequest request) {
-       loginService.sendVerifyCode(email,request);
+        loginService.sendVerifyCode(email, request);
         return ResultUtil.success("发送成功!");
     }
 
