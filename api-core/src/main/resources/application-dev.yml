@@ -35,10 +35,6 @@ spring:
   jackson:
     serialization:
       FAIL_ON_EMPTY_BEANS: false
-  cloud:
-    nacos:
-      discovery:
-        server-addr: ${host}:8848
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -48,29 +44,6 @@ mybatis-plus:
       logic-not-delete-value: 0 # mybatis-plus 逻辑删除
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 打印sql
-knife4j:
-  enable: true
-  openapi:
-    title: api-platform_bankend
-    description: 后端接口文档
-    email: dhx2648466390@163.com
-    concat: adorabled4
-    url: https://blog.dhx.icu
-    version: v4.0
-    license: Apache 2.0
-    license-url: https://blog.dhx.icu
-    terms-of-service-url: https://blog.dhx.icu
-    group:
-      dev:
-        group-name: 开发环境
-        api-rule: package
-        api-rule-resources:
-          - com.dhx.apicore.controller
-api:
-  thread:
-    core-size: 20
-    max-size: 200
-    keep-alive-time: 10
 
 dubbo:
   application:
@@ -119,11 +92,3 @@ dhx:
   client:
     access-key: r3242rfj3w9r
     secret-key: g45hg34wrxsa
-
-# 阿里云 sms
-sms:
-  endpoint: dysmsapi.aliyuncs.com
-  accessId: LTAI5t5tbAuGcFH8EtiepHQj
-  accessKey: UJ6l8PO9eRZmrMWT4N96Ta3X9Tj6Sz
-  commonSignName: 1111111111
-  templateCodeTwo: 1111111111

@@ -25,7 +25,7 @@ public enum UserRoleEnum implements BaseEnum<Integer> {
 
     private final int index;
     private final String role;
-    private final String value;
+    private final String val;
 
     private static final Map<String, UserRoleEnum> MAP = new HashMap<>();
 
@@ -47,7 +47,7 @@ public enum UserRoleEnum implements BaseEnum<Integer> {
     public static UserRoleEnum getUserRoleByValue(String value) {
         UserRoleEnum[] values = values();
         for (int i = 0; i < values.length; i++) {
-            if (values[i].getValue().equals(value)) {
+            if (values[i].getVal().equals(value)) {
                 return values[i];
             }
         }
@@ -57,7 +57,7 @@ public enum UserRoleEnum implements BaseEnum<Integer> {
     public static UserRoleEnum findUserRoleByValue(String value) {
         UserRoleEnum[] values = values();
         for (int i = 0; i < values.length; i++) {
-            if (values[i].getValue().equals(value)) {
+            if (values[i].getVal().equals(value)) {
                 return values[i];
             }
         }
@@ -69,4 +69,8 @@ public enum UserRoleEnum implements BaseEnum<Integer> {
         return this.role;
     }
 
+    @Override
+    public Integer getValue() {
+        return this.index;
+    }
 }
