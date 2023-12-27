@@ -82,6 +82,11 @@ public class InterfacePubQuery implements Serializable {
      */
     private String serviceAddress;
 
+    /**
+     * 是否是AIGC相关接口
+     */
+    private Boolean isAigc;
+
     private static final long serialVersionUID = 1L;
 
 }
