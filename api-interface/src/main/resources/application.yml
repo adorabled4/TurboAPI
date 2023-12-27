@@ -1,4 +1,3 @@
-
 # 日志配置
 logging:
   level:
@@ -32,21 +31,11 @@ spring:
         max-idle: 10
         # 连接池中的最小空闲连接
         min-idle: 0
-
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 192.168.159.134:8848
-  application:
-    name: api-interface
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://192.168.159.134:3306/api-interface?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
     username: root
     password: root
-
-weather:
-  apiKey: e86fcaac97a97aaa116af494ac1c9bfb
 
 knife4j:
   enable: true
@@ -66,3 +55,28 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.dhx.apiinterface.controller
+
+dubbo:
+  application:
+    metadataType: remote
+    register-mode: all
+    service-discovery:
+      migration: FORCE_APPLICATION
+    name: api-interface
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    address: nacos://192.168.159.134:8848
+    group: dev
+    parameters:
+      # 这里要在nacos创建名为dubbo的namespace
+      namespace: b9970d70-8f1c-402e-b139-4a98f487c197
+  # 消费者相关配置
+  consumer:
+    # 支持校验注解
+    validation: true
+    # 超时时间
+    timeout: 3000
+  scan:
+    base-packages: com.dhx.apiinterface.service
