@@ -47,13 +47,13 @@ public class AuthCheckAOP {
         if (StringUtils.isNotBlank(mustRole)) {
             UserDTO loginUser = UserHolder.getUser();
             // 接口需要的权限
-            UserRoleEnum mustUserRoleEnum = UserRoleEnum.getEnumByValue(mustRole);
+            UserRoleEnum mustUserRoleEnum = UserRoleEnum.findUserRoleByValue(mustRole);
             if (mustUserRoleEnum == null) {
                 throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
             }
             String userRole = loginUser.getUserRole();
             // 如果被封号，直接拒绝
-            if (UserRoleEnum.BAN.getValue().equals(userRole)) {
+            if (UserRoleEnum.BAN.getVal().equals(userRole)) {
                 throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
             }
             // 必须有管理员权限

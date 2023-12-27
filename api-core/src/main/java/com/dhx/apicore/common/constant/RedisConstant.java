@@ -50,4 +50,8 @@ public class RedisConstant {
      * leftnum key
      */
     public static final String LEFTNUM_LOCK_KEY = "lock:leftnum";
+
+    public static final String VERIFY_CODE_KEY = "user:verifycode:";
+
+    public static final long VERIFY_CODE_TTL = 60*5L;
 }

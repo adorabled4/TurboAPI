@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>验证码[TurboAPI]</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+
+        p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #666666;
+        }
+
+        .code {
+            font-size: 28px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #ffffff;
+            border-radius: 4px;
+            display: inline-block;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .emphasis {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #999999;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>验证码[TurboAPI]</h1>
+    <p>尊敬的用户，您正在进行访问请求。</p>
+    <p>您的验证码是: <span class="emphasis" th:text="${verificationCode}"></span></p>
+    <p>访问IP: <span class="emphasis" th:text="${visitorIp}"></span></p>
+    <p>发送时间: <span class="emphasis" th:text="${sendTime}"></span></p>
+    <p>如果这不是您的操作，请忽略此邮件。</p>
+    <p class="footer">&copy; 2023 TurboAPI. All rights reserved.</p>
+</div>
+</body>
+</html>
