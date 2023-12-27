@@ -66,3 +66,41 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.dhx.apiinterface.controller
+
+dubbo:
+  application:
+    metadataType: remote
+    # 可选值 interface、instance、all，默认是 all，即接口级地址、应用级地址都注册
+    register-mode: all
+    service-discovery:
+      # FORCE_INTERFACE，只消费接口级地址，如无地址则报错，单订阅 2.x 地址
+      # APPLICATION_FIRST，智能决策接口级/应用级地址，双订阅
+      # FORCE_APPLICATION，只消费应用级地址，如无地址则报错，单订阅 3.x 地址
+      migration: FORCE_APPLICATION
+    name: api-interface
+  protocol:
+    # 设置为 tri 即可使用 Triple 3.0 新协议
+    # 性能对比 dubbo 协议并没有提升 但基于 http2 用于多语言异构等 http 交互场景
+    # 使用 dubbo 协议通信
+    name: dubbo
+    # dubbo 协议端口(-1表示自增端口,从20880开始)
+    port: -1
+  # 注册中心配置
+  registry:
+    address: nacos://192.168.159.134:8848
+    # 这里注意 由于 3.X 的 bug 导致注册组不生效
+    group: dev
+    # 由于 group 不生效 这里使用 namespace 将 dubbo 服务与 cloud 服务隔离
+    # 否则会导致正常请求路由到 dubbo 服务报错
+    parameters:
+      # 注意 这里要在 nacos 创建名为 dubbo 的 namespace 环境
+      namespace: b9970d70-8f1c-402e-b139-4a98f487c197
+  # 消费者相关配置
+  consumer:
+    # 支持校验注解
+    validation: true
+    # 超时时间
+    timeout: 3000
+  scan:
+#     接口实现类扫描
+    base-packages: com.dhx.apiinterface.service

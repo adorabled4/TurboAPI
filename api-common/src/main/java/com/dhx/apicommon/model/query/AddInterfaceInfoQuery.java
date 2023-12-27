@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * @author adorabled4
@@ -17,7 +18,9 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AddInterfaceInfoQuery {
+public class AddInterfaceInfoQuery implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 接口ID
