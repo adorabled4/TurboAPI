@@ -1,6 +1,7 @@
 package com.dhx.apicore.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -118,6 +119,14 @@ public class UserServiceImpl extends ServiceImpl<UserEntityMapper, UserEntity> i
         userEntity.setUserId(user.getUserId());
         boolean b = updateById(userEntity);
         ThrowUtil.throwIf(!b, ErrorCode.SYSTEM_ERROR, "更新用户信息失败!");
+    }
+
+    @Override
+    public void updateUserPwd(String password) {
+        UserDTO user = UserHolder.getUser();
+        String handlerPassword = BCrypt.hashpw(password);
+        boolean update = update().set("password", handlerPassword).eq("user_id", user.getUserId()).update();
+        ThrowUtil.throwIf(!update, ErrorCode.SYSTEM_ERROR, "更新密码失败!");
     }
 }
 

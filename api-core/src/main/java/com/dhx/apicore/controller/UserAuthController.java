@@ -6,6 +6,7 @@ import com.dhx.apicore.model.query.EmailVerifyCodeRequest;
 import com.dhx.apicore.model.query.LoginQuery;
 import com.dhx.apicore.model.query.RegisterQuery;
 import com.dhx.apicore.service.LoginService;
+import com.dhx.apicore.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,9 @@ public class UserAuthController {
 
     @Resource
     LoginService loginService;
+
+    @Resource
+    UserService userService;
 
     @PostMapping("/login")
     @ApiOperation("用户登录")
@@ -61,6 +65,13 @@ public class UserAuthController {
     public BaseResponse<String> sendVerifyCode(@RequestParam("email") String email, HttpServletRequest request) {
         loginService.sendVerifyCode(email, request);
         return ResultUtil.success("发送成功!");
+    }
+
+    @PostMapping("/update/pwd")
+    @ApiOperation("更新用户密码")
+    public BaseResponse<String> updateUserPassword(@RequestParam("password")String password){
+        userService.updateUserPwd(password);
+        return ResultUtil.success("更新成功!");
     }
 
 }

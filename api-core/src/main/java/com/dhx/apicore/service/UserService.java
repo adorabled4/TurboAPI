@@ -36,4 +36,6 @@ public interface UserService extends IService<UserEntity> {
     UserEntity findById(Long userId);
 
     void updateUserInfO(MultipartFile multipartFile, UserUpdateQuery param);
+
+    void updateUserPwd(String password);
 }
