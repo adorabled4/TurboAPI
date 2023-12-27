@@ -10,7 +10,7 @@
             <result property="interfaceName" column="interface_name" jdbcType="VARCHAR"/>
             <result property="callPath" column="call_path" jdbcType="VARCHAR"/>
             <result property="dataCount" column="data_count" jdbcType="BIGINT"/>
-            <result property="isCache" column="is_cache" jdbcType="TINYINT"/>
+            <result property="isAigc" column="is_aigc" jdbcType="TINYINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
@@ -18,7 +18,7 @@
 
     <sql id="Base_Column_List">
         id,interface_id,interface_name,
-        call_path,data_count,is_cache,
+        call_path,data_count,is_aigc,
         create_time,update_time,is_deleted
     </sql>
 </mapper>
