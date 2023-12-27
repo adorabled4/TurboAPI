@@ -15,7 +15,7 @@ import javax.validation.constraints.Pattern;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuickLoginEmailRequest {
+public class EmailVerifyCodeRequest {
 
     /**
      * 4~16位 数字,大小写字母组成

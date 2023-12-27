@@ -2,8 +2,8 @@ package com.dhx.apicore.controller;
 
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.util.ResultUtil;
+import com.dhx.apicore.model.query.EmailVerifyCodeRequest;
 import com.dhx.apicore.model.query.LoginQuery;
-import com.dhx.apicore.model.query.QuickLoginEmailRequest;
 import com.dhx.apicore.model.query.RegisterQuery;
 import com.dhx.apicore.service.LoginService;
 import io.swagger.annotations.ApiOperation;
@@ -36,18 +36,26 @@ public class UserAuthController {
         return loginService.register(param);
     }
 
+    @PostMapping("/bind/email")
+    @ApiOperation("绑定邮箱")
+    public BaseResponse<String> bindEmail(@Valid @RequestBody EmailVerifyCodeRequest param) {
+        loginService.bindEmail(param);
+        return ResultUtil.success("绑定成功!!");
+    }
+
     @PostMapping("/login/email/quick")
     @ApiOperation("邮箱验证码快速登录")
-    public BaseResponse<String> quickLogin(@Valid @RequestBody QuickLoginEmailRequest param) {
+    public BaseResponse<String> quickLogin(@Valid @RequestBody EmailVerifyCodeRequest param) {
         return loginService.quickLoginByEmail(param);
     }
 
-    /**
-     * 发送验证码
-     *
-     * @param email 电子邮件
-     * @return {@link BaseResponse}<{@link String}>
-     */
+    @GetMapping("/refresh/key")
+    @ApiOperation("更新key")
+    public BaseResponse<String> refreshUserKey() {
+        loginService.refreshKey();
+        return ResultUtil.success("获取成功!");
+    }
+
     @GetMapping("/send/email/code")
     @ApiOperation("发送验证码")
     public BaseResponse<String> sendVerifyCode(@RequestParam("email") String email, HttpServletRequest request) {

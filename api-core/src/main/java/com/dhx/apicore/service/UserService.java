@@ -30,4 +30,6 @@ public interface UserService extends IService<UserEntity> {
     UserEntity getUserByAccount(String userAccount);
 
     UserEntity findUserByAccount(String userAccount);
+
+    UserEntity findById(Long userId);
 }

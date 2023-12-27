@@ -89,6 +89,13 @@ public class UserServiceImpl extends ServiceImpl<UserEntityMapper, UserEntity> i
         ThrowUtil.throwIf(userEntity == null, ErrorCode.PARAMS_ERROR, "用户不存在!");
         return userEntity;
     }
+
+    @Override
+    public UserEntity findById(Long userId) {
+        UserEntity userEntity = getById(userId);
+        ThrowUtil.throwIf(userEntity == null, ErrorCode.PARAMS_ERROR, "用户不存在!");
+        return userEntity;
+    }
 }
 
 

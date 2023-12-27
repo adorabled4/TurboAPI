@@ -13,14 +13,16 @@ import com.dhx.apicore.common.constant.UserConstant;
 import com.dhx.apicore.manager.EmailManager;
 import com.dhx.apicore.model.DO.UserEntity;
 import com.dhx.apicore.model.DTO.JwtToken;
+import com.dhx.apicore.model.DTO.UserDTO;
 import com.dhx.apicore.model.enums.UserRoleEnum;
+import com.dhx.apicore.model.query.EmailVerifyCodeRequest;
 import com.dhx.apicore.model.query.LoginQuery;
-import com.dhx.apicore.model.query.QuickLoginEmailRequest;
 import com.dhx.apicore.model.query.RegisterQuery;
 import com.dhx.apicore.service.JwtTokensService;
 import com.dhx.apicore.service.LoginService;
 import com.dhx.apicore.service.UserService;
 import com.dhx.apicore.util.ThrowUtil;
+import com.dhx.apicore.util.UserHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
@@ -29,6 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static com.dhx.apicore.model.enums.UserRoleEnum.*;
 
 /**
  * @author adorabled4
@@ -50,7 +54,7 @@ public class LoginServiceImpl implements LoginService {
     EmailManager emailManager;
 
     @Override
-    public BaseResponse<String> quickLoginByEmail(QuickLoginEmailRequest param) {
+    public BaseResponse<String> quickLoginByEmail(EmailVerifyCodeRequest param) {
         verifyCode(param.getCode(), param.getEmail());
         //1. 获取的加密密码
         List<UserEntity> users = userService.list(new QueryWrapper<UserEntity>().eq("email", param.getEmail()));
@@ -116,10 +120,39 @@ public class LoginServiceImpl implements LoginService {
         user.setUserAccount(userAccount);
         user.setUserName("user-" + UUID.randomUUID().toString().substring(0, 10));
         user.setPassword(handlerPassword);
-        user.setUserRole(UserRoleEnum.VISITOR.getVal());
+        user.setUserRole(VISITOR.getVal());
         boolean save = userService.save(user);
-        ThrowUtil.throwIf(!save,ErrorCode.SYSTEM_ERROR,"保存用户信息失败!");
+        ThrowUtil.throwIf(!save, ErrorCode.SYSTEM_ERROR, "保存用户信息失败!");
         return ResultUtil.success(user.getUserId());
+    }
+
+    @Override
+    public void bindEmail(EmailVerifyCodeRequest param) {
+        verifyCode(param.getCode(), param.getEmail());
+        UserDTO userDTO = UserHolder.getUser();
+        UserEntity user = userService.getById(userDTO.getUserId());
+        user.setEmail(param.getEmail());
+        user.setUserRole(USER.getVal());
+        userService.updateById(user);
+    }
+
+    @Override
+    public void refreshKey() {
+        UserDTO userDTO = UserHolder.getUser();
+        checkUserRole(userDTO);
+        String ak = "appkey-" + UUID.randomUUID();
+        String sk = "sk-" + UUID.randomUUID();
+        UserEntity user = userService.findById(userDTO.getUserId());
+        user.setAccessKey(ak);
+        user.setSecretKey(sk);
+        userService.updateById(user);
+    }
+
+    private void checkUserRole(UserDTO userDTO) {
+        String userRole = userDTO.getUserRole();
+        UserRoleEnum userRoleEnum = findUserRoleByValue(userRole);
+        ThrowUtil.throwIf(userRoleEnum == BAN || userRoleEnum == VISITOR, ErrorCode.NO_AUTH_ERROR,
+                "需要在通过邮箱认证之后才能开通key权限!");
     }
 
     /**
@@ -154,7 +187,7 @@ public class LoginServiceImpl implements LoginService {
         user.setUserAccount(email);
         user.setUserName(email);
         user.setEmail(email);
-        user.setUserRole(UserRoleEnum.USER.getVal());
+        user.setUserRole(USER.getVal());
         boolean save = userService.save(user);
         ThrowUtil.throwIf(!save, ErrorCode.SYSTEM_ERROR, "登录失败!");
         return user;

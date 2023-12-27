@@ -1,8 +1,8 @@
 package com.dhx.apicore.service;
 
 import com.dhx.apicommon.common.BaseResponse;
+import com.dhx.apicore.model.query.EmailVerifyCodeRequest;
 import com.dhx.apicore.model.query.LoginQuery;
-import com.dhx.apicore.model.query.QuickLoginEmailRequest;
 import com.dhx.apicore.model.query.RegisterQuery;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +19,7 @@ public interface LoginService {
      * @param param 参数
      * @return {@link BaseResponse} 返回jwt token
      */
-    BaseResponse<String> quickLoginByEmail(QuickLoginEmailRequest param);
+    BaseResponse<String> quickLoginByEmail(EmailVerifyCodeRequest param);
 
     /**
      * 发送验证码
@@ -45,4 +45,16 @@ public interface LoginService {
      * @return 返回token
      */
     BaseResponse<String> login(LoginQuery param);
+
+    /**
+     * 绑定邮箱(认证)
+     *
+     * @param param 参数
+     */
+    void bindEmail(EmailVerifyCodeRequest param);
+
+    /**
+     * 刷新AK/SK
+     */
+    void refreshKey();
 }
