@@ -59,7 +59,11 @@ public class AigcContentServiceImpl extends ServiceImpl<AigcContentMapper, AigcC
                 sb.append(s);
             }
         }
-        return sb.toString();
+        String value = sb.toString();
+        value = value.replace("${好评内容}", "")
+                .replace("【", "")
+                .replace("】", "");
+        return value;
     }
 
     private List<AigcContent> getContentByParam(Long interfaceId, String param) {
