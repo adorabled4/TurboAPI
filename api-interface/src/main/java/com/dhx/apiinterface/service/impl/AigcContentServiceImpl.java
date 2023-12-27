@@ -21,12 +21,12 @@ import java.util.List;
  * @createDate 2023-12-27 11:21:55
  */
 @Service
-public class AigcContentServiceImpl extends ServiceImpl<AigcContentMapper, AigcContent>
-        implements AigcContentService {
+public class AigcContentServiceImpl extends ServiceImpl<AigcContentMapper, AigcContent> implements AigcContentService {
     @Resource
     AliModelManager aliModelManager;
     @Resource
     InterfaceMetadataService interfaceMetadataService;
+
     @Override
     public String genTakeOutComment(Long interfaceId, String recipe) {
         // 查询是否有已经持久化的内容
@@ -40,19 +40,26 @@ public class AigcContentServiceImpl extends ServiceImpl<AigcContentMapper, AigcC
             String input = buildInputByEnum(recipe, PromptEnum.TAKEOUT_COMMENT);
             try {
                 String result = aliModelManager.doChat(input);
-                AigcContent content = AigcContent.builder()
-                        .interfaceId(interfaceId)
-                        .param(recipe)
-                        .data(result)
-                        .createTime(LocalDateTime.now())
-                        .build();
+                String handledResult = handleTakeOutResult(result);
+                AigcContent content = AigcContent.builder().interfaceId(interfaceId).param(recipe).data(handledResult).createTime(LocalDateTime.now()).build();
                 save(content);
                 interfaceMetadataService.increDataCount(interfaceId);
-                return result;
+                return handledResult;
             } catch (NoApiKeyException | InputRequiredException e) {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private String handleTakeOutResult(String result) {
+        String[] split = result.split("【【【");
+        StringBuilder sb = new StringBuilder();
+        for (String s : split) {
+            if (!s.trim().equals("")) {
+                sb.append(s);
+            }
+        }
+        return sb.toString();
     }
 
     private List<AigcContent> getContentByParam(Long interfaceId, String param) {

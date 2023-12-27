@@ -12,4 +12,5 @@ public interface InterfaceMetadataService extends IService<InterfaceMetadata> {
 
     boolean increDataCount(Long interfaceId);
 
+    InterfaceMetadata findInterfaceByPath(String requestURI);
 }

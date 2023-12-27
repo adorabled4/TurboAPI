@@ -13,11 +13,16 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class InterfaceMetadataServiceImpl extends ServiceImpl<InterfaceMetadataMapper, InterfaceMetadata>
-        implements InterfaceMetadataService{
+        implements InterfaceMetadataService {
 
     @Override
     public boolean increDataCount(Long interfaceId) {
         return update().setSql("data_count = data_count+1").eq("interface_id", interfaceId).update();
+    }
+
+    @Override
+    public InterfaceMetadata findInterfaceByPath(String requestURI) {
+        return query().eq("call_path", requestURI).one();
     }
 }
 
