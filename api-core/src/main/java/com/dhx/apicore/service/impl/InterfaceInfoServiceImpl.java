@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.common.exception.ErrorCode;
+import com.dhx.apicommon.model.query.AddInterfaceInfoQuery;
+import com.dhx.apicommon.service.api.ApiInterfaceService;
 import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apicore.common.constant.RedisConstant;
 import com.dhx.apicore.mapper.InterfaceInfoEntityMapper;
@@ -22,6 +24,7 @@ import com.dhx.apicore.service.InterfaceInfoService;
 import com.dhx.apicore.service.InterfaceVariableInfoService;
 import com.dhx.apicore.util.CategoryBitMapUtil;
 import com.dhx.apicore.util.ThrowUtil;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
@@ -45,6 +48,9 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
 
     @Resource
     InterfaceVariableInfoService interfaceVariableInfoService;
+
+    @DubboReference
+    ApiInterfaceService apiInterfaceService;
 
     @Override
     public List<InterfaceBasicInfoVO> getInterfaceList(PageQuery pageQuery) {
@@ -122,7 +128,19 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
         InterfaceInfoEntity interfaceInfo = getInterfaceEntity(query);
         boolean update = saveOrUpdate(interfaceInfo);
         boolean saveOrUpdate = interfaceVariableInfoService.saveOrUpdate(variableInfo);
+        // 同步到 api-interface 的 接口meta-data中
+        boolean syncResult = sync2ApiInterface(query, interfaceInfo.getId());
         ThrowUtil.throwIf(!update || !saveOrUpdate, ErrorCode.OPERATION_ERROR, "保存接口信息失败");
+    }
+
+    private boolean sync2ApiInterface(InterfacePubQuery query,Long interfaceId) {
+        AddInterfaceInfoQuery addInterfaceInfoQuery = AddInterfaceInfoQuery.builder()
+                .interfaceName(query.getName())
+                .isAigc(query.getIsAigc())
+                .interfaceId(interfaceId)
+                .callPath(query.getCallPath())
+                .build();
+        return apiInterfaceService.addInterfaceData(addInterfaceInfoQuery);
     }
 
     private InterfaceInfoEntity getInterfaceEntity(InterfacePubQuery query) {

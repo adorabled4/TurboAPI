@@ -3,7 +3,10 @@ package com.dhx.apiinterface.gen;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -14,6 +17,9 @@ import java.time.LocalDateTime;
  */
 @TableName(value ="interface_metadata")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class InterfaceMetadata implements Serializable {
     /**
      * 主键
@@ -48,8 +54,8 @@ public class InterfaceMetadata implements Serializable {
     /**
      * 是否开启缓存
      */
-    @TableField(value = "is_cache")
-    private Integer isCache;
+    @TableField(value = "is_aigc")
+    private Boolean isAigc;
 
     /**
      * 创建时间
@@ -89,7 +95,7 @@ public class InterfaceMetadata implements Serializable {
             && (this.getInterfaceName() == null ? other.getInterfaceName() == null : this.getInterfaceName().equals(other.getInterfaceName()))
             && (this.getCallPath() == null ? other.getCallPath() == null : this.getCallPath().equals(other.getCallPath()))
             && (this.getDataCount() == null ? other.getDataCount() == null : this.getDataCount().equals(other.getDataCount()))
-            && (this.getIsCache() == null ? other.getIsCache() == null : this.getIsCache().equals(other.getIsCache()))
+            && (this.getIsAigc() == null ? other.getIsAigc() == null : this.getIsAigc().equals(other.getIsAigc()))
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
             && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
             && (this.getIsDeleted() == null ? other.getIsDeleted() == null : this.getIsDeleted().equals(other.getIsDeleted()));
@@ -104,7 +110,7 @@ public class InterfaceMetadata implements Serializable {
         result = prime * result + ((getInterfaceName() == null) ? 0 : getInterfaceName().hashCode());
         result = prime * result + ((getCallPath() == null) ? 0 : getCallPath().hashCode());
         result = prime * result + ((getDataCount() == null) ? 0 : getDataCount().hashCode());
-        result = prime * result + ((getIsCache() == null) ? 0 : getIsCache().hashCode());
+        result = prime * result + ((getIsAigc() == null) ? 0 : getIsAigc().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
         result = prime * result + ((getIsDeleted() == null) ? 0 : getIsDeleted().hashCode());
@@ -122,7 +128,7 @@ public class InterfaceMetadata implements Serializable {
         sb.append(", interface_name=").append(interfaceName);
         sb.append(", call_path=").append(callPath);
         sb.append(", data_count=").append(dataCount);
-        sb.append(", is_cache=").append(isCache);
+        sb.append(", is_aigc=").append(isAigc);
         sb.append(", create_time=").append(createTime);
         sb.append(", update_time=").append(updateTime);
         sb.append(", is_deleted=").append(isDeleted);
