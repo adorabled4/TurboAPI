@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicore.model.DO.UserEntity;
 import com.dhx.apicore.model.query.PageQuery;
+import com.dhx.apicore.model.query.UserUpdateQuery;
 import com.dhx.apicore.model.vo.UserVo;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -32,4 +34,6 @@ public interface UserService extends IService<UserEntity> {
     UserEntity findUserByAccount(String userAccount);
 
     UserEntity findById(Long userId);
+
+    void updateUserInfO(MultipartFile multipartFile, UserUpdateQuery param);
 }

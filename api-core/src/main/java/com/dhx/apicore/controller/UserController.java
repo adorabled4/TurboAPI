@@ -4,8 +4,10 @@ import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apicore.common.annotation.AuthCheck;
+import com.dhx.apicore.common.annotation.SysLog;
 import com.dhx.apicore.common.constant.UserConstant;
 import com.dhx.apicore.model.query.PageQuery;
+import com.dhx.apicore.model.query.UserUpdateQuery;
 import com.dhx.apicore.model.vo.UserVo;
 import com.dhx.apicore.service.UserService;
 import com.dhx.apicore.util.ThrowUtil;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -31,7 +34,6 @@ public class UserController {
 
     @Autowired
     UserService userService;
-
     @GetMapping("/{id}/info")
     @ApiOperation("通过用户id获取当前信息")
     public BaseResponse<UserVo> getUserById(@PathVariable("id") Long userId) {
@@ -71,5 +73,15 @@ public class UserController {
     @ApiOperation("获取当前用户信息")
     public BaseResponse<UserVo> currentUser() {
         return ResultUtil.success(userService.getCurrentUser());
+    }
+
+
+    @PostMapping("/update")
+    @ApiOperation("更新用户信息")
+    @SysLog("更新用户")
+    public BaseResponse<String> updateUserInfo(@RequestPart(value = "file", required = false) MultipartFile multipartFile,
+                                       UserUpdateQuery param) {
+        userService.updateUserInfO(multipartFile,param);
+        return ResultUtil.success("更新成功!");
     }
 }

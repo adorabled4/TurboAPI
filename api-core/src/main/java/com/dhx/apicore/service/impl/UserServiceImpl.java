@@ -7,15 +7,19 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.util.ResultUtil;
+import com.dhx.apicore.manager.OssManager;
 import com.dhx.apicore.mapper.UserEntityMapper;
 import com.dhx.apicore.model.DO.UserEntity;
+import com.dhx.apicore.model.DTO.FileUploadResult;
 import com.dhx.apicore.model.DTO.UserDTO;
 import com.dhx.apicore.model.query.PageQuery;
+import com.dhx.apicore.model.query.UserUpdateQuery;
 import com.dhx.apicore.model.vo.UserVo;
 import com.dhx.apicore.service.UserService;
 import com.dhx.apicore.util.ThrowUtil;
 import com.dhx.apicore.util.UserHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -31,6 +35,9 @@ public class UserServiceImpl extends ServiceImpl<UserEntityMapper, UserEntity> i
 
     @Resource
     UserEntityMapper userMapper;
+
+    @Resource
+    OssManager ossManager;
 
     @Override
     public BaseResponse<UserVo> getUserById(Long userId) {
@@ -95,6 +102,22 @@ public class UserServiceImpl extends ServiceImpl<UserEntityMapper, UserEntity> i
         UserEntity userEntity = getById(userId);
         ThrowUtil.throwIf(userEntity == null, ErrorCode.PARAMS_ERROR, "用户不存在!");
         return userEntity;
+    }
+
+    @Override
+    public void updateUserInfO(MultipartFile multipartFile, UserUpdateQuery param) {
+        if (multipartFile != null) {
+            // 执行更新用户图像操作
+            FileUploadResult result = ossManager.uploadImage(multipartFile);
+            ThrowUtil.throwIf(result.getStatus().equals("error"), ErrorCode.SYSTEM_ERROR, "上传头像失败!");
+            String url = result.getName();
+            param.setAvatarUrl(url);
+        }
+        UserEntity userEntity = BeanUtil.copyProperties(param, UserEntity.class);
+        UserDTO user = UserHolder.getUser();
+        userEntity.setUserId(user.getUserId());
+        boolean b = updateById(userEntity);
+        ThrowUtil.throwIf(!b, ErrorCode.SYSTEM_ERROR, "更新用户信息失败!");
     }
 }
 
