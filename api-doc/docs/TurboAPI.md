@@ -2,11 +2,9 @@
 sidebar_position: 1
 ---
 
-# TurboAPI指南
+# Tutorial Intro
 
-本站是[项目TurbpAPI](https://github/com/TurboAPI)准备的说明文档网站, 开发者可以通过浏览本网站, 获取接口(包括但不限于接口地址,调用方式,SK加密)等内容, 实现简单,文档,安全的接口服务集成到
-项目中, 实现更加高效的接口调用服务, 帮助广大开发者实现**faster and more effective** 调用体验
-Let's discover **TurboAPI in less than 5 🕜**.
+Let's discover **Docusaurus in less than 5 minutes**.
 
 ## Getting Started
 

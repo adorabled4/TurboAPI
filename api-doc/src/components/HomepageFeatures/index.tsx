@@ -10,32 +10,29 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
+    title: '客户端SDK支持',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+          基于SpringBootStarter的SDK实现, 只需要入依赖&配置AK/SK,一行代码即可实现接口调用。
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
+    title: 'AIGC集成',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        接口模块集成了各个模型客户端, 祝您实现更加前沿, 便捷的接口调用体验。
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: '分布式部署',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        通过微服务以及注册中心和接口模块分布式部署充分保证接口服务的可用性。
       </>
     ),
   },
