@@ -6,15 +6,15 @@
 
     <resultMap id="BaseResultMap" type="com.dhx.apiinterface.gen.AigcContent">
             <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="interface_id" column="interface_id" jdbcType="BIGINT"/>
+            <result property="interfaceId" column="interface_id" jdbcType="BIGINT"/>
             <result property="param" column="param" jdbcType="VARCHAR"/>
             <result property="data" column="data" jdbcType="VARCHAR"/>
-            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="is_delete" column="is_delete" jdbcType="TINYINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="idDeleted" column="is_deleted" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,interface_id,param,
-        data,create_time,is_delete
+        data,create_time,is_deleted
     </sql>
 </mapper>

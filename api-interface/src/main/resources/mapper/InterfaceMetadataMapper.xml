@@ -6,19 +6,19 @@
 
     <resultMap id="BaseResultMap" type="com.dhx.apiinterface.gen.InterfaceMetadata">
             <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="interface_id" column="interface_id" jdbcType="BIGINT"/>
-            <result property="interface_name" column="interface_name" jdbcType="VARCHAR"/>
-            <result property="call_path" column="call_path" jdbcType="VARCHAR"/>
-            <result property="data_count" column="data_count" jdbcType="BIGINT"/>
-            <result property="is_cache" column="is_cache" jdbcType="TINYINT"/>
-            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="update_time" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="is_delete" column="is_delete" jdbcType="TINYINT"/>
+            <result property="interfaceId" column="interface_id" jdbcType="BIGINT"/>
+            <result property="interfaceName" column="interface_name" jdbcType="VARCHAR"/>
+            <result property="callPath" column="call_path" jdbcType="VARCHAR"/>
+            <result property="dataCount" column="data_count" jdbcType="BIGINT"/>
+            <result property="isCache" column="is_cache" jdbcType="TINYINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,interface_id,interface_name,
         call_path,data_count,is_cache,
-        create_time,update_time,is_delete
+        create_time,update_time,is_deleted
     </sql>
 </mapper>
