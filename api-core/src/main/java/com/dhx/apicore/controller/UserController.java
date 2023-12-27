@@ -70,6 +70,7 @@ public class UserController {
     @DeleteMapping("/delete/account")
     @Profile("dev")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @ApiOperation("通过账户删除用户")
     public BaseResponse<Boolean> deleteUserByAccount(@RequestParam("account") String userAccount) {
         ThrowUtil.throwIf(StringUtils.isBlank(userAccount), ErrorCode.PARAMS_ERROR);
         return ResultUtil.success(userService.deleteUserByAccount(userAccount));

@@ -47,7 +47,7 @@ public class AuthCheckAOP {
         if (StringUtils.isNotBlank(mustRole)) {
             UserDTO loginUser = UserHolder.getUser();
             // 接口需要的权限
-            UserRoleEnum mustUserRoleEnum = UserRoleEnum.getEnumByValue(mustRole);
+            UserRoleEnum mustUserRoleEnum = UserRoleEnum.findUserRoleByValue(mustRole);
             if (mustUserRoleEnum == null) {
                 throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
             }
