@@ -10,4 +10,6 @@ import com.dhx.apiinterface.gen.InterfaceMetadata;
 */
 public interface InterfaceMetadataService extends IService<InterfaceMetadata> {
 
+    boolean increDataCount(Long interfaceId);
+
 }

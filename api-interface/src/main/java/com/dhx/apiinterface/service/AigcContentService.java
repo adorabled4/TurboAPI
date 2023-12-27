@@ -10,4 +10,5 @@ import com.dhx.apiinterface.gen.AigcContent;
 */
 public interface AigcContentService extends IService<AigcContent> {
 
+    String genTakeOutComment(Long interfaceId,String recipe);
 }
