@@ -13,6 +13,7 @@ import com.dhx.apicore.common.constant.UserConstant;
 import com.dhx.apicore.manager.EmailManager;
 import com.dhx.apicore.model.DO.UserEntity;
 import com.dhx.apicore.model.DTO.JwtToken;
+import com.dhx.apicore.model.enums.UserRoleEnum;
 import com.dhx.apicore.model.query.LoginQuery;
 import com.dhx.apicore.model.query.QuickLoginEmailRequest;
 import com.dhx.apicore.model.query.RegisterQuery;
@@ -72,7 +73,6 @@ public class LoginServiceImpl implements LoginService {
     public void sendVerifyCode(String email, HttpServletRequest request) {
         // 校验
         ThrowUtil.throwIf(!email.matches(UserConstant.EMAIL_REGEX), ErrorCode.PARAMS_ERROR, "邮箱格式非法!");
-        Long cnt = userService.query().eq("email", email).count();
         // 发送验证码
         String code = RandomUtil.randomNumbers(6);
         String codeKey = RedisConstant.VERIFY_CODE_KEY + email;
@@ -116,7 +116,9 @@ public class LoginServiceImpl implements LoginService {
         user.setUserAccount(userAccount);
         user.setUserName("user-" + UUID.randomUUID().toString().substring(0, 10));
         user.setPassword(handlerPassword);
+        user.setUserRole(UserRoleEnum.VISITOR.getVal());
         boolean save = userService.save(user);
+        ThrowUtil.throwIf(!save,ErrorCode.SYSTEM_ERROR,"保存用户信息失败!");
         return ResultUtil.success(user.getUserId());
     }
 
@@ -152,6 +154,7 @@ public class LoginServiceImpl implements LoginService {
         user.setUserAccount(email);
         user.setUserName(email);
         user.setEmail(email);
+        user.setUserRole(UserRoleEnum.USER.getVal());
         boolean save = userService.save(user);
         ThrowUtil.throwIf(!save, ErrorCode.SYSTEM_ERROR, "登录失败!");
         return user;

@@ -36,7 +36,6 @@ public class UserAuthController {
         return loginService.register(param);
     }
 
-
     @PostMapping("/login/email/quick")
     @ApiOperation("邮箱验证码快速登录")
     public BaseResponse<String> quickLogin(@Valid @RequestBody QuickLoginEmailRequest param) {
