@@ -15,10 +15,12 @@ import java.nio.channels.FileChannel;
 public class FileUtil {
 
 
-    public static final String[]PICTURE_TYPES= new String[]{".jpg",".png",".jpeg", ".gif", ".bmp", ".webp",".GIF",".BMP",".WEBP",".JPG",".PNG","JPEG",};
-    public static final int MAX_SIZE= 20*1024*1000;
+    public static final String[] PICTURE_TYPES = new String[]{".jpg", ".png", ".jpeg", ".gif", ".bmp", ".webp", ".GIF", ".BMP", ".WEBP", ".JPG", ".PNG", "JPEG",};
+    public static final int MAX_SIZE = 20 * 1024 * 1000;
+
     /**
      * MultipartFile 转 File
+     *
      * @param file
      * @throws Exception
      */
@@ -54,6 +56,7 @@ public class FileUtil {
 
     /**
      * 删除本地临时文件
+     *
      * @param file
      */
     public static void deleteTempFile(File file) {
@@ -65,22 +68,23 @@ public class FileUtil {
 
     /**
      * 检查图片是否符合规范 大小/类型
+     *
      * @param file
      * @return
      */
     public static boolean checkFile(File file) throws IOException {
         String name = file.getName();
         long fileSize = getFileSize(file);
-        if(fileSize>=MAX_SIZE){
-            throw new BusinessException(ErrorCode.PARAMS_ERROR,"文件大小限制在20MB");
+        if (fileSize >= MAX_SIZE) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "文件大小限制在20MB");
         }
-        String suffix= name.substring(name.lastIndexOf("."));
+        String suffix = name.substring(name.lastIndexOf("."));
         for (String picture_type : PICTURE_TYPES) {
-            if(picture_type.equals(suffix)){
+            if (picture_type.equals(suffix)) {
                 return true;
             }
         }
-        throw new BusinessException(ErrorCode.PARAMS_ERROR,"请上传图片类型文件");
+        throw new BusinessException(ErrorCode.PARAMS_ERROR, "请上传图片类型文件");
     }
 
 
@@ -93,6 +97,46 @@ public class FileUtil {
         FileInputStream fis = new FileInputStream(file);
         FileChannel fc = fis.getChannel();
         return fc.size();
+    }
+
+    /**
+     * 渲染ftl模板中的制表符
+     *
+     * @param fileName 文件名称 如 api-sdk-Client.java.ftl
+     * @throws IOException ioexception
+     */
+    public String handleCodeTab(String fileName) throws IOException {
+        InputStream is = getClass().getClassLoader().getResourceAsStream(fileName);
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        int depth = 0;
+        String line;
+        StringBuilder tmp = new StringBuilder();
+        while ((line = br.readLine()) != null) {
+            tmp.delete(0, tmp.length());
+            for (int i = 0; i < depth; i++) {
+                tmp.append("${\"\\t\"}");
+            }
+            // 6 chars
+            // 排除前面的制表符
+            if (line.charAt(line.length() - 1) == '}' || line.charAt(0) == '}') {
+                tmp.delete(0, 7);
+                depth--;
+            }
+            if (line.charAt(line.length() - 1) == '{') {
+                depth++;
+            }
+            tmp.append(line).append("\n");
+            sb.append(tmp.toString());
+        }
+        br.close(); // 关闭读取流
+        // 将处理后的内容更新到文件
+        String handledFile = "format/" + fileName;
+        FileWriter fileWriter = new FileWriter(handledFile);
+        fileWriter.write(sb.toString());
+        fileWriter.close();
+        is.close();
+        return handledFile;
     }
 
 }
