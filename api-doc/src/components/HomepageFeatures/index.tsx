@@ -11,7 +11,7 @@ type FeatureItem = {
 const FeatureList: FeatureItem[] = [
   {
     title: '客户端SDK支持',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    Svg: require('@site/static/img/idea.svg').default,
     description: (
       <>
           基于SpringBootStarter的SDK实现, 只需要入依赖&配置AK/SK,一行代码即可实现接口调用。
@@ -20,7 +20,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'AIGC集成',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    Svg: require('@site/static/img/aigc.svg').default,
     description: (
       <>
         接口模块集成了各个模型客户端, 祝您实现更加前沿, 便捷的接口调用体验。
@@ -29,7 +29,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: '分布式部署',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    Svg: require('@site/static/img/disturb.svg').default,
     description: (
       <>
         通过微服务以及注册中心和接口模块分布式部署充分保证接口服务的可用性。
