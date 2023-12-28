@@ -42,6 +42,23 @@ public class CategoryBitMapUtil {
 
 
     /**
+     * 解析类别值对应的位，返回对应的中文解释列表
+     *
+     * @param categoryValue 类别值
+     * @return {@link List}<{@link String}>
+     */
+    public static List<String> parse2String(long categoryValue) {
+        List<String> categoryValues = new ArrayList<>();
+        for (InterfaceCategoryEnum category : InterfaceCategoryEnum.values()) {
+            long categoryBit = getCategoryValue(category);
+            if ((categoryValue & categoryBit) != 0) {
+                categoryValues.add(category.getName());
+            }
+        }
+        return categoryValues;
+    }
+
+    /**
      * 获取多个类别对应的位的值
      *
      * @param categories 类别
