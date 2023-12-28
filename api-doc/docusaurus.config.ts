@@ -71,12 +71,6 @@ const config: Config = {
           position: 'left',
           label: 'Get started',
         },
-        {
-          type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
-          position: 'right',
-          label: 'quick',
-        },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
           href: 'https://github.com/adorabled4/TurboAPI',
@@ -128,7 +122,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} TurboAPI-dic by adorabled4. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
