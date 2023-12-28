@@ -64,4 +64,11 @@ public interface InterfaceInfoService extends IService<InterfaceInfoEntity> {
      * @return {@link BaseResponse}<{@link List}<{@link InterfaceBasicInfoVO}>>
      */
     BaseResponse<List<InterfaceBasicInfoVO>> getInterfaceByCategories(InterfaceCategoryQuery query);
+
+    /**
+     * 通用接口文档md
+     *
+     * @param interfaceIds 接口ids
+     */
+    void genInterfaceDocMD(List<Long> interfaceIds);
 }

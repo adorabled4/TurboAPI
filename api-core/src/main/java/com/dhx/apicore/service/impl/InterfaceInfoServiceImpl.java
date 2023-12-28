@@ -9,9 +9,11 @@ import com.dhx.apicommon.model.query.AddInterfaceInfoQuery;
 import com.dhx.apicommon.service.api.ApiInterfaceService;
 import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apicore.common.constant.RedisConstant;
+import com.dhx.apicore.config.FreeMarkerConfig;
 import com.dhx.apicore.mapper.InterfaceInfoEntityMapper;
 import com.dhx.apicore.model.DO.InterfaceInfoEntity;
 import com.dhx.apicore.model.DO.InterfaceVariableInfoEntity;
+import com.dhx.apicore.model.DTO.InterfaceTemplateDTO;
 import com.dhx.apicore.model.enums.InterfaceCategoryEnum;
 import com.dhx.apicore.model.enums.InterfaceStatusEnum;
 import com.dhx.apicore.model.query.InterfaceCategoryQuery;
@@ -24,6 +26,9 @@ import com.dhx.apicore.service.InterfaceInfoService;
 import com.dhx.apicore.service.InterfaceVariableInfoService;
 import com.dhx.apicore.util.CategoryBitMapUtil;
 import com.dhx.apicore.util.ThrowUtil;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
@@ -31,6 +36,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -51,6 +60,12 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
 
     @DubboReference
     ApiInterfaceService apiInterfaceService;
+
+    @Resource
+    Configuration cfg;
+
+    @Resource
+    FreeMarkerConfig freeMarkerConfig;
 
     @Override
     public List<InterfaceBasicInfoVO> getInterfaceList(PageQuery pageQuery) {
@@ -133,7 +148,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
         ThrowUtil.throwIf(!update || !saveOrUpdate, ErrorCode.OPERATION_ERROR, "保存接口信息失败");
     }
 
-    private boolean sync2ApiInterface(InterfacePubQuery query,Long interfaceId) {
+    private boolean sync2ApiInterface(InterfacePubQuery query, Long interfaceId) {
         AddInterfaceInfoQuery addInterfaceInfoQuery = AddInterfaceInfoQuery.builder()
                 .interfaceName(query.getName())
                 .isAigc(query.getIsAigc())
@@ -169,6 +184,62 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
                     return interfaceBasicInfoVO;
                 }).collect(Collectors.toList());
         return ResultUtil.success(interfaceBasicInfoVOS);
+    }
+
+    @Override
+    public void genInterfaceDocMD(List<Long> interfaceIds) {
+        try {
+            List<InterfaceTemplateDTO> templateDTOS = interfaceIds
+                    .stream().map(this::getInterfaceTemplateData).collect(Collectors.toList());
+            Template template = cfg.getTemplate("api-doc.md.ftl");
+            for (InterfaceTemplateDTO templateDTO : templateDTOS) {
+                generateDoc(template, templateDTO);
+            }
+        } catch (IOException | TemplateException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 生成接口文档
+     *
+     * @param template 模板
+     * @param api      api
+     * @throws IOException       ioexception
+     * @throws TemplateException 模板异常
+     */
+    private void generateDoc(Template template, InterfaceTemplateDTO api) throws IOException, TemplateException {
+        String docPath = freeMarkerConfig.getDocPath();
+        File folder = new File(docPath);
+        if (!folder.exists()) {
+            ThrowUtil.throwIf(!folder.mkdirs(), ErrorCode.SYSTEM_ERROR, "创建文件夸失败!");
+        }
+        String fileName = docPath + "/" + api.getName() + template.getName().replace(".ftl", "");
+        FileOutputStream fos = new FileOutputStream(fileName);
+        OutputStreamWriter out = new OutputStreamWriter(fos);
+        template.process(api, out);
+        fos.close();
+        out.close();
+    }
+
+    /**
+     * 获取接口模板数据
+     *
+     * @param id id
+     * @return {@link BaseResponse}<{@link InterfaceTemplateDTO}>
+     */
+    private InterfaceTemplateDTO getInterfaceTemplateData(Long id) {
+        InterfaceInfoEntity interfaceEntity = findById(id);
+        InterfaceVariableInfoEntity variableInfo = interfaceVariableInfoService.findById(id);
+        InterfaceTemplateDTO interfaceTemplateDTO = new InterfaceTemplateDTO();
+        BeanUtil.copyProperties(interfaceEntity, interfaceTemplateDTO);
+        BeanUtil.copyProperties(variableInfo, interfaceTemplateDTO);
+        // 设置分类信息
+        Long categoryBitMap = interfaceEntity.getCategoryBitMap();
+        List<String> interfaceCategoryEnums = CategoryBitMapUtil.parse2String(categoryBitMap);
+        interfaceTemplateDTO.setStatus(interfaceEntity.getStatus().getName());
+        interfaceTemplateDTO.setCategories(interfaceCategoryEnums);
+        return interfaceTemplateDTO;
     }
 }
 

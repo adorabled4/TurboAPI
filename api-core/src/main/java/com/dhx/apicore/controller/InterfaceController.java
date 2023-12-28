@@ -76,8 +76,15 @@ public class InterfaceController {
 
     @GetMapping("/list/categories")
     @ApiOperation(value = "通过标签查询接口")
-    public BaseResponse<List<InterfaceBasicInfoVO>> getInterfaceByCategories(InterfaceCategoryQuery query){
+    public BaseResponse<List<InterfaceBasicInfoVO>> getInterfaceByCategories(InterfaceCategoryQuery query) {
         return interfaceInfoService.getInterfaceByCategories(query);
+    }
+
+    @GetMapping("/gen/interface-doc")
+    @ApiOperation(value = "通过id生成接口说明文档")
+    public BaseResponse<String> genInterfaceDoc(@RequestParam("ids") List<Long> interfaceIds) {
+        interfaceInfoService.genInterfaceDocMD(interfaceIds);
+        return ResultUtil.success("生成成功!");
     }
 
 }
