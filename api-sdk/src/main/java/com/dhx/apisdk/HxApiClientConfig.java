@@ -8,8 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.Resource;
-
 /**
  * @author adorabled4
  * @className HxApiClientConfig
@@ -21,14 +19,14 @@ import javax.annotation.Resource;
 @ComponentScan
 public class HxApiClientConfig {
 
-    public static final String SERVER_HOST= "http://localhost:88";
+    public static final String SERVER_HOST = "http://localhost:88";
 
     private String accessKey;
 
     private String secretKey;
 
     @Bean
-    HxApiClient hxApiClient(){
-        return new HxApiClientImpl(accessKey,secretKey);
+    HxApiClient hxApiClient() {
+        return new HxApiClientImpl(accessKey, secretKey);
     }
 }

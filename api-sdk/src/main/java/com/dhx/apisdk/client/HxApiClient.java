@@ -1,14 +1,12 @@
 package com.dhx.apisdk.client;
 
-import com.dhx.apicommon.common.BaseResponse;
+import com.dhx.apicommon.model.v1.param.FileSuffixParam;
+import com.dhx.apicommon.model.v1.param.IpAnaParam;
+import com.dhx.apicommon.model.v1.param.WeatherParam;
 import com.dhx.apisdk.model.TO.ComputerSuffix;
 import com.dhx.apisdk.model.TO.LovelornSentence;
 import com.dhx.apisdk.model.TO.Poet;
 import com.dhx.apisdk.model.TO.WeatherInfo;
-import org.springframework.lang.Nullable;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 
 public interface HxApiClient {
 
@@ -30,26 +28,25 @@ public interface HxApiClient {
 
     /**
      * 获取 后缀名 详情
-     * @param suffix
+     * @param param
      * @return
      */
-    ComputerSuffix getDescriptionOfSuffix(String suffix);
+    ComputerSuffix getDescriptionOfSuffix(FileSuffixParam param);
 
     /**
      * 分析IP属地
-     * @param ipv4
+     * @param param
      * @return
      */
-    String analyseIP(String ipv4);
+    String analyseIP(IpAnaParam param);
 
 
     /**
      * 获取指定地区的当前天气情况 , 如果参数为空那么会通过request的IP获取
-     * @param cityName 地区名称
+     * @param weatherParam 地区名称
      * @return
      */
-    WeatherInfo getNowWeather(@Nullable String cityName);
+    WeatherInfo getNowWeather( WeatherParam weatherParam);
 
 
-    BaseResponse invokeInterface(String method, Map params, String url, HttpServletRequest request);
 }

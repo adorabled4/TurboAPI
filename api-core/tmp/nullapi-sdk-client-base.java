@@ -1,71 +1,52 @@
-package com.dhx.apisdk.client.impl;
+package com.dhx.apisdk;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpRequest;
+import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONUtil;
 import com.dhx.apicommon.common.BaseResponse;
-import com.dhx.apicommon.common.exception.BusinessException;
-import com.dhx.apicommon.model.v1.param.FileSuffixParam;
-import com.dhx.apicommon.model.v1.param.IpAnaParam;
-import com.dhx.apicommon.model.v1.param.WeatherParam;
+import com.dhx.apicommon.common.exception.ErrorCode;
+import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apisdk.client.HxApiClient;
-import com.dhx.apisdk.model.TO.ComputerSuffix;
-import com.dhx.apisdk.model.TO.LovelornSentence;
-import com.dhx.apisdk.model.TO.Poet;
-import com.dhx.apisdk.model.TO.WeatherInfo;
+import com.dhx.apicommon.common.exception.BusinessException;
 import com.dhx.apisdk.util.SignUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import com.dhx.apicommon.model.v1.com.dhx.common.model.v1.Poet0;
+import com.dhx.apicommon.model.v1.com.dhx.common.model.v1.Poet1;
+import com.dhx.apicommon.model.v1.com.dhx.common.model.v1.Poet2;
+import com.dhx.apicommon.model.v1.com.dhx.common.model.v1.Poet3;
+import com.dhx.apicommon.model.v1.com.dhx.common.model.v1.Poet4;
 
+import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.dhx.apisdk.HxApiClientConfig.SERVER_HOST;
 
-/**
- * @author adorabled4
- * @className HxApiClient
- * @date : 2023/04/14/ 12:51
- **/
-@Component
 @Slf4j
-public class HxApiClientImpl implements HxApiClient {
 
-    String accessKey;
+public class HxApiClientTest {
 
-    String secretKey;
 
-    public HxApiClientImpl(String accessKey, String secretKey) {
-        this.accessKey = accessKey;
-        this.secretKey = secretKey;
-    }
-
-    public HxApiClientImpl() {
-
-    }
-
-    Map<String, String> getHeaderMap() {
-        Map<String, String> hashMap = new HashMap<>();
-        hashMap.put("accessKey", accessKey);
-        hashMap.put("nonce", RandomUtil.randomNumbers(4));
-        hashMap.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
-        hashMap.put("sign", SignUtil.genSign("", secretKey)); // 空字符串作为 body 参数
-        return hashMap;
-    }
-
-    @Override
-    public Poet getRandomPoet() {
+    public com.dhx.common.model.v1.Poet0 getWeather0(com.dhx.common.model.v1.query.PoetQuery param) {
         try {
-            String result = HttpRequest.get(SERVER_HOST + "/dev-api/api/apiinterface/poet/random").addHeaders(getHeaderMap()).execute().body();
+            String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+            String result = HttpRequest.get(SERVER_HOST + "api/v1/test/api").addHeaders(getHeaderMap()).body(JSONUtil.toJsonStr(param).execute().body();
             BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
             if (baseResponse.getCode() == 200) {
                 String dataStr = JSONUtil.toJsonStr(baseResponse.getData());
                 if (dataStr == null || dataStr.equals("")) {
-                    throw new RuntimeException();
+                    log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + baseResponse.toString());
                 }
-                Poet poet = JSONUtil.toBean(dataStr, Poet.class);
-                return poet;
+                com.dhx.apisdk.model.com.dhx.common.model.v1.Poet0 obj = JSONUtil.toBean(dataStr, com.dhx.apisdk.model.com.dhx.common.model.v1.Poet0.class);
+                return obj;
             } else {
                 throw new BusinessException(baseResponse.getCode(), baseResponse.getMessage());
             }
@@ -74,21 +55,21 @@ public class HxApiClientImpl implements HxApiClient {
         } catch (RuntimeException e) {
             log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + e.getMessage());
         }
-        return null;
     }
 
-    @Override
-    public String analyseIP(IpAnaParam param) {
+
+    public com.dhx.common.model.v1.Poet1 getWeather1(com.dhx.common.model.v1.query.PoetQuery param) {
         try {
-            String result = HttpRequest.get(SERVER_HOST + "/dev-api/api/ip/ana").addHeaders(getHeaderMap()).body(JSONUtil.toJsonStr(param), "application/json").execute().body();
+            String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+            String result = HttpRequest.get(SERVER_HOST + "api/v1/test/api").addHeaders(getHeaderMap()).body(JSONUtil.toJsonStr(param).execute().body();
             BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
             if (baseResponse.getCode() == 200) {
                 String dataStr = JSONUtil.toJsonStr(baseResponse.getData());
                 if (dataStr == null || dataStr.equals("")) {
-                    throw new RuntimeException();
-                } else {
-                    return dataStr;
+                    log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + baseResponse.toString());
                 }
+                com.dhx.apisdk.model.com.dhx.common.model.v1.Poet1 obj = JSONUtil.toBean(dataStr, com.dhx.apisdk.model.com.dhx.common.model.v1.Poet1.class);
+                return obj;
             } else {
                 throw new BusinessException(baseResponse.getCode(), baseResponse.getMessage());
             }
@@ -97,22 +78,21 @@ public class HxApiClientImpl implements HxApiClient {
         } catch (RuntimeException e) {
             log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + e.getMessage());
         }
-        return null;
     }
 
-    @Override
-    public WeatherInfo getNowWeather(WeatherParam param) {
+
+    public com.dhx.common.model.v1.Poet2 getWeather2(com.dhx.common.model.v1.query.PoetQuery param) {
         try {
-            String result = HttpRequest.get("http://localhost:8123/api/v1/common/weather/now").addHeaders(getHeaderMap()).body(JSONUtil.toJsonStr(param), "application/json").execute().body();
+            String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+            String result = HttpRequest.get(SERVER_HOST + "api/v1/test/api").addHeaders(getHeaderMap()).body(JSONUtil.toJsonStr(param).execute().body();
             BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
             if (baseResponse.getCode() == 200) {
                 String dataStr = JSONUtil.toJsonStr(baseResponse.getData());
                 if (dataStr == null || dataStr.equals("")) {
-                    throw new RuntimeException();
-                } else {
-                    WeatherInfo weatherInfo = JSONUtil.toBean(dataStr, WeatherInfo.class);
-                    return weatherInfo;
+                    log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + baseResponse.toString());
                 }
+                com.dhx.apisdk.model.com.dhx.common.model.v1.Poet2 obj = JSONUtil.toBean(dataStr, com.dhx.apisdk.model.com.dhx.common.model.v1.Poet2.class);
+                return obj;
             } else {
                 throw new BusinessException(baseResponse.getCode(), baseResponse.getMessage());
             }
@@ -121,21 +101,21 @@ public class HxApiClientImpl implements HxApiClient {
         } catch (RuntimeException e) {
             log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + e.getMessage());
         }
-        return null;
     }
 
-    @Override
-    public LovelornSentence getRandomLovelornSentence() {
+
+    public com.dhx.common.model.v1.Poet3 getWeather3(com.dhx.common.model.v1.query.PoetQuery param) {
         try {
-            String result = HttpRequest.get(SERVER_HOST + "/dev-api/api/apiinterface/common/lovelorn").addHeaders(getHeaderMap()).execute().body();
+            String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+            String result = HttpRequest.get(SERVER_HOST + "api/v1/test/api").addHeaders(getHeaderMap()).body(JSONUtil.toJsonStr(param).execute().body();
             BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
             if (baseResponse.getCode() == 200) {
                 String dataStr = JSONUtil.toJsonStr(baseResponse.getData());
                 if (dataStr == null || dataStr.equals("")) {
-                    throw new RuntimeException();
+                    log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + baseResponse.toString());
                 }
-                LovelornSentence lovelornSentence = JSONUtil.toBean(dataStr, LovelornSentence.class);
-                return lovelornSentence;
+                com.dhx.apisdk.model.com.dhx.common.model.v1.Poet3 obj = JSONUtil.toBean(dataStr, com.dhx.apisdk.model.com.dhx.common.model.v1.Poet3.class);
+                return obj;
             } else {
                 throw new BusinessException(baseResponse.getCode(), baseResponse.getMessage());
             }
@@ -144,22 +124,21 @@ public class HxApiClientImpl implements HxApiClient {
         } catch (RuntimeException e) {
             log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + e.getMessage());
         }
-        return null;
     }
 
 
-    @Override
-    public ComputerSuffix getDescriptionOfSuffix(FileSuffixParam param) {
+    public com.dhx.common.model.v1.Poet4 getWeather4(com.dhx.common.model.v1.query.PoetQuery param) {
         try {
-            String result = HttpRequest.get(SERVER_HOST + "/dev-api/api/common/suffix").addHeaders(getHeaderMap()).body(JSONUtil.toJsonStr(param)).execute().body();
+            String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+            String result = HttpRequest.get(SERVER_HOST + "api/v1/test/api").addHeaders(getHeaderMap()).body(JSONUtil.toJsonStr(param).execute().body();
             BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
             if (baseResponse.getCode() == 200) {
                 String dataStr = JSONUtil.toJsonStr(baseResponse.getData());
                 if (dataStr == null || dataStr.equals("")) {
-                    throw new RuntimeException();
-                } else {
-                    return JSONUtil.toBean(dataStr, ComputerSuffix.class);
+                    log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + baseResponse.toString());
                 }
+                com.dhx.apisdk.model.com.dhx.common.model.v1.Poet4 obj = JSONUtil.toBean(dataStr, com.dhx.apisdk.model.com.dhx.common.model.v1.Poet4.class);
+                return obj;
             } else {
                 throw new BusinessException(baseResponse.getCode(), baseResponse.getMessage());
             }
@@ -168,6 +147,7 @@ public class HxApiClientImpl implements HxApiClient {
         } catch (RuntimeException e) {
             log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + e.getMessage());
         }
-        return null;
     }
+
+
 }
