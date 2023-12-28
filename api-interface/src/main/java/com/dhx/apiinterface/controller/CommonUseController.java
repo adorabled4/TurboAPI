@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.common.exception.BusinessException;
 import com.dhx.apicommon.common.exception.ErrorCode;
+import com.dhx.apicommon.model.v1.param.FileSuffixParam;
+import com.dhx.apicommon.model.v1.param.IpAnaParam;
+import com.dhx.apicommon.model.v1.param.WeatherParam;
 import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apiinterface.domain.ComputerSuffix;
 import com.dhx.apiinterface.domain.LovelornSentence;
@@ -17,8 +20,8 @@ import com.dhx.apiinterface.vo.PoetVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -47,13 +50,13 @@ public class CommonUseController {
 
     /**
      * 查询 文件后缀名 介绍
-     * @param suffix
+     * @param param
      * @return
      */
     @GetMapping("/suffix")
-    public BaseResponse<ComputerSuffix> getSuffixDetail(@RequestParam("suffix")String suffix){
+    public BaseResponse<ComputerSuffix> getSuffixDetail(@RequestBody FileSuffixParam param){
         QueryWrapper<ComputerSuffix> wrapper = new QueryWrapper<>();
-        wrapper.eq("suffix",suffix);
+        wrapper.eq("suffix",param);
         List<ComputerSuffix> list = computerSuffixService.list(wrapper);
         if(list==null || list.size()==0){
             return  ResultUtil.error(ErrorCode.PARAMS_ERROR,"未知的文件后缀~");
@@ -83,16 +86,15 @@ public class CommonUseController {
 
     /**
      * 获取IPv4地址的location
-     * @param ipAddr
+     * @param param
      * @return
      */
     @GetMapping("/ip/ana")
-    public BaseResponse<String> analysisIP(@RequestParam("ip")String ipAddr){
+    public BaseResponse<String> analysisIP(@RequestBody IpAnaParam param){
         try{
-            InetAddress inetAddress = InetAddress.getByName(ipAddr);
-
+            InetAddress inetAddress = InetAddress.getByName(param.getIp());
             if (inetAddress instanceof Inet4Address) {
-                String location = IpUtil.getIpLocation(ipAddr);
+                String location = IpUtil.getIpLocation(param.getIp());
                 return ResultUtil.success(location);
             } else {
                 throw new BusinessException(ErrorCode.PARAMS_ERROR,"参数不是合法的IPv4地址!");
@@ -114,11 +116,11 @@ public class CommonUseController {
     }
 
     @GetMapping("/weather/now")
-    public BaseResponse<WeatherInfo> nowWeather(@RequestParam(value = "cityName",required = false)String cityName, HttpServletRequest request){
-        if(StringUtils.isEmpty(cityName)){
+    public BaseResponse<WeatherInfo> nowWeather(@RequestBody WeatherParam weatherParam, HttpServletRequest request){
+        if(StringUtils.isEmpty(weatherParam.getCityName())){
             return weatherService.getWeatherByRequest(request);
         }
-        return weatherService.getWeatherByCityName(cityName);
+        return weatherService.getWeatherByCityName(weatherParam.getCityName());
     }
     @GetMapping("/poet/random")
     public BaseResponse<PoetVO> getRandomPoet() {
