@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicore.model.DO.InterfaceInfoEntity;
 import com.dhx.apicore.model.query.InterfaceCategoryQuery;
-import com.dhx.apicore.model.query.InterfacePubQuery;
+import com.dhx.apicore.model.query.InterfaceUpdateQuery;
 import com.dhx.apicore.model.query.PageQuery;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVO;
 import com.dhx.apicore.model.vo.InterfaceDetailVO;
@@ -55,7 +55,7 @@ public interface InterfaceInfoService extends IService<InterfaceInfoEntity> {
      * @param query 查询
      * @return boolean
      */
-    void publishInterface(InterfacePubQuery query);
+    void publishInterface(InterfaceUpdateQuery query);
 
     /**
      * 按类别获取接口
@@ -78,4 +78,11 @@ public interface InterfaceInfoService extends IService<InterfaceInfoEntity> {
      * @param interfaceIds 接口id
      */
     void genSDKCode(List<Long> interfaceIds);
+
+    /**
+     * 更新接口信息
+     *
+     * @param query query
+     */
+    void updateInterfaceInfo(InterfaceUpdateQuery query);
 }

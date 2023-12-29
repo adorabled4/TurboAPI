@@ -10,12 +10,17 @@ import java.util.List;
 
 /**
  * @author adorabled4
- * @className InterfacePubQuery
+ * @className InterfaceUpdateQuery
  * @date : 2023/12/26/ 14:32
  **/
 @Data
 @NoArgsConstructor
-public class InterfacePubQuery implements Serializable {
+public class InterfaceUpdateQuery implements Serializable {
+
+    /**
+     * 接口id
+     */
+    private Long interfaceId;
 
     /**
      * 接口名称
@@ -36,11 +41,6 @@ public class InterfacePubQuery implements Serializable {
      * 接口分类
      */
     private List<InterfaceCategoryEnum> categories;
-
-    /**
-     * 接口类型(免费, 付费, 限时免费, 会员免费)
-     */
-    private Integer type;
 
     /**
      * 接口状态
@@ -86,6 +86,26 @@ public class InterfacePubQuery implements Serializable {
      * 是否是AIGC相关接口
      */
     private Boolean isAigc;
+
+    /**
+     * SDK中的方法名称
+     */
+    private String sdkMethodName;
+
+    /**
+     * SDK参数类名称(全类名)
+     */
+    private String sdkParamName;
+
+    /**
+     * 版本:v1,v2,v3...
+     */
+    private String version;
+
+    /**
+     * 对应的实体类的名称
+     */
+    private String modelName;
 
     private static final long serialVersionUID = 1L;
 

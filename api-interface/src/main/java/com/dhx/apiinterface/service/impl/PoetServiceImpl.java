@@ -1,23 +1,22 @@
 package com.dhx.apiinterface.service.impl;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
 import com.dhx.apicommon.common.BaseResponse;
+import com.dhx.apicommon.model.v1.PoetVO;
 import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apiinterface.constant.RedisConstant;
-import com.dhx.apiinterface.vo.PoetVO;
+import com.dhx.apiinterface.domain.Poet;
+import com.dhx.apiinterface.mapper.PoetMapper;
+import com.dhx.apiinterface.service.IPoetService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import com.dhx.apiinterface.mapper.PoetMapper;
-import com.dhx.apiinterface.domain.Poet;
-import com.dhx.apiinterface.service.IPoetService;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 诗句Service业务层处理

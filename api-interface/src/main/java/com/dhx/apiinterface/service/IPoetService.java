@@ -1,10 +1,10 @@
 package com.dhx.apiinterface.service;
 
-import java.util.List;
-
 import com.dhx.apicommon.common.BaseResponse;
+import com.dhx.apicommon.model.v1.PoetVO;
 import com.dhx.apiinterface.domain.Poet;
-import com.dhx.apiinterface.vo.PoetVO;
+
+import java.util.List;
 
 /**
  * 诗句Service接口

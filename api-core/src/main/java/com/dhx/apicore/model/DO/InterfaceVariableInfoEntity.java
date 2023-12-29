@@ -1,7 +1,7 @@
 package com.dhx.apicore.model.DO;
 
 import com.baomidou.mybatisplus.annotation.*;
-import com.dhx.apicore.model.query.InterfacePubQuery;
+import com.dhx.apicore.model.query.InterfaceUpdateQuery;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -92,11 +92,14 @@ public class InterfaceVariableInfoEntity implements Serializable {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
-    public InterfaceVariableInfoEntity(InterfacePubQuery query) {
+    public InterfaceVariableInfoEntity(InterfaceUpdateQuery query) {
         this.serviceAddress = query.getServiceAddress();
         this.callPath = query.getCallPath();
         this.requestParam = query.getRequestParam();
         this.requestHeaders = query.getRequestHeaders();
+        this.modelName = query.getModelName();
+        this.sdkMethodName = query.getSdkMethodName();
+        this.sdkParamName = query.getSdkParamName();
         this.totalCallCount = 0L;
     }
 

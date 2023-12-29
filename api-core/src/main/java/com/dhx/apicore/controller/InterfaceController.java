@@ -5,7 +5,7 @@ import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apicore.model.DO.InterfaceVariableInfoEntity;
 import com.dhx.apicore.model.enums.InterfaceCategoryEnum;
 import com.dhx.apicore.model.query.InterfaceCategoryQuery;
-import com.dhx.apicore.model.query.InterfacePubQuery;
+import com.dhx.apicore.model.query.InterfaceUpdateQuery;
 import com.dhx.apicore.model.query.PageQuery;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVO;
 import com.dhx.apicore.model.vo.InterfaceDetailVO;
@@ -43,7 +43,7 @@ public class InterfaceController {
 
     @PostMapping("/publish")
     @ApiOperation(value = "发布接口服务")
-    public BaseResponse publishInterface(@RequestBody @Validated InterfacePubQuery query) {
+    public BaseResponse publishInterface(@RequestBody @Validated InterfaceUpdateQuery query) {
         interfaceInfoService.publishInterface(query);
         return ResultUtil.success("发布成功");
     }
@@ -87,4 +87,10 @@ public class InterfaceController {
         return ResultUtil.success("生成成功!");
     }
 
+    @PostMapping("/update/interface")
+    @ApiOperation("更新接口信息")
+    public BaseResponse<String> updateInterfaceInfo(@RequestBody InterfaceUpdateQuery query) {
+        interfaceInfoService.updateInterfaceInfo(query);
+        return ResultUtil.success("更新成功!");
+    }
 }

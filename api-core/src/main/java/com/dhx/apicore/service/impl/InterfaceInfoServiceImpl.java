@@ -19,7 +19,7 @@ import com.dhx.apicore.model.DTO.InterfaceMetaDataDTO;
 import com.dhx.apicore.model.enums.InterfaceCategoryEnum;
 import com.dhx.apicore.model.enums.InterfaceStatusEnum;
 import com.dhx.apicore.model.query.InterfaceCategoryQuery;
-import com.dhx.apicore.model.query.InterfacePubQuery;
+import com.dhx.apicore.model.query.InterfaceUpdateQuery;
 import com.dhx.apicore.model.query.PageQuery;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVO;
 import com.dhx.apicore.model.vo.InterfaceDetailVO;
@@ -142,17 +142,19 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
 
     @Override
     @Transactional
-    public void publishInterface(InterfacePubQuery query) {
-        InterfaceVariableInfoEntity variableInfo = new InterfaceVariableInfoEntity(query);
+    public void publishInterface(InterfaceUpdateQuery query) {
+        InterfaceVariableInfoEntity variableInfo = BeanUtil.copyProperties(query, InterfaceVariableInfoEntity.class);
         InterfaceInfoEntity interfaceInfo = getInterfaceEntity(query);
-        boolean update = saveOrUpdate(interfaceInfo);
+        variableInfo.setModelName(query.getModelName());
+        boolean update = save(interfaceInfo);
+        variableInfo.setId(interfaceInfo.getId());
         boolean saveOrUpdate = interfaceVariableInfoService.saveOrUpdate(variableInfo);
         // 同步到 api-interface 的 接口meta-data中
         boolean syncResult = sync2ApiInterface(query, interfaceInfo.getId());
         ThrowUtil.throwIf(!update || !saveOrUpdate, ErrorCode.OPERATION_ERROR, "保存接口信息失败");
     }
 
-    private boolean sync2ApiInterface(InterfacePubQuery query, Long interfaceId) {
+    private boolean sync2ApiInterface(InterfaceUpdateQuery query, Long interfaceId) {
         AddInterfaceInfoQuery addInterfaceInfoQuery = AddInterfaceInfoQuery.builder()
                 .interfaceName(query.getName())
                 .isAigc(query.getIsAigc())
@@ -162,7 +164,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
         return apiInterfaceService.addInterfaceData(addInterfaceInfoQuery);
     }
 
-    private InterfaceInfoEntity getInterfaceEntity(InterfacePubQuery query) {
+    private InterfaceInfoEntity getInterfaceEntity(InterfaceUpdateQuery query) {
         InterfaceInfoEntity interfaceInfo = BeanUtil.copyProperties(query, InterfaceInfoEntity.class);
         List<InterfaceCategoryEnum> categories = query.getCategories();
         long combinedCategoryValue = CategoryBitMapUtil.getCombinedCategoryValue(categories);
@@ -248,8 +250,8 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
         context.put("apis", metaDataDTOS);
         context.put("basePackage", "com.dhx.apisdk");
         context.put("className", "TurboAPIClientImpl");
-        context.put("time", DateUtil.format(DateTime.now(),"yyyy-MM-dd"));
-        String fileName = docPath + "/" + "TurboAPIClientImpl.java" ;
+        context.put("time", DateUtil.format(DateTime.now(), "yyyy-MM-dd"));
+        String fileName = docPath + "/" + "TurboAPIClientImpl.java";
         FileOutputStream fos = new FileOutputStream(fileName);
         OutputStreamWriter out = new OutputStreamWriter(fos);
         template.process(context, out);
@@ -275,9 +277,22 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
         interfaceMetaDataDTO.setStatus(interfaceEntity.getStatus().getName());
         interfaceMetaDataDTO.setCategories(interfaceCategoryEnums);
         // 设置version
-        String version = variableInfo.getCallPath().substring(4,6);
+        String version = variableInfo.getCallPath().substring(4, 6);
         interfaceMetaDataDTO.setVersion(version);
         return interfaceMetaDataDTO;
+    }
+
+    @Override
+    public void updateInterfaceInfo(InterfaceUpdateQuery query) {
+        InterfaceInfoEntity interfaceInfo = BeanUtil.copyProperties(query, InterfaceInfoEntity.class);
+        InterfaceVariableInfoEntity variableInfo = BeanUtil.copyProperties(query, InterfaceVariableInfoEntity.class);
+        interfaceInfo.setId(query.getInterfaceId());
+        variableInfo.setId(query.getInterfaceId());
+        boolean update = updateById(interfaceInfo);
+        boolean saveOrUpdate = interfaceVariableInfoService.updateById(variableInfo);
+        // 同步到 api-interface 的 接口meta-data中
+        boolean syncResult = sync2ApiInterface(query, query.getInterfaceId());
+        ThrowUtil.throwIf(!update || !saveOrUpdate || !syncResult, ErrorCode.OPERATION_ERROR, "保存接口信息失败");
     }
 }
 

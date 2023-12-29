@@ -1,4 +1,4 @@
-package com.dhx.apiinterface.vo;
+package com.dhx.apicommon.model.v1;
 
 import lombok.Data;
 

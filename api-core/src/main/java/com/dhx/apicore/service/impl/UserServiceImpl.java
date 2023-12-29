@@ -88,7 +88,8 @@ public class UserServiceImpl extends ServiceImpl<UserEntityMapper, UserEntity> i
 
     @Override
     public UserEntity getUserByAccount(String userAccount) {
-        return query().eq("user_account", userAccount).one();
+        List<UserEntity> users = query().eq("user_account", userAccount).list();
+        return users.isEmpty() ? null : users.get(0);
     }
 
     @Override
