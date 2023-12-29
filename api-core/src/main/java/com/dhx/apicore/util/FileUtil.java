@@ -102,7 +102,7 @@ public class FileUtil {
     /**
      * 渲染ftl模板中的制表符
      *
-     * @param fileName 文件名称 如 api-sdk-Client.java.ftl
+     * @param fileName 文件名称 如 api-sdk-client.java.ftl
      * @throws IOException ioexception
      */
     public static String handleCodeTab(String fileName) throws IOException {
@@ -133,7 +133,7 @@ public class FileUtil {
         }
         br.close(); // 关闭读取流
         // 将处理后的内容更新到文件
-        String handledFile = "tmp/" + fileName;
+        String handledFile = "tmp/api-sdk-client.java.ftl";
         FileWriter fileWriter = new FileWriter(handledFile);
         fileWriter.write(sb.toString());
         fileWriter.close();

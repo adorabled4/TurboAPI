@@ -1,6 +1,6 @@
-package com.dhx.apicore.manager;
+package com.dhx.apicore.service;
 
-import com.dhx.apicore.model.DTO.InterfaceTemplateDTO;
+import com.dhx.apicore.model.DTO.InterfaceMetaDataDTO;
 import com.dhx.apicore.model.enums.InterfaceStatusEnum;
 import com.dhx.apicore.util.CategoryBitMapUtil;
 import freemarker.cache.ClassTemplateLoader;
@@ -30,11 +30,11 @@ public class ApiDocTest {
 
     public void Test() throws IOException, TemplateException {
         Template template = cfg.getTemplate("api-doc.md.ftl");
-        InterfaceTemplateDTO detailVO = createInterfaceDetail(true);
+        InterfaceMetaDataDTO detailVO = createInterfaceDetail(true);
         generate(template, detailVO, "tmp");
     }
 
-    private void generate(Template template, InterfaceTemplateDTO api, String path) throws IOException, TemplateException {
+    private void generate(Template template, InterfaceMetaDataDTO api, String path) throws IOException, TemplateException {
         File folder = new File(path);
         if (!folder.exists()) {
             folder.mkdirs();
@@ -47,8 +47,8 @@ public class ApiDocTest {
         out.close();
     }
 
-    private InterfaceTemplateDTO createInterfaceDetail(boolean isExample) {
-        InterfaceTemplateDTO vo = new InterfaceTemplateDTO();
+    private InterfaceMetaDataDTO createInterfaceDetail(boolean isExample) {
+        InterfaceMetaDataDTO vo = new InterfaceMetaDataDTO();
         vo.setName("this is api-name");
         vo.setRequestMethod("GET");
         vo.setStatus(InterfaceStatusEnum.AVAILABLE.getName());

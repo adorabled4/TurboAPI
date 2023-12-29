@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
  * @date : 2023/12/27/ 17:54
  **/
 @Slf4j
+@Component
 public class EmailManager {
 
     @Resource

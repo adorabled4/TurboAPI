@@ -3,25 +3,27 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dhx.apicore.mapper.InterfaceVariableInfoMapper">
-
     <resultMap id="BaseResultMap" type="com.dhx.apicore.model.DO.InterfaceVariableInfoEntity">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="requestParam" column="request_param" jdbcType="VARCHAR"/>
-            <result property="requestHeaders" column="request_headers" jdbcType="VARCHAR"/>
-            <result property="requestExample" column="request_example" jdbcType="VARCHAR"/>
-            <result property="responseExample" column="response_example" jdbcType="VARCHAR"/>
-            <result property="totalCallCount" column="total_call_count" jdbcType="BIGINT"/>
-            <result property="callPath" column="call_path" jdbcType="VARCHAR"/>
-            <result property="serviceAddress" column="service_address" jdbcType="VARCHAR"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="requestParam" column="request_param" jdbcType="VARCHAR"/>
+        <result property="requestHeaders" column="request_headers" jdbcType="VARCHAR"/>
+        <result property="requestExample" column="request_example" jdbcType="VARCHAR"/>
+        <result property="responseExample" column="response_example" jdbcType="VARCHAR"/>
+        <result property="totalCallCount" column="total_call_count" jdbcType="BIGINT"/>
+        <result property="callPath" column="call_path" jdbcType="VARCHAR"/>
+        <result property="serviceAddress" column="service_address" jdbcType="VARCHAR"/>
+        <result property="sdkMethodName" column="sdk_method_name" jdbcType="VARCHAR"/>
+        <result property="sdkParamName" column="sdk_param_name" jdbcType="VARCHAR"/>
+        <result property="modelName" column="model_name" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,request_param,request_headers,
         request_example,response_example,total_call_count,
-        call_path,service_address,create_time,
+        call_path,service_address,sdk_method_name,sdk_param_name,create_time,
         update_time,is_deleted
     </sql>
 </mapper>

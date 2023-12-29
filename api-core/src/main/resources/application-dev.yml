@@ -38,6 +38,8 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  freemarker:
+    charset: UTF-8
 mybatis-plus:
   global-config:
     db-config:
@@ -92,3 +94,15 @@ dhx:
   client:
     access-key: r3242rfj3w9r
     secret-key: g45hg34wrxsa
+template:
+  gen:
+    doc-path: ../api-doc/docs/gen
+    sdk-path: ../api-sdk/src/main/java/com/dhx/apisdk/client
+alibaba:
+  cloud:
+    oss:
+      endpoint: https://oss-cn-beijing.aliyuncs.com
+      bucket: dhx-blog
+      domain: https://oss.dhx.icu/
+      access-key: LTAI5tPcnQEU3vr3Vss5Ax7n
+      secret-key: NCySlHYxtHgEhM9CPg3sYv3va2Pbfj
