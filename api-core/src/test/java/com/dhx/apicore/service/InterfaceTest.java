@@ -1,6 +1,8 @@
 package com.dhx.apicore.service;
 
+import com.dhx.apicore.model.DO.InterfaceInfoEntity;
 import com.dhx.apicore.model.enums.InterfaceCategoryEnum;
+import com.dhx.apicore.model.query.InterfaceIdsQuery;
 import com.dhx.apicore.util.CategoryBitMapUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.dhx.apicore.model.enums.InterfaceCategoryEnum.*;
 
@@ -26,7 +29,14 @@ public class InterfaceTest {
     InterfaceInfoService interfaceInfoService;
     @Test
     public void Test() throws Exception {
-        interfaceInfoService.genSDKCode(Collections.singletonList(5L));
+        interfaceInfoService.genSDKCode(new InterfaceIdsQuery(Collections.singletonList(5L)));
+    }
+
+    @Test
+    public void genDocTest(){
+        List<InterfaceInfoEntity> list = interfaceInfoService.list();
+        List<Long> ids = list.stream().map(InterfaceInfoEntity::getId).collect(Collectors.toList());
+        interfaceInfoService.genInterfaceDocMD(new InterfaceIdsQuery(ids));
     }
 
     @Test

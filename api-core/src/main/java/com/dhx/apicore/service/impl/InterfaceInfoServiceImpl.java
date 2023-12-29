@@ -19,6 +19,7 @@ import com.dhx.apicore.model.DTO.InterfaceMetaDataDTO;
 import com.dhx.apicore.model.enums.InterfaceCategoryEnum;
 import com.dhx.apicore.model.enums.InterfaceStatusEnum;
 import com.dhx.apicore.model.query.InterfaceCategoryQuery;
+import com.dhx.apicore.model.query.InterfaceIdsQuery;
 import com.dhx.apicore.model.query.InterfaceUpdateQuery;
 import com.dhx.apicore.model.query.PageQuery;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVO;
@@ -31,6 +32,7 @@ import com.dhx.apicore.util.ThrowUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
@@ -54,6 +56,7 @@ import java.util.stream.Collectors;
  * @createDate 2023-04-12 09:38:35
  */
 @Service
+@Slf4j
 public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMapper, InterfaceInfoEntity>
         implements InterfaceInfoService {
     @Resource
@@ -193,12 +196,13 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
     }
 
     @Override
-    public void genInterfaceDocMD(List<Long> interfaceIds) {
+    public void genInterfaceDocMD(InterfaceIdsQuery query) {
         try {
-            List<InterfaceMetaDataDTO> templateDTOS = interfaceIds
+            List<InterfaceMetaDataDTO> templateDTOS = query.getIds()
                     .stream().map(this::getInterfaceTemplateData).collect(Collectors.toList());
             Template template = cfg.getTemplate("api-doc.md.ftl");
             for (InterfaceMetaDataDTO templateDTO : templateDTOS) {
+                log.info(templateDTO.toString());
                 generateDoc(template, templateDTO);
             }
         } catch (IOException | TemplateException e) {
@@ -220,7 +224,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
         if (!folder.exists()) {
             ThrowUtil.throwIf(!folder.mkdirs(), ErrorCode.SYSTEM_ERROR, "创建文件夸失败!");
         }
-        String fileName = docPath + "/" + api.getName() + template.getName().replace(".ftl", "");
+        String fileName = docPath + "/" + api.getVersion() +"/"+ api.getName() + template.getName().replace(".ftl", "");
         FileOutputStream fos = new FileOutputStream(fileName);
         OutputStreamWriter out = new OutputStreamWriter(fos);
         template.process(api, out);
@@ -229,9 +233,9 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
     }
 
     @Override
-    public void genSDKCode(List<Long> interfaceIds) {
+    public void genSDKCode(InterfaceIdsQuery query) {
         try {
-            List<InterfaceMetaDataDTO> templateDTOS = interfaceIds
+            List<InterfaceMetaDataDTO> templateDTOS = query.getIds()
                     .stream().map(this::getInterfaceTemplateData).collect(Collectors.toList());
             Template template = cfg.getTemplate("api-sdk-client.java.ftl");
             generateSDKCode(template, templateDTOS);

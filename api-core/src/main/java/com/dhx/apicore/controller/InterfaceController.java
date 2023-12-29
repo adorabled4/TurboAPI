@@ -5,6 +5,7 @@ import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apicore.model.DO.InterfaceVariableInfoEntity;
 import com.dhx.apicore.model.enums.InterfaceCategoryEnum;
 import com.dhx.apicore.model.query.InterfaceCategoryQuery;
+import com.dhx.apicore.model.query.InterfaceIdsQuery;
 import com.dhx.apicore.model.query.InterfaceUpdateQuery;
 import com.dhx.apicore.model.query.PageQuery;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVO;
@@ -80,10 +81,10 @@ public class InterfaceController {
         return interfaceInfoService.getInterfaceByCategories(query);
     }
 
-    @GetMapping("/gen/interface-doc")
+    @PostMapping("/gen/interface-doc")
     @ApiOperation(value = "通过id生成接口说明文档")
-    public BaseResponse<String> genInterfaceDoc(@RequestParam("ids") List<Long> interfaceIds) {
-        interfaceInfoService.genInterfaceDocMD(interfaceIds);
+    public BaseResponse<String> genInterfaceDoc(@RequestBody InterfaceIdsQuery ids) {
+        interfaceInfoService.genInterfaceDocMD(ids);
         return ResultUtil.success("生成成功!");
     }
 

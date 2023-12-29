@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicore.model.DO.InterfaceInfoEntity;
 import com.dhx.apicore.model.query.InterfaceCategoryQuery;
+import com.dhx.apicore.model.query.InterfaceIdsQuery;
 import com.dhx.apicore.model.query.InterfaceUpdateQuery;
 import com.dhx.apicore.model.query.PageQuery;
 import com.dhx.apicore.model.vo.InterfaceBasicInfoVO;
@@ -68,16 +69,16 @@ public interface InterfaceInfoService extends IService<InterfaceInfoEntity> {
     /**
      * 通用接口文档md
      *
-     * @param interfaceIds 接口ids
+     * @param query 接口ids
      */
-    void genInterfaceDocMD(List<Long> interfaceIds);
+    void genInterfaceDocMD(InterfaceIdsQuery query);
 
     /**
      * 生成SDK代码
      *
-     * @param interfaceIds 接口id
+     * @param query 接口id
      */
-    void genSDKCode(List<Long> interfaceIds);
+    void genSDKCode(InterfaceIdsQuery query);
 
     /**
      * 更新接口信息
