@@ -6,7 +6,7 @@
 	
     <groupId>com.dhx</groupId>
     <artifactId>TurboAPI</artifactId>
-    <version>3.8.5</version>
+    <version>1.0.0</version>
 
     <name>TurboAPI</name>
     <description>TurboAPI</description>
