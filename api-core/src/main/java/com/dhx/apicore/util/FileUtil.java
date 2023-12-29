@@ -102,7 +102,7 @@ public class FileUtil {
     /**
      * 渲染ftl模板中的制表符
      *
-     * @param fileName 文件名称 如 api-sdk-Client.java.ftl
+     * @param fileName 文件名称 如 api-sdk-client.java.ftl
      * @throws IOException ioexception
      */
     public static String handleCodeTab(String fileName) throws IOException {

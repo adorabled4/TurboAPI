@@ -57,11 +57,12 @@ public class ApiSDKMultiTest {
         for (int i = 0; i < 5; i++) {
             Map<String, Object> api = new HashMap<>();
             api.put("modelName", "com.dhx.common.model.v1.Poet" + i);
-            api.put("methodName", "getWeather" + i);
+            api.put("sdkMethodName", "getWeather" + i);
             api.put("name", "this is api-name");
             api.put("requestMethod", "GET");
             api.put("version", "v1");
-            api.put("paramModel", "com.dhx.common.model.v1.query.PoetQuery");
+            api.put("docUrl", "http://blog.dhx.icu");
+            api.put("sdkParamName", "com.dhx.common.model.v1.query.PoetQuery");
             api.put("callPath", "api/v1/test/api");
             api.put("description", "this is desc");
             if (isExample) {
@@ -82,6 +83,7 @@ public class ApiSDKMultiTest {
         context.put("apis", objs);
         context.put("basePackage", "com.dhx.apisdk");
         context.put("methodName", "getRandomPoet");
+        context.put("time", "2023-12-29");
         context.put("className", "HxApiClientTest");
         return context;
     }

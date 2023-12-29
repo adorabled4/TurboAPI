@@ -19,7 +19,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class InterfaceTemplateDTO implements Serializable {
+public class InterfaceMetaDataDTO implements Serializable {
 
     /**
      * 接口名称
@@ -85,6 +85,26 @@ public class InterfaceTemplateDTO implements Serializable {
      * 响应示例
      */
     private String responseExample;
+
+    /**
+     * SDK中的方法名称
+     */
+    private String sdkMethodName;
+
+    /**
+     * SDK参数类名称(全类名)
+     */
+    private String sdkParamName;
+
+    /**
+     * 版本:v1,v2,v3...
+     */
+    private String version;
+
+    /**
+     * 对应的实体类的名称
+     */
+    private String modelName;
 
     private static final long serialVersionUID = 1L;
 }

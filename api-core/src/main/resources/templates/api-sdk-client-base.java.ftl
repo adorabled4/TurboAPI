@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 <#list apis as api>
 import com.dhx.apicommon.model.${api.version}.${api.modelName};
+import com.dhx.apicommon.model.${api.version}.param.${api.sdkParamName};
 </#list>
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,49 +36,34 @@ public class ${className} {
 <#list apis as api>
 
 
-<#if api.paramModel??>
-public ${api.modelName} ${api.methodName}(${api.paramModel} param) {
+/**
+* <p>${api.description}</p>
+* @param param ${api.sdkParamName}
+* @return BaseResponse<${api.modelName}>
+* @doc <a href="${api.docUrl}">文档地址</a>
+* @build <p>Build by Adorabled4 at ${time} , driver by FreeMarker Template Engine</p>
+*/
+public BaseResponse<${api.modelName}> ${api.sdkMethodName}(<#if api.sdkParamName??> ${api.sdkParamName}param </#if>) {
 try {
-String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+<#if api.sdkParamName??>
 <#if api.requestMethod=="GET">
 String result = HttpRequest.get(SERVER_HOST + "${api.callPath}").addHeaders(getHeaderMap()).body(JSONUtil.toJsonStr(param).execute().body();
 <#elseif api.requestMethod=="POST">
 String result = HttpRequest.post(SERVER_HOST + "${api.callPath}").addHeaders(getHeaderMap()).body(JSONUtil.toJsonStr(param).execute().body();
-</#if>
-BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
-if (baseResponse.getCode() == 200) {
-String dataStr = JSONUtil.toJsonStr(baseResponse.getData());
-if (dataStr == null || dataStr.equals("")) {
-log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + baseResponse.toString());
-}
-${basePackage}.model.${api.modelName} obj = JSONUtil.toBean(dataStr, ${basePackage}.model.${api.modelName}.class);
-return obj;
-} else {
-throw new BusinessException(baseResponse.getCode(), baseResponse.getMessage());
-}
-} catch (IORuntimeException e) {
-log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 访问服务器失败 --" + e.getMessage());
-} catch (RuntimeException e) {
-log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + e.getMessage());
-}
-}
-<#else >
-public ${api.modelName} ${api.methodName}() {
-try {
-String nowTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
-<#if api.requestMethod="GET">
-    String result = HttpRequest.get(SERVER_HOST + "${callPath}").addHeaders(getHeaderMap()).execute().body();
+</#if></#if>
+<#if !api.sdkParamName??>
+<#if api.requestMethod=="GET">
+String result = HttpRequest.get(SERVER_HOST + "${api.callPath}").addHeaders(getHeaderMap()).execute().body();
 <#elseif api.requestMethod=="POST">
-    String result = HttpRequest.post(SERVER_HOST + "${callPath}").addHeaders(getHeaderMap()).execute().body();
-</#if>
-BaseResponse baseResponse = JSONUtil.toBean(result, BaseResponse.class);
+String result = HttpRequest.post(SERVER_HOST + "${api.callPath}").addHeaders(getHeaderMap()).execute().body();
+</#if></#if>
+BaseResponse<${api.modelName}> baseResponse = JSONUtil.toBean(result, BaseResponse.class);
 if (baseResponse.getCode() == 200) {
 String dataStr = JSONUtil.toJsonStr(baseResponse.getData());
 if (dataStr == null || dataStr.equals("")) {
 log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + baseResponse.toString());
 }
-${basePackage}.model.${api.modelName} obj = JSONUtil.toBean(dataStr, ${basePackage}.model.${api.modelName}.class);
-return obj;
+return baseResponse;
 } else {
 throw new BusinessException(baseResponse.getCode(), baseResponse.getMessage());
 }
@@ -87,8 +73,6 @@ log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 访问服
 log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + e.getMessage());
 }
 }
-
-</#if>
 
 </#list>
 

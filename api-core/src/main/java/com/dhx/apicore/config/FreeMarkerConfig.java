@@ -23,6 +23,12 @@ public class FreeMarkerConfig {
     private String docPath;
 
 
+    /**
+     * api-sdk的相对路径
+     */
+    private String sdkPath;
+
+
     @Bean
     Configuration configuration() {
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_30);

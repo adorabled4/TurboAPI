@@ -59,6 +59,21 @@ public class InterfaceVariableInfoEntity implements Serializable {
     private String serviceAddress;
 
     /**
+     * SDK中的方法名称
+     */
+    private String sdkMethodName;
+
+    /**
+     * SDK参数类名称(全类名)
+     */
+    private String sdkParamName;
+
+    /**
+     * 响应结果的实体类的名称
+     */
+    private String modelName;
+
+    /**
      * 创建时间
      */
     private LocalDateTime createTime;
