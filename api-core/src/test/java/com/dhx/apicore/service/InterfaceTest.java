@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,6 +24,10 @@ public class InterfaceTest {
 
     @Resource
     InterfaceInfoService interfaceInfoService;
+    @Test
+    public void Test() throws Exception {
+        interfaceInfoService.genSDKCode(Collections.singletonList(5L));
+    }
 
     @Test
     public void bitMapTest() {
@@ -36,6 +41,6 @@ public class InterfaceTest {
         selectedCategories.add(ONE_MINUTE_PURCHASE_ZONE);
         selectedCategories.add(BUSINESS_SPECIFIC);
         long combinedValue = CategoryBitMapUtil.getCombinedCategoryValue(selectedCategories);
-        assert combinedValue == Math.pow(2,FINTECH.getIndex())+ Math.pow(2,ONE_MINUTE_PURCHASE_ZONE.getIndex())+ Math.pow(2,BUSINESS_SPECIFIC.getIndex());
+        assert combinedValue == Math.pow(2, FINTECH.getIndex()) + Math.pow(2, ONE_MINUTE_PURCHASE_ZONE.getIndex()) + Math.pow(2, BUSINESS_SPECIFIC.getIndex());
     }
 }

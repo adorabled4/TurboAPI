@@ -1,6 +1,8 @@
 package com.dhx.apicore.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dhx.apicommon.common.BaseResponse;
@@ -13,7 +15,7 @@ import com.dhx.apicore.config.FreeMarkerConfig;
 import com.dhx.apicore.mapper.InterfaceInfoEntityMapper;
 import com.dhx.apicore.model.DO.InterfaceInfoEntity;
 import com.dhx.apicore.model.DO.InterfaceVariableInfoEntity;
-import com.dhx.apicore.model.DTO.InterfaceTemplateDTO;
+import com.dhx.apicore.model.DTO.InterfaceMetaDataDTO;
 import com.dhx.apicore.model.enums.InterfaceCategoryEnum;
 import com.dhx.apicore.model.enums.InterfaceStatusEnum;
 import com.dhx.apicore.model.query.InterfaceCategoryQuery;
@@ -40,7 +42,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -189,10 +193,10 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
     @Override
     public void genInterfaceDocMD(List<Long> interfaceIds) {
         try {
-            List<InterfaceTemplateDTO> templateDTOS = interfaceIds
+            List<InterfaceMetaDataDTO> templateDTOS = interfaceIds
                     .stream().map(this::getInterfaceTemplateData).collect(Collectors.toList());
             Template template = cfg.getTemplate("api-doc.md.ftl");
-            for (InterfaceTemplateDTO templateDTO : templateDTOS) {
+            for (InterfaceMetaDataDTO templateDTO : templateDTOS) {
                 generateDoc(template, templateDTO);
             }
         } catch (IOException | TemplateException e) {
@@ -208,7 +212,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
      * @throws IOException       ioexception
      * @throws TemplateException 模板异常
      */
-    private void generateDoc(Template template, InterfaceTemplateDTO api) throws IOException, TemplateException {
+    private void generateDoc(Template template, InterfaceMetaDataDTO api) throws IOException, TemplateException {
         String docPath = freeMarkerConfig.getDocPath();
         File folder = new File(docPath);
         if (!folder.exists()) {
@@ -222,24 +226,58 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
         out.close();
     }
 
+    @Override
+    public void genSDKCode(List<Long> interfaceIds) {
+        try {
+            List<InterfaceMetaDataDTO> templateDTOS = interfaceIds
+                    .stream().map(this::getInterfaceTemplateData).collect(Collectors.toList());
+            Template template = cfg.getTemplate("api-sdk-client.java.ftl");
+            generateSDKCode(template, templateDTOS);
+        } catch (IOException | TemplateException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void generateSDKCode(Template template, List<InterfaceMetaDataDTO> metaDataDTOS) throws IOException, TemplateException {
+        String docPath = freeMarkerConfig.getSdkPath();
+        File folder = new File(docPath);
+        if (!folder.exists()) {
+            ThrowUtil.throwIf(!folder.mkdirs(), ErrorCode.SYSTEM_ERROR, "创建文件夹失败!");
+        }
+        Map<String, Object> context = new HashMap<>();
+        context.put("apis", metaDataDTOS);
+        context.put("basePackage", "com.dhx.apisdk");
+        context.put("className", "TurboAPIClientImpl");
+        context.put("time", DateUtil.format(DateTime.now(),"yyyy-MM-dd"));
+        String fileName = docPath + "/" + "TurboAPIClientImpl.java" ;
+        FileOutputStream fos = new FileOutputStream(fileName);
+        OutputStreamWriter out = new OutputStreamWriter(fos);
+        template.process(context, out);
+        fos.close();
+        out.close();
+    }
+
     /**
      * 获取接口模板数据
      *
      * @param id id
-     * @return {@link BaseResponse}<{@link InterfaceTemplateDTO}>
+     * @return {@link BaseResponse}<{@link InterfaceMetaDataDTO}>
      */
-    private InterfaceTemplateDTO getInterfaceTemplateData(Long id) {
+    private InterfaceMetaDataDTO getInterfaceTemplateData(Long id) {
         InterfaceInfoEntity interfaceEntity = findById(id);
         InterfaceVariableInfoEntity variableInfo = interfaceVariableInfoService.findById(id);
-        InterfaceTemplateDTO interfaceTemplateDTO = new InterfaceTemplateDTO();
-        BeanUtil.copyProperties(interfaceEntity, interfaceTemplateDTO);
-        BeanUtil.copyProperties(variableInfo, interfaceTemplateDTO);
+        InterfaceMetaDataDTO interfaceMetaDataDTO = new InterfaceMetaDataDTO();
+        BeanUtil.copyProperties(interfaceEntity, interfaceMetaDataDTO);
+        BeanUtil.copyProperties(variableInfo, interfaceMetaDataDTO);
         // 设置分类信息
         Long categoryBitMap = interfaceEntity.getCategoryBitMap();
         List<String> interfaceCategoryEnums = CategoryBitMapUtil.parse2String(categoryBitMap);
-        interfaceTemplateDTO.setStatus(interfaceEntity.getStatus().getName());
-        interfaceTemplateDTO.setCategories(interfaceCategoryEnums);
-        return interfaceTemplateDTO;
+        interfaceMetaDataDTO.setStatus(interfaceEntity.getStatus().getName());
+        interfaceMetaDataDTO.setCategories(interfaceCategoryEnums);
+        // 设置version
+        String version = variableInfo.getCallPath().substring(4,6);
+        interfaceMetaDataDTO.setVersion(version);
+        return interfaceMetaDataDTO;
     }
 }
 

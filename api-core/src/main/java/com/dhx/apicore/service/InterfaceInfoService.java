@@ -71,4 +71,11 @@ public interface InterfaceInfoService extends IService<InterfaceInfoEntity> {
      * @param interfaceIds 接口ids
      */
     void genInterfaceDocMD(List<Long> interfaceIds);
+
+    /**
+     * 生成SDK代码
+     *
+     * @param interfaceIds 接口id
+     */
+    void genSDKCode(List<Long> interfaceIds);
 }
