@@ -25,6 +25,7 @@ import com.dhx.apicore.util.ThrowUtil;
 import com.dhx.apicore.util.UserHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +40,7 @@ import static com.dhx.apicore.model.enums.UserRoleEnum.*;
  * @className LoginServiceImpl
  * @date : 2023/12/27/ 19:39
  **/
+@Service
 public class LoginServiceImpl implements LoginService {
 
     @Resource

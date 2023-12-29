@@ -1,4 +1,4 @@
-package com.dhx.apicore.manager;
+package com.dhx.apicore.service;
 
 import com.dhx.apicore.util.FileUtil;
 import freemarker.cache.ClassTemplateLoader;
@@ -27,22 +27,31 @@ public class ApiSDKMultiTest {
 
     {
         cfg = new Configuration(Configuration.VERSION_2_3_30);
-        cfg.setTemplateLoader(new ClassTemplateLoader(this.getClass(), "/templates"));
+        cfg.setTemplateLoader(new ClassTemplateLoader(this.getClass(),"/tmp"));
         cfg.setDefaultEncoding("UTF-8");
+    }
+
+    @Test
+    public void hTest() throws IOException {
+        // 代码模板格式化
+        FileUtil.handleCodeTab("templates/api-sdk-client-base.java.ftl");
     }
     @Test
     public void Test() throws IOException, TemplateException {
-        Template template = cfg.getTemplate("api-sdk-client-base.java.ftl");
+        Template template = cfg.getTemplate("api-sdk-client.java.ftl");
         Map<String, Object> map = getData(true);
-        String s = FileUtil.handleCodeTab("templates/api-sdk-client-base.java.ftl");
+        // 生成 (withOut Spring)
         String fileName = generate(template, map, "tmp");
     }
+
     private String generate(Template template, Map<String, Object> map, String path) throws IOException, TemplateException {
         File folder = new File(path);
         if (!folder.exists()) {
             folder.mkdirs();
         }
-        String fileName = path + "/" + map.get("name") + template.getName().replace(".ftl", "");
+//        String fileName = path + "/" + map.get("name") + template.getName().replace(".ftl", "");
+        String fileName = "../"  + "TurboAPIClientImpl.java" ;
+//        String fileName = "../api-sdk/src/main/java/com/dhx/apisdk/client/gen" + "/" + "TurboAPIClientImpl.java" ;
         FileOutputStream fos = new FileOutputStream(fileName);
         OutputStreamWriter out = new OutputStreamWriter(fos);
         template.process(map, out);
@@ -54,16 +63,16 @@ public class ApiSDKMultiTest {
     private Map<String, Object> getData(boolean isExample) {
         Map<String, Object> context = new HashMap<>();
         List objs = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             Map<String, Object> api = new HashMap<>();
-            api.put("modelName", "com.dhx.common.model.v1.Poet" + i);
-            api.put("sdkMethodName", "getWeather" + i);
+            api.put("modelName", "com.dhx.apicommon.model.v1.Poet");
+            api.put("sdkMethodName", "callRandomPoet" + i);
             api.put("name", "this is api-name");
             api.put("requestMethod", "GET");
             api.put("version", "v1");
             api.put("docUrl", "http://blog.dhx.icu");
-            api.put("sdkParamName", "com.dhx.common.model.v1.query.PoetQuery");
-            api.put("callPath", "api/v1/test/api");
+//            api.put("sdkParamName", "com.dhx.apicommon.model.v1.query.PoetQuery");
+            api.put("callPath", "api/v1/common/poet/random");
             api.put("description", "this is desc");
             if (isExample) {
                 api.put("requestExample", "{\n\t'name':1232423\n}");
@@ -84,7 +93,7 @@ public class ApiSDKMultiTest {
         context.put("basePackage", "com.dhx.apisdk");
         context.put("methodName", "getRandomPoet");
         context.put("time", "2023-12-29");
-        context.put("className", "HxApiClientTest");
+        context.put("className", "TurboAPIClientImpl");
         return context;
     }
 

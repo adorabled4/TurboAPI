@@ -133,7 +133,7 @@ public class FileUtil {
         }
         br.close(); // 关闭读取流
         // 将处理后的内容更新到文件
-        String handledFile = "tmp/" + fileName;
+        String handledFile = "tmp/api-sdk-client.java.ftl";
         FileWriter fileWriter = new FileWriter(handledFile);
         fileWriter.write(sb.toString());
         fileWriter.close();

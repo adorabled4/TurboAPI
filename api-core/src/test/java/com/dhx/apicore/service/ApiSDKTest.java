@@ -1,4 +1,4 @@
-package com.dhx.apicore.manager;
+package com.dhx.apicore.service;
 
 import com.dhx.apicore.model.enums.InterfaceStatusEnum;
 import com.dhx.apicore.util.CategoryBitMapUtil;

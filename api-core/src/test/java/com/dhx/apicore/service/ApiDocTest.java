@@ -1,4 +1,4 @@
-package com.dhx.apicore.manager;
+package com.dhx.apicore.service;
 
 import com.dhx.apicore.model.DTO.InterfaceMetaDataDTO;
 import com.dhx.apicore.model.enums.InterfaceStatusEnum;

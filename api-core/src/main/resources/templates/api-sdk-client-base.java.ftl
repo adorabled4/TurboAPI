@@ -1,4 +1,4 @@
-package ${basePackage};
+package ${basePackage}.client;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.RandomUtil;
@@ -15,10 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 <#list apis as api>
-import com.dhx.apicommon.model.${api.version}.${api.modelName};
-import com.dhx.apicommon.model.${api.version}.param.${api.sdkParamName};
+import ${api.modelName};
+<#if api.sdkParamName?has_content>import ${api.sdkParamName};</#if>
 </#list>
-
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -26,42 +25,50 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import static com.dhx.apisdk.HxApiClientConfig.SERVER_HOST;
 
 @Slf4j
-
 public class ${className} {
 
-<#list apis as api>
+private String accessKey;
+private String secretKey;
 
+public TurboAPIClientImpl(String accessKey, String secretKey) {
+this.accessKey = accessKey;
+this.secretKey = secretKey;
+}
+
+public TurboAPIClientImpl() {
+}
+
+Map${"<String, String>"} getHeaderMap() {
+Map${"<String, String>"} hashMap = new HashMap<>();
+hashMap.put("accessKey", accessKey);
+hashMap.put("nonce", RandomUtil.randomNumbers(4));
+hashMap.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
+hashMap.put("sign", SignUtil.genSign("", secretKey)); // 空字符串作为 body 参数
+return hashMap;
+}
+<#list apis as api>
 
 /**
 * <p>${api.description}</p>
-* @param param ${api.sdkParamName}
-* @return BaseResponse<${api.modelName}>
-* @doc <a href="${api.docUrl}">文档地址</a>
-* @build <p>Build by Adorabled4 at ${time} , driver by FreeMarker Template Engine</p>
+* <#if api.sdkParamName?has_content>@param param ${api.sdkParamName} param</#if>
+* @return BaseResponse<${api.modelName}> response
+* @doc <a href="${api.docUrl}">点击访问文档</a>
+* @build <p>Build by Adorabled4 at ${time}. Driver by FreeMarker Template Engine</p>
 */
-public BaseResponse<${api.modelName}> ${api.sdkMethodName}(<#if api.sdkParamName??> ${api.sdkParamName}param </#if>) {
+public BaseResponse<${api.modelName}> ${api.sdkMethodName}(<#if api.sdkParamName?has_content>${api.sdkParamName} param </#if>) {
 try {
-<#if api.sdkParamName??>
-<#if api.requestMethod=="GET">
-String result = HttpRequest.get(SERVER_HOST + "${api.callPath}").addHeaders(getHeaderMap()).body(JSONUtil.toJsonStr(param).execute().body();
-<#elseif api.requestMethod=="POST">
-String result = HttpRequest.post(SERVER_HOST + "${api.callPath}").addHeaders(getHeaderMap()).body(JSONUtil.toJsonStr(param).execute().body();
-</#if></#if>
-<#if !api.sdkParamName??>
-<#if api.requestMethod=="GET">
-String result = HttpRequest.get(SERVER_HOST + "${api.callPath}").addHeaders(getHeaderMap()).execute().body();
-<#elseif api.requestMethod=="POST">
-String result = HttpRequest.post(SERVER_HOST + "${api.callPath}").addHeaders(getHeaderMap()).execute().body();
-</#if></#if>
+<#if api.sdkParamName?has_content><#if api.requestMethod=="GET">String result = HttpRequest.get(SERVER_HOST + "${api.callPath}").addHeaders(getHeaderMap()).body(JSONUtil.toJsonStr(param).execute().body();
+<#elseif api.requestMethod=="POST">String result = HttpRequest.post(SERVER_HOST + "${api.callPath}").addHeaders(getHeaderMap()).body(JSONUtil.toJsonStr(param).execute().body();</#if></#if>
+<#if !api.sdkParamName?has_content><#if api.requestMethod=="GET">String result = HttpRequest.get(SERVER_HOST + "${api.callPath}").addHeaders(getHeaderMap()).execute().body();
+<#elseif api.requestMethod=="POST">String result = HttpRequest.post(SERVER_HOST + "${api.callPath}").addHeaders(getHeaderMap()).execute().body();</#if></#if>
 BaseResponse<${api.modelName}> baseResponse = JSONUtil.toBean(result, BaseResponse.class);
 if (baseResponse.getCode() == 200) {
 String dataStr = JSONUtil.toJsonStr(baseResponse.getData());
 if (dataStr == null || dataStr.equals("")) {
-log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + baseResponse.toString());
+log.error("\u001B[31m" + this.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + baseResponse.toString());
 }
 return baseResponse;
 } else {
@@ -72,8 +79,7 @@ log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 访问服
 } catch (RuntimeException e) {
 log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + e.getMessage());
 }
+return null;
 }
-
 </#list>
-
 }

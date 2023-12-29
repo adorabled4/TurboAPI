@@ -14,10 +14,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OSSConfig {
 
-    @Value("${alibaba.cloud.access-key}")
+    @Value("${alibaba.cloud.oss.access-key}")
     String accessKey;
 
-    @Value("${alibaba.cloud.secret-key}")
+    @Value("${alibaba.cloud.oss.secret-key}")
     String secretKey;
 
     @Value("${alibaba.cloud.oss.endpoint}")
