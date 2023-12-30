@@ -12,15 +12,8 @@ public interface InnerInterfaceService {
     /**
      * 获取接口信息
      * @param method
-     * @param url
+     * @param callPath
      * @return
      */
-    InterfaceTo getInterfaceInfo(String  url , String method);
-
-
-    /**
-     * 接口调用次数+1
-     * @param interfaceId
-     */
-    void interfaceCallCount(long interfaceId);
+    InterfaceTo getInterfaceInfo(String  callPath , String method);
 }

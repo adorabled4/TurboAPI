@@ -164,13 +164,15 @@ public class SDKRequestFilter implements GlobalFilter, Ordered {
                 if (body instanceof Flux) {
                     return super.writeWith(Mono.fromDirect(body).map(dataBuffer -> {
                         // 统计接口调用
-                        innerInterfaceService.interfaceCallCount(interfaceInfoId);
                         byte[] content = new byte[dataBuffer.readableByteCount()];
                         dataBuffer.read(content);
                         DataBufferUtils.release(dataBuffer);
                         String responseStr = new String(content, StandardCharsets.UTF_8);
                         BaseResponse baseResponse = JSONUtil.toBean(responseStr, BaseResponse.class);
-                        innerUserInterfaceInfoService.invokeCount(userId, interfaceInfoId, interfaceTo.getCost());
+                        boolean invokeCount = innerUserInterfaceInfoService.invokeCount(userId, interfaceInfoId, interfaceTo.getCost());
+                        if(!invokeCount){
+                            throw new BusinessException(ErrorCode.OPERATION_ERROR, "更新用户调用异常!");
+                        }
                         if (baseResponse.getCode() == 200) {
                             log.info("[callSuccess],ip:{} ,用户ID:{},  接口ID: {}, 请求参数:{}, 响应结果：{}", request.getRemoteAddress().getHostString(), userId, interfaceInfoId, request.getQueryParams(), new String(content, StandardCharsets.UTF_8));
                             return bufferFactory.wrap(content);

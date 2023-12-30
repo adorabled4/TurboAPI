@@ -224,7 +224,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
         if (!folder.exists()) {
             ThrowUtil.throwIf(!folder.mkdirs(), ErrorCode.SYSTEM_ERROR, "创建文件夸失败!");
         }
-        String fileName = docPath + "/" + api.getVersion() +"/"+ api.getName() + template.getName().replace(".ftl", "");
+        String fileName = docPath + "/" + api.getVersion() + "/" + api.getName() + template.getName().replace(".ftl", "");
         FileOutputStream fos = new FileOutputStream(fileName);
         OutputStreamWriter out = new OutputStreamWriter(fos);
         template.process(api, out);
@@ -297,6 +297,12 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
         // 同步到 api-interface 的 接口meta-data中
         boolean syncResult = sync2ApiInterface(query, query.getInterfaceId());
         ThrowUtil.throwIf(!update || !saveOrUpdate || !syncResult, ErrorCode.OPERATION_ERROR, "保存接口信息失败");
+    }
+
+    @Override
+    public void increaseCount(Long interfaceId) {
+        boolean update = update().setSql("total_count = total_count + 1 ").eq("id", interfaceId).update();
+        ThrowUtil.throwIf(!update, ErrorCode.SYSTEM_ERROR, "更新接口调用次数失败!");
     }
 }
 

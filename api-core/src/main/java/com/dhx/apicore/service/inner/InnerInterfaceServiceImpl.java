@@ -1,22 +1,20 @@
 package com.dhx.apicore.service.inner;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dhx.apicommon.common.exception.BusinessException;
 import com.dhx.apicommon.common.exception.ErrorCode;
-import com.dhx.apicommon.constant.MQConstant;
 import com.dhx.apicommon.model.to.InterfaceTo;
 import com.dhx.apicommon.service.InnerInterfaceService;
 import com.dhx.apicore.model.DO.InterfaceInfoEntity;
+import com.dhx.apicore.model.DO.InterfaceVariableInfoEntity;
 import com.dhx.apicore.service.InterfaceInfoService;
+import com.dhx.apicore.service.InterfaceVariableInfoService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboService;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 
 /**
  * @author adorabled4
@@ -24,13 +22,14 @@ import java.util.HashMap;
  * @date : 2023/04/19/ 14:36
  **/
 @DubboService
+@Slf4j
 public class InnerInterfaceServiceImpl implements InnerInterfaceService {
 
     @Resource
     InterfaceInfoService interfaceInfoService;
 
     @Resource
-    RabbitTemplate rabbitTemplate;
+    InterfaceVariableInfoService interfaceVariableInfoService;
 
     @Override
     public InterfaceTo getInterfaceInfo(String url , String method) {
@@ -38,23 +37,18 @@ public class InnerInterfaceServiceImpl implements InnerInterfaceService {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         QueryWrapper<InterfaceInfoEntity> wrapper = new QueryWrapper<>();
-        wrapper.like("url", url);
-        wrapper.eq("method", method);
-        InterfaceInfoEntity one = interfaceInfoService.getOne(wrapper);
-        InterfaceTo interfaceTo = BeanUtil.copyProperties(one, InterfaceTo.class);
-        return interfaceTo;
+        wrapper.like("call_path", url);
+        wrapper.eq("request_method", method);
+        try{
+            InterfaceInfoEntity interfaceInfo = interfaceInfoService.getOne(wrapper);
+            InterfaceVariableInfoEntity variableInfo = interfaceVariableInfoService.findById(interfaceInfo.getId());
+            InterfaceTo interfaceTo = BeanUtil.copyProperties(interfaceInfo, InterfaceTo.class);
+            BeanUtil.copyProperties(variableInfo,interfaceTo);
+            return interfaceTo;
+        }catch (RuntimeException e){
+            log.info("获取接口信息失败: {}",e.getMessage());
+        }
+        return null;
     }
 
-    /**
-     * 发送消息到 rabbitmq , 异步处理 接口信息统计
-     * @param interfaceId
-     */
-    @Override
-    public void interfaceCallCount(long interfaceId) {
-        // 统一转换成JSON格式字符串传输
-        HashMap<Object, Object> map = new HashMap<>();
-        map.put("interfaceId",interfaceId);
-        Message message = new Message(JSONUtil.toJsonStr(map).getBytes());
-        rabbitTemplate.send(MQConstant.INTERFACE_COUNT_EXCHANGE,MQConstant.INTERFACE_COUNT_QUEUE,message);
-    }
 }
