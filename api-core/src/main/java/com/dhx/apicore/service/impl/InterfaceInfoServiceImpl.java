@@ -245,17 +245,17 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
     }
 
     private void generateSDKCode(Template template, List<InterfaceMetaDataDTO> metaDataDTOS) throws IOException, TemplateException {
-        String docPath = freeMarkerConfig.getSdkPath();
-        File folder = new File(docPath);
+        String sdkPath = freeMarkerConfig.getSdkPath();
+        File folder = new File(sdkPath);
         if (!folder.exists()) {
             ThrowUtil.throwIf(!folder.mkdirs(), ErrorCode.SYSTEM_ERROR, "创建文件夹失败!");
         }
         Map<String, Object> context = new HashMap<>();
         context.put("apis", metaDataDTOS);
-        context.put("basePackage", "com.dhx.apisdk");
-        context.put("className", "TurboAPIClientImpl");
+        context.put("basePackage", "com.dhx.apisdk.client");
+        context.put("className", "TurboAPIClient");
         context.put("time", DateUtil.format(DateTime.now(), "yyyy-MM-dd"));
-        String fileName = docPath + "/" + "TurboAPIClientImpl.java";
+        String fileName = sdkPath + "/" + "TurboAPIClient.java";
         FileOutputStream fos = new FileOutputStream(fileName);
         OutputStreamWriter out = new OutputStreamWriter(fos);
         template.process(context, out);

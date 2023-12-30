@@ -1,4 +1,4 @@
-package ${basePackage}.client;
+package ${basePackage};
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.RandomUtil;
@@ -8,7 +8,6 @@ import cn.hutool.json.JSONUtil;
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.util.ResultUtil;
-import com.dhx.apisdk.client.HxApiClient;
 import com.dhx.apicommon.common.exception.BusinessException;
 import com.dhx.apisdk.util.SignUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import static com.dhx.apisdk.HxApiClientConfig.SERVER_HOST;
+import static com.dhx.apisdk.TurboAPIClientConfig.SERVER_HOST;
 
 @Slf4j
 public class ${className} {
@@ -33,12 +32,12 @@ ${"\t"}
 ${"\t"}private String accessKey;
 ${"\t"}private String secretKey;
 ${"\t"}
-${"\t"}public TurboAPIClientImpl(String accessKey, String secretKey) {
+${"\t"}public ${className}(String accessKey, String secretKey) {
 ${"\t"}${"\t"}this.accessKey = accessKey;
 ${"\t"}${"\t"}this.secretKey = secretKey;
 ${"\t"}}
 ${"\t"}
-${"\t"}public TurboAPIClientImpl() {
+${"\t"}public ${className}() {
 ${"\t"}}
 ${"\t"}
 ${"\t"}Map${"<String, String>"} getHeaderMap() {
@@ -60,24 +59,24 @@ ${"\t"}* @build <p>Build by Adorabled4 at ${time}. Driver by FreeMarker Template
 ${"\t"}*/
 ${"\t"}public BaseResponse<${api.modelName}> ${api.sdkMethodName}(<#if api.sdkParamName?has_content>${api.sdkParamName} param </#if>) {
 ${"\t"}${"\t"}try {
-${"\t"}${"\t"}${"\t"}<#if api.sdkParamName?has_content><#if api.requestMethod=="GET">String result = HttpRequest.get(SERVER_HOST + "${api.callPath}").addHeaders(getHeaderMap()).body(JSONUtil.toJsonStr(param).execute().body();
-${"\t"}${"\t"}${"\t"}<#elseif api.requestMethod=="POST">String result = HttpRequest.post(SERVER_HOST + "${api.callPath}").addHeaders(getHeaderMap()).body(JSONUtil.toJsonStr(param).execute().body();</#if></#if>
+${"\t"}${"\t"}${"\t"}<#if api.sdkParamName?has_content><#if api.requestMethod=="GET">String result = HttpRequest.get(SERVER_HOST + "${api.callPath}").addHeaders(getHeaderMap()).body(JSONUtil.toJsonStr(param)).execute().body();
+${"\t"}${"\t"}${"\t"}<#elseif api.requestMethod=="POST">String result = HttpRequest.post(SERVER_HOST + "${api.callPath}").addHeaders(getHeaderMap()).body(JSONUtil.toJsonStr(param)).execute().body();</#if></#if>
 ${"\t"}${"\t"}${"\t"}<#if !api.sdkParamName?has_content><#if api.requestMethod=="GET">String result = HttpRequest.get(SERVER_HOST + "${api.callPath}").addHeaders(getHeaderMap()).execute().body();
 ${"\t"}${"\t"}${"\t"}<#elseif api.requestMethod=="POST">String result = HttpRequest.post(SERVER_HOST + "${api.callPath}").addHeaders(getHeaderMap()).execute().body();</#if></#if>
 ${"\t"}${"\t"}${"\t"}BaseResponse<${api.modelName}> baseResponse = JSONUtil.toBean(result, BaseResponse.class);
 ${"\t"}${"\t"}${"\t"}if (baseResponse.getCode() == 200) {
 ${"\t"}${"\t"}${"\t"}${"\t"}String dataStr = JSONUtil.toJsonStr(baseResponse.getData());
 ${"\t"}${"\t"}${"\t"}${"\t"}if (dataStr == null || dataStr.equals("")) {
-${"\t"}${"\t"}${"\t"}${"\t"}${"\t"}log.error("\u001B[31m" + this.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + baseResponse.toString());
+${"\t"}${"\t"}${"\t"}${"\t"}${"\t"}log.error("\u001B[31m" + this.getClass() + "\u001B[0m: " + "[TurboApiClient] 调用接口失败 --" + baseResponse.toString());
 ${"\t"}${"\t"}${"\t"}${"\t"}}
 ${"\t"}${"\t"}${"\t"}${"\t"}return baseResponse;
 ${"\t"}${"\t"}${"\t"}} else {
 ${"\t"}${"\t"}${"\t"}${"\t"}throw new BusinessException(baseResponse.getCode(), baseResponse.getMessage());
 ${"\t"}${"\t"}${"\t"}}
 ${"\t"}${"\t"}} catch (IORuntimeException e) {
-${"\t"}${"\t"}${"\t"}log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 访问服务器失败 --" + e.getMessage());
+${"\t"}${"\t"}${"\t"}log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[TurboApiClient] 访问服务器失败 --" + e.getMessage());
 ${"\t"}${"\t"}} catch (RuntimeException e) {
-${"\t"}${"\t"}${"\t"}log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[HxApiClient] 调用接口失败 --" + e.getMessage());
+${"\t"}${"\t"}${"\t"}log.error("\u001B[31m" + e.getClass() + "\u001B[0m: " + "[TurboApiClient] 调用接口失败 --" + e.getMessage());
 ${"\t"}${"\t"}}
 ${"\t"}${"\t"}return null;
 ${"\t"}}

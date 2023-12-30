@@ -1,7 +1,6 @@
 package com.dhx.apisdk;
 
-import com.dhx.apisdk.client.HxApiClient;
-import com.dhx.apisdk.client.impl.HxApiClientImpl;
+import com.dhx.apisdk.client.TurboAPIClient;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("dhx.client")
 @Data
 @ComponentScan
-public class HxApiClientConfig {
+public class TurboAPIClientConfig {
 
     public static final String SERVER_HOST = "http://localhost:88";
 
@@ -26,7 +25,7 @@ public class HxApiClientConfig {
     private String secretKey;
 
     @Bean
-    HxApiClient hxApiClient() {
-        return new HxApiClientImpl(accessKey, secretKey);
+    TurboAPIClient turboAPIClient(){
+        return new TurboAPIClient(accessKey,secretKey);
     }
 }

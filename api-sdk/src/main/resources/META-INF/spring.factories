@@ -1,2 +1,2 @@
 # spring boot starter
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.dhx.apisdk.HxApiClientConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.dhx.apisdk.TurboAPIClientConfig

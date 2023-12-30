@@ -41,6 +41,13 @@ public class InterfaceController {
         List<Long> ids = list.stream().map(InterfaceInfoEntity::getId).collect(Collectors.toList());
         interfaceInfoService.genInterfaceDocMD(new InterfaceIdsQuery(ids));
     }
+
+    @GetMapping("/test/gen/sdk")
+    public void genTurboAPISDK(){
+        List<InterfaceInfoEntity> list = interfaceInfoService.list();
+        List<Long> ids = list.stream().map(InterfaceInfoEntity::getId).collect(Collectors.toList());
+        interfaceInfoService.genSDKCode(new InterfaceIdsQuery(ids));
+    }
     @Resource
     InterfaceVariableInfoService interfaceVariableInfoService;
 

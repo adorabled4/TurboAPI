@@ -14,7 +14,7 @@
     <name>api-sdk</name>
     <description>api-sdk</description>
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
         <jarName>TurboAPI-SDK</jarName>
     </properties>
     <dependencies>
