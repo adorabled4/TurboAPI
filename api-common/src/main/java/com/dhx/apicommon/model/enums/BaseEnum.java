@@ -1,4 +1,4 @@
-package com.dhx.apicore.model.enums;
+package com.dhx.apicommon.model.enums;
 
 import com.baomidou.mybatisplus.annotation.IEnum;
 import com.fasterxml.jackson.annotation.JsonValue;

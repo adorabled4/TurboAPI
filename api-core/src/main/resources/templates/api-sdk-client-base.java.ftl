@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import static com.dhx.apisdk.HxApiClientConfig.SERVER_HOST;
+import static com.dhx.apisdk.TurboAPIClientConfig.SERVER_HOST;
 
 @Slf4j
 public class ${className} {
@@ -33,12 +33,12 @@ public class ${className} {
 private String accessKey;
 private String secretKey;
 
-public TurboAPIClientImpl(String accessKey, String secretKey) {
+public ${className}(String accessKey, String secretKey) {
 this.accessKey = accessKey;
 this.secretKey = secretKey;
 }
 
-public TurboAPIClientImpl() {
+public ${className}() {
 }
 
 Map${"<String, String>"} getHeaderMap() {

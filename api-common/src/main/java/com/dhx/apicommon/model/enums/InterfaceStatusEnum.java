@@ -14,7 +14,7 @@ import java.util.Map;
  **/
 @Getter
 @AllArgsConstructor
-public enum InterfaceStatusEnum {
+public enum InterfaceStatusEnum implements BaseEnum<Integer>{
     AVAILABLE(1, "可用"),
     CLOSED(2, "已关闭"),
     DEVELOPING(3, "开发中"),
@@ -27,7 +27,7 @@ public enum InterfaceStatusEnum {
 
     static {
         for (InterfaceStatusEnum status : InterfaceStatusEnum.values()) {
-            MAP.put(status.getValue(), status);
+            MAP.put(status.getName(), status);
         }
     }
 
@@ -38,6 +38,16 @@ public enum InterfaceStatusEnum {
             throw new IllegalArgumentException("InterfaceStatusEnum not found. name=" + name);
         }
         return MAP.get(name);
+    }
+
+    @Override
+    public Integer getValue() {
+        return this.index;
+    }
+
+    @Override
+    public String getName() {
+        return this.value;
     }
 
 }

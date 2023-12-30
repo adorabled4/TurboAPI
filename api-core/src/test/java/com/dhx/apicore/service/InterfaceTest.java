@@ -40,6 +40,12 @@ public class InterfaceTest {
     }
 
     @Test
+    public void genSDKTest(){
+        List<InterfaceInfoEntity> list = interfaceInfoService.list();
+        List<Long> ids = list.stream().map(InterfaceInfoEntity::getId).collect(Collectors.toList());
+        interfaceInfoService.genSDKCode(new InterfaceIdsQuery(ids));
+    }
+    @Test
     public void bitMapTest() {
         // 通过值解析出分类
         long value = CategoryBitMapUtil.getCategoryValue(LIFE_SERVICE);

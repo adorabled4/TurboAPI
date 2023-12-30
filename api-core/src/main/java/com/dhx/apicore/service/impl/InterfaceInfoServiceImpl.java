@@ -224,7 +224,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
         if (!folder.exists()) {
             ThrowUtil.throwIf(!folder.mkdirs(), ErrorCode.SYSTEM_ERROR, "创建文件夸失败!");
         }
-        String fileName = docPath + "/" + api.getVersion() + "/" + api.getName() + template.getName().replace(".ftl", "");
+        String fileName = docPath + "/" + api.getVersion() + "/" + api.getName() +".md";
         FileOutputStream fos = new FileOutputStream(fileName);
         OutputStreamWriter out = new OutputStreamWriter(fos);
         template.process(api, out);
@@ -245,17 +245,17 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
     }
 
     private void generateSDKCode(Template template, List<InterfaceMetaDataDTO> metaDataDTOS) throws IOException, TemplateException {
-        String docPath = freeMarkerConfig.getSdkPath();
-        File folder = new File(docPath);
+        String sdkPath = freeMarkerConfig.getSdkPath();
+        File folder = new File(sdkPath);
         if (!folder.exists()) {
             ThrowUtil.throwIf(!folder.mkdirs(), ErrorCode.SYSTEM_ERROR, "创建文件夹失败!");
         }
         Map<String, Object> context = new HashMap<>();
         context.put("apis", metaDataDTOS);
-        context.put("basePackage", "com.dhx.apisdk");
-        context.put("className", "TurboAPIClientImpl");
+        context.put("basePackage", "com.dhx.apisdk.client");
+        context.put("className", "TurboAPIClient");
         context.put("time", DateUtil.format(DateTime.now(), "yyyy-MM-dd"));
-        String fileName = docPath + "/" + "TurboAPIClientImpl.java";
+        String fileName = sdkPath + "/" + "TurboAPIClient.java";
         FileOutputStream fos = new FileOutputStream(fileName);
         OutputStreamWriter out = new OutputStreamWriter(fos);
         template.process(context, out);
@@ -278,7 +278,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
         // 设置分类信息
         Long categoryBitMap = interfaceEntity.getCategoryBitMap();
         List<String> interfaceCategoryEnums = CategoryBitMapUtil.parse2String(categoryBitMap);
-        interfaceMetaDataDTO.setStatus(interfaceEntity.getStatus().getValue());
+        interfaceMetaDataDTO.setStatus(interfaceEntity.getStatus().getName());
         interfaceMetaDataDTO.setCategories(interfaceCategoryEnums);
         // 设置version
         String version = variableInfo.getCallPath().substring(4, 6);

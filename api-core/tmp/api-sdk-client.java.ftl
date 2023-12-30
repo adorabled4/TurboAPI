@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import static com.dhx.apisdk.HxApiClientConfig.SERVER_HOST;
+import static com.dhx.apisdk.TurboAPIClientConfig.SERVER_HOST;
 
 @Slf4j
 public class ${className} {
