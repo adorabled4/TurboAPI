@@ -1,4 +1,4 @@
-package com.dhx.apicore.model.enums;
+package com.dhx.apicommon.model.enums;
 
 import com.dhx.apicommon.common.exception.BusinessException;
 import com.dhx.apicommon.common.exception.ErrorCode;
@@ -16,7 +16,7 @@ import java.util.Map;
  **/
 @AllArgsConstructor
 @Getter
-public enum UserRoleEnum implements BaseEnum<Integer> {
+public enum UserRoleEnum{
     VISITOR(1, "游客", "visitor"),
     USER(2, "认证用户", "user"),
     VIP(3, "会员用户", "vip"),
@@ -64,13 +64,8 @@ public enum UserRoleEnum implements BaseEnum<Integer> {
         throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "UserRoleEnum not found. value=" + value);
     }
 
-    @Override
     public String getName() {
         return this.role;
     }
 
-    @Override
-    public Integer getValue() {
-        return this.index;
-    }
 }

@@ -4,7 +4,7 @@ import com.dhx.apicommon.common.exception.BusinessException;
 import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicore.common.annotation.AuthCheck;
 import com.dhx.apicore.model.DTO.UserDTO;
-import com.dhx.apicore.model.enums.UserRoleEnum;
+import com.dhx.apicommon.model.enums.UserRoleEnum;
 import com.dhx.apicore.util.UserHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

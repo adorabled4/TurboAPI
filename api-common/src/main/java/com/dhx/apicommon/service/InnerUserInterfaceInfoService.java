@@ -16,13 +16,5 @@ public interface InnerUserInterfaceInfoService {
      * @param interfaceId 接口id
      * @return boolean
      */
-    boolean invokeCount(Long userId, Long interfaceId, BaseResponse baseResponse);
-
-    /**
-     * 获取用户剩余调用次数
-     *
-     * @param userId      用户id
-     * @return int
-     */
-    int getUserLeftNum(Long userId);
+    boolean invokeCount(Long userId, Long interfaceId, Integer cost);
 }

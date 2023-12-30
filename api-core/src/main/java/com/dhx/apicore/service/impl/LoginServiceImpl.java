@@ -14,7 +14,7 @@ import com.dhx.apicore.manager.EmailManager;
 import com.dhx.apicore.model.DO.UserEntity;
 import com.dhx.apicore.model.DTO.JwtToken;
 import com.dhx.apicore.model.DTO.UserDTO;
-import com.dhx.apicore.model.enums.UserRoleEnum;
+import com.dhx.apicommon.model.enums.UserRoleEnum;
 import com.dhx.apicore.model.query.EmailVerifyCodeRequest;
 import com.dhx.apicore.model.query.LoginQuery;
 import com.dhx.apicore.model.query.RegisterQuery;
@@ -33,7 +33,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.dhx.apicore.model.enums.UserRoleEnum.*;
+import static com.dhx.apicommon.model.enums.UserRoleEnum.*;
 
 /**
  * @author adorabled4

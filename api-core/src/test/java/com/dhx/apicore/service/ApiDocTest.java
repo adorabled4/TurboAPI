@@ -1,7 +1,7 @@
 package com.dhx.apicore.service;
 
 import com.dhx.apicore.model.DTO.InterfaceMetaDataDTO;
-import com.dhx.apicore.model.enums.InterfaceStatusEnum;
+import com.dhx.apicommon.model.enums.InterfaceStatusEnum;
 import com.dhx.apicore.util.CategoryBitMapUtil;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;

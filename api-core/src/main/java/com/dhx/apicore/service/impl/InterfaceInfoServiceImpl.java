@@ -17,7 +17,7 @@ import com.dhx.apicore.model.DO.InterfaceInfoEntity;
 import com.dhx.apicore.model.DO.InterfaceVariableInfoEntity;
 import com.dhx.apicore.model.DTO.InterfaceMetaDataDTO;
 import com.dhx.apicore.model.enums.InterfaceCategoryEnum;
-import com.dhx.apicore.model.enums.InterfaceStatusEnum;
+import com.dhx.apicommon.model.enums.InterfaceStatusEnum;
 import com.dhx.apicore.model.query.InterfaceCategoryQuery;
 import com.dhx.apicore.model.query.InterfaceIdsQuery;
 import com.dhx.apicore.model.query.InterfaceUpdateQuery;
@@ -278,7 +278,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
         // 设置分类信息
         Long categoryBitMap = interfaceEntity.getCategoryBitMap();
         List<String> interfaceCategoryEnums = CategoryBitMapUtil.parse2String(categoryBitMap);
-        interfaceMetaDataDTO.setStatus(interfaceEntity.getStatus().getName());
+        interfaceMetaDataDTO.setStatus(interfaceEntity.getStatus().getValue());
         interfaceMetaDataDTO.setCategories(interfaceCategoryEnums);
         // 设置version
         String version = variableInfo.getCallPath().substring(4, 6);

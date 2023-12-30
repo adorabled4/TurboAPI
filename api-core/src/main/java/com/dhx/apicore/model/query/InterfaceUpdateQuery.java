@@ -1,7 +1,7 @@
 package com.dhx.apicore.model.query;
 
 import com.dhx.apicore.model.enums.InterfaceCategoryEnum;
-import com.dhx.apicore.model.enums.InterfaceStatusEnum;
+import com.dhx.apicommon.model.enums.InterfaceStatusEnum;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

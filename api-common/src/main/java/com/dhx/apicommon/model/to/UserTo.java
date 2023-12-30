@@ -1,5 +1,6 @@
 package com.dhx.apicommon.model.to;
 
+import com.dhx.apicommon.model.enums.UserRoleEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -40,9 +41,19 @@ public class UserTo implements Serializable {
     private String accessKey;
 
     /**
+     * 用户角色enum
+     */
+    private UserRoleEnum userRole;
+
+    /**
      * sk
      */
     private String secretKey;
+
+    /**
+     * 剩余硬币数量
+     */
+    private Integer leftCoin;
 
     private static final long serialVersionUID = 1L;
 
