@@ -40,4 +40,6 @@ public interface UserService extends IService<UserEntity> {
     void updateUserPwd(String password);
 
     void reduceCoin(Long userId, Integer cost);
+
+    void addLeftCoin(Long userId, Long addCoins);
 }
