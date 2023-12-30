@@ -1,26 +1,22 @@
 package com.dhx.apigateway.global;
 
-import cn.hutool.json.JSONUtil;
 import com.dhx.apicommon.common.BaseResponse;
-import com.dhx.apicommon.common.exception.BusinessException;
-import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.util.ResultUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.convert.ConversionFailedException;
+import org.springframework.core.annotation.Order;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.http.MediaType;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebExceptionHandler;
+import reactor.core.publisher.Mono;
 
-import javax.validation.ConstraintViolationException;
-import java.util.List;
 
 /**
  * @author adorabled4
@@ -29,48 +25,31 @@ import java.util.List;
  **/
 @Slf4j
 @ControllerAdvice
-public class GlobalExceptionHandler {
+@Order(-1)
+public class GlobalExceptionHandler implements WebExceptionHandler {
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception e) {
-        // Log the exception here
-        log.error(e.getMessage(), e);
-        BaseResponse baseResponse = new BaseResponse<>(ErrorCode.SYSTEM_ERROR);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(JSONUtil.toJsonStr(baseResponse));
-    }
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-
-    /**
-     * 常见的参数异常处理
-     */
-    @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class, MissingServletRequestParameterException.class,
-            ConversionFailedException.class, ConstraintViolationException.class, HttpMessageNotReadableException.class})
-    public BaseResponse handleMethodArgumentTypeMismatchException(HttpMessageNotReadableException e) {
-        return ResultUtil.error(ErrorCode.PARAMS_ERROR);
-    }
-
-    /**
-     * 处理自定义异常
-     */
-    @ExceptionHandler(BusinessException.class)
-    public BaseResponse<Object> handleRRException(BusinessException e){
-        log.error(e.getMessage(), e);
-        return ResultUtil.error(e.getCode(),e.getMessage());
-    }
-
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseBody
-    public BaseResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        BindingResult bindingResult = e.getBindingResult();
-        StringBuilder sb = new StringBuilder();
-        if (bindingResult.hasErrors()) {
-            List<ObjectError> allErrors = bindingResult.getAllErrors();
-            for (ObjectError objectError : allErrors) {
-                sb.append(objectError.getDefaultMessage()).append(";");
-            }
+    @Override
+    public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
+        ServerHttpResponse response = exchange.getResponse();
+        HttpHeaders headers = response.getHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        if (response.isCommitted()) {
+            return Mono.error(ex);
         }
-        return ResultUtil.error(ErrorCode.PARAMS_ERROR,sb.toString());
+        DataBufferFactory bufferFactory = response.bufferFactory();
+        response.setStatusCode(HttpStatus.FORBIDDEN);
+        BaseResponse<String> error = ResultUtil.error(HttpStatus.FORBIDDEN.value(), ex.getMessage());
+        log.error("【网关异常】：{}", error);
+        try {
+            byte[] errorBytes = objectMapper.writeValueAsBytes(error);
+            DataBuffer dataBuffer = bufferFactory.wrap(errorBytes);
+            return response.writeWith(Mono.just(dataBuffer));
+        } catch (JsonProcessingException e) {
+            log.error("JSON序列化异常：{}", e.getMessage());
+            return Mono.error(e);
+        }
     }
 
 }
