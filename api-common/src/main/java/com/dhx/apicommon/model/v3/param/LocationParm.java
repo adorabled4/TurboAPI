@@ -9,16 +9,16 @@ import javax.validation.constraints.NotNull;
 
 /**
  * @author adorabled4
- * @className IdiomParm
+ * @className LocationParm
  * @date : 2023/12/30/ 19:39
  **/
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
 @Builder
-public class IdiomParm {
+public class LocationParm {
 
     @NotNull
-    private String wd;
+    private String fid;
 
 }
