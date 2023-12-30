@@ -70,9 +70,9 @@ dubbo:
     port: -1
   # 注册中心配置
   registry:
-    address: nacos://${host}:8848
+    address: nacos://${nacos.host}
     # 这里注意 由于 3.X 的 bug 导致注册组不生效
-    group: dev
+    group: ${spring.profiles.active}
     # 由于 group 不生效 这里使用 namespace 将 dubbo 服务与 cloud 服务隔离
     # 否则会导致正常请求路由到 dubbo 服务报错
     parameters:

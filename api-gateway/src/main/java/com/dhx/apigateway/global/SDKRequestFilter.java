@@ -58,7 +58,7 @@ public class SDKRequestFilter implements GlobalFilter, Ordered {
         RequestPath path = request.getPath();
         HttpHeaders headers = request.getHeaders();
         String accessKey = headers.getFirst("accessKey");
-        if (accessKey != null) {
+        if (path.toString().startsWith("/api/")) {
             UserTo user = innerUserService.getUserEntityByAccessKey(accessKey);
             // 请求来自SDK,执行对应流程
             if (!validateUser(headers, accessKey, user)) {

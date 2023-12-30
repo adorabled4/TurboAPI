@@ -17,4 +17,4 @@ COPY jar/api-core.jar /app/api-core
 EXPOSE 9001
 
 # 运行所有jar文件
-CMD ["sh", "-c", "java -jar /app/api-core/api-core.jar --spring.profiles.active=prod"]
+CMD ["sh", "-c", "java -jar /app/api-core/api-core.jar --spring.profiles.active=test"]

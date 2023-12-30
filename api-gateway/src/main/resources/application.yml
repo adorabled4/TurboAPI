@@ -47,10 +47,10 @@ dubbo:
     port: -1
   registry:
     id: nacos-registry
-    address: nacos://192.168.159.134:8848?register-consumer-url=true
+    address: nacos://${nacos.host}?register-consumer-url=true
     parameters:
       namespace: b9970d70-8f1c-402e-b139-4a98f487c197
-    group: dev
+    group: ${spring.profiles.active}
   # 消费者相关配置
   consumer:
     # 支持校验注解

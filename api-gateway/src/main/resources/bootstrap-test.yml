@@ -1,27 +1,21 @@
+nacos:
+  host: 100.122.217.6:8848
 spring:
   application:
-    name: api-core
-  profiles:
-    active: dev
+    name: 'api-gateway'
   cloud:
     nacos:
       config:
-        server-addr: 192.168.159.134:8848
-        namespace: 294353ee-680c-462e-a646-f58c71add098
+        server-addr: ${nacos.host}
+        namespace: ba7f9acd-6436-4c8f-b282-1e29bd576ac0
         group: ${spring.profiles.active}
         file-extension: yml
         prefix: ${spring.application.name}-${spring.profiles.active}
       discovery:
-        server-addr: 192.168.159.134:8848
+        server-addr: ${nacos.host}
         group: ${spring.profiles.active}
         namespace: d67f22fd-85b4-4f7d-be13-c48c6bbbfebb
   main:
     allow-bean-definition-overriding: true
-#        ext-config:
-#          - data-id: common.properties
-#            group: DEFAULT_GROUP
-#            refresh: true
 server:
-  port: 9001
-  servlet:
-    context-path: /apicore
+  port: 88

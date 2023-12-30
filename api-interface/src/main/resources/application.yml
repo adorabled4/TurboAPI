@@ -67,8 +67,8 @@ dubbo:
     name: dubbo
     port: -1
   registry:
-    address: nacos://192.168.159.134:8848
-    group: dev
+    address: nacos://${nacos.host}
+    group: ${spring.profiles.active}
     parameters:
       # 这里要在nacos创建名为dubbo的namespace
       namespace: b9970d70-8f1c-402e-b139-4a98f487c197

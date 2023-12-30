@@ -17,4 +17,4 @@ COPY jar/api-gateway.jar /app/api-gateway
 EXPOSE 88
 
 # 运行所有jar文件
-CMD ["sh", "-c", "java -jar /app/api-gateway/api-gateway.jar --spring.profiles.active=prod"]
+CMD ["sh", "-c", "java -jar /app/api-gateway/api-gateway.jar --spring.profiles.active=test"]

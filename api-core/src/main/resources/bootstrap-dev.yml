@@ -1,0 +1,23 @@
+nacos:
+  host: 192.168.159.134:8848
+spring:
+  application:
+    name: api-core
+  cloud:
+    nacos:
+      config:
+        server-addr: ${nacos.host}
+        namespace: 294353ee-680c-462e-a646-f58c71add098
+        group: ${spring.profiles.active}
+        file-extension: yml
+        prefix: ${spring.application.name}-${spring.profiles.active}
+      discovery:
+        server-addr: ${nacos.host}
+        group: ${spring.profiles.active}
+        namespace: d67f22fd-85b4-4f7d-be13-c48c6bbbfebb
+  main:
+    allow-bean-definition-overriding: true
+server:
+  port: 9001
+  servlet:
+    context-path: /apicore

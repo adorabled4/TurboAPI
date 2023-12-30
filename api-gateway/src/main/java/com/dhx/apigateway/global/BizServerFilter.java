@@ -14,6 +14,7 @@ import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.server.RequestPath;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
@@ -38,12 +39,13 @@ public class BizServerFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        // 1. 通过请求头判断请求来源
+        // 1. 通过请求路径判断请求来源
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse response = exchange.getResponse();
+        RequestPath path = request.getPath();
         HttpHeaders headers = request.getHeaders();
         String accessKey = headers.getFirst("accessKey");
-        if (accessKey != null) {
+        if (path.toString().startsWith("/apicore")) {
             // 初步判断请求来自前端
             String token = headers.getFirst("Authorization");
             UserTo user = innerUserService.getUserEntityByAccessToken(token, response.getHeaders());
