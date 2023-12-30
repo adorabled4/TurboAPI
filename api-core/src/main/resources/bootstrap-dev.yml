@@ -1,20 +1,22 @@
-nacos:
-  host: 192.168.159.134:8848
+host:
+  nacos: 192.168.159.134:8848
+  tailscale: 100.72.207.93
 spring:
   application:
     name: api-core
   cloud:
     nacos:
       config:
-        server-addr: ${nacos.host}
+        server-addr: ${host.nacos}
         namespace: 294353ee-680c-462e-a646-f58c71add098
         group: ${spring.profiles.active}
         file-extension: yml
         prefix: ${spring.application.name}-${spring.profiles.active}
       discovery:
-        server-addr: ${nacos.host}
+        server-addr: ${host.nacos}
         group: ${spring.profiles.active}
         namespace: d67f22fd-85b4-4f7d-be13-c48c6bbbfebb
+        ip: ${host.tailscale}
   main:
     allow-bean-definition-overriding: true
 server:

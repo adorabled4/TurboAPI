@@ -66,8 +66,10 @@ dubbo:
   protocol:
     name: dubbo
     port: -1
+  provider:
+    host: ${host.tailscale}
   registry:
-    address: nacos://${nacos.host}
+    address: nacos://${host.nacos}
     group: ${spring.profiles.active}
     parameters:
       # 这里要在nacos创建名为dubbo的namespace
