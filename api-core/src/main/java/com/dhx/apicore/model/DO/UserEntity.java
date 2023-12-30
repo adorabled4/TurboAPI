@@ -55,6 +55,11 @@ public class UserEntity implements Serializable {
     private String email;
 
     /**
+     * 剩余硬币数
+     */
+    private Long leftCoin;
+
+    /**
      * ak
      */
     private String accessKey;

@@ -25,14 +25,9 @@ public class CallResultDTO implements Serializable {
      */
     private Long interfaceId;
 
-    /**
-     * 调用结果
-     */
-    private BaseResponse baseResponse;
 
-    public CallResultDTO(Long userId, Long interfaceId, BaseResponse baseResponse) {
+    public CallResultDTO(Long userId, Long interfaceId) {
         this.userId=userId;
         this.interfaceId=interfaceId;
-        this.baseResponse=baseResponse;
     }
 }

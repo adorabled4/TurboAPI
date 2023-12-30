@@ -17,7 +17,7 @@ import com.dhx.apicore.model.DO.InterfaceInfoEntity;
 import com.dhx.apicore.model.DO.InterfaceVariableInfoEntity;
 import com.dhx.apicore.model.DTO.InterfaceMetaDataDTO;
 import com.dhx.apicore.model.enums.InterfaceCategoryEnum;
-import com.dhx.apicore.model.enums.InterfaceStatusEnum;
+import com.dhx.apicommon.model.enums.InterfaceStatusEnum;
 import com.dhx.apicore.model.query.InterfaceCategoryQuery;
 import com.dhx.apicore.model.query.InterfaceIdsQuery;
 import com.dhx.apicore.model.query.InterfaceUpdateQuery;
@@ -224,7 +224,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
         if (!folder.exists()) {
             ThrowUtil.throwIf(!folder.mkdirs(), ErrorCode.SYSTEM_ERROR, "创建文件夸失败!");
         }
-        String fileName = docPath + "/" + api.getVersion() +"/"+ api.getName() + template.getName().replace(".ftl", "");
+        String fileName = docPath + "/" + api.getVersion() + "/" + api.getName() + template.getName().replace(".ftl", "");
         FileOutputStream fos = new FileOutputStream(fileName);
         OutputStreamWriter out = new OutputStreamWriter(fos);
         template.process(api, out);
@@ -278,7 +278,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
         // 设置分类信息
         Long categoryBitMap = interfaceEntity.getCategoryBitMap();
         List<String> interfaceCategoryEnums = CategoryBitMapUtil.parse2String(categoryBitMap);
-        interfaceMetaDataDTO.setStatus(interfaceEntity.getStatus().getName());
+        interfaceMetaDataDTO.setStatus(interfaceEntity.getStatus().getValue());
         interfaceMetaDataDTO.setCategories(interfaceCategoryEnums);
         // 设置version
         String version = variableInfo.getCallPath().substring(4, 6);
@@ -297,6 +297,12 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
         // 同步到 api-interface 的 接口meta-data中
         boolean syncResult = sync2ApiInterface(query, query.getInterfaceId());
         ThrowUtil.throwIf(!update || !saveOrUpdate || !syncResult, ErrorCode.OPERATION_ERROR, "保存接口信息失败");
+    }
+
+    @Override
+    public void increaseCount(Long interfaceId) {
+        boolean update = update().setSql("total_count = total_count + 1 ").eq("id", interfaceId).update();
+        ThrowUtil.throwIf(!update, ErrorCode.SYSTEM_ERROR, "更新接口调用次数失败!");
     }
 }
 

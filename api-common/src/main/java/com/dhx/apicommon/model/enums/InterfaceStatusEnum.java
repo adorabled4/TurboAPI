@@ -1,4 +1,4 @@
-package com.dhx.apicore.model.enums;
+package com.dhx.apicommon.model.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.Map;
  **/
 @Getter
 @AllArgsConstructor
-public enum InterfaceStatusEnum implements BaseEnum<Integer> {
+public enum InterfaceStatusEnum {
     AVAILABLE(1, "可用"),
     CLOSED(2, "已关闭"),
     DEVELOPING(3, "开发中"),
@@ -27,7 +27,7 @@ public enum InterfaceStatusEnum implements BaseEnum<Integer> {
 
     static {
         for (InterfaceStatusEnum status : InterfaceStatusEnum.values()) {
-            MAP.put(status.getName(), status);
+            MAP.put(status.getValue(), status);
         }
     }
 
@@ -40,13 +40,4 @@ public enum InterfaceStatusEnum implements BaseEnum<Integer> {
         return MAP.get(name);
     }
 
-    @Override
-    public Integer getValue() {
-        return this.index;
-    }
-
-    @Override
-    public String getName() {
-        return this.value;
-    }
 }

@@ -1,7 +1,7 @@
 package com.dhx.apicore.model.DO;
 
 import com.baomidou.mybatisplus.annotation.*;
-import com.dhx.apicore.model.enums.InterfaceStatusEnum;
+import com.dhx.apicommon.model.enums.InterfaceStatusEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,6 +56,11 @@ public class InterfaceInfoEntity implements Serializable {
      * 接口文档地址
      */
     private String docUrl;
+
+    /**
+     * 花费
+     */
+    private Integer cost;
 
     /**
      * 请求方式

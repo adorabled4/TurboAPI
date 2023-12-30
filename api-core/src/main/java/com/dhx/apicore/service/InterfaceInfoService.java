@@ -86,4 +86,11 @@ public interface InterfaceInfoService extends IService<InterfaceInfoEntity> {
      * @param query query
      */
     void updateInterfaceInfo(InterfaceUpdateQuery query);
+
+    /**
+     * 增加接口调用此处
+     *
+     * @param interfaceId 接口id
+     */
+    void increaseCount(Long interfaceId);
 }

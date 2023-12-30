@@ -38,4 +38,8 @@ public interface UserService extends IService<UserEntity> {
     void updateUserInfO(MultipartFile multipartFile, UserUpdateQuery param);
 
     void updateUserPwd(String password);
+
+    void reduceCoin(Long userId, Integer cost);
+
+    void addLeftCoin(Long userId, Long addCoins);
 }

@@ -129,6 +129,18 @@ public class UserServiceImpl extends ServiceImpl<UserEntityMapper, UserEntity> i
         boolean update = update().set("password", handlerPassword).eq("user_id", user.getUserId()).update();
         ThrowUtil.throwIf(!update, ErrorCode.SYSTEM_ERROR, "更新密码失败!");
     }
+
+    @Override
+    public void reduceCoin(Long userId, Integer cost) {
+        boolean update = update().setSql("left_coin = left_coin - " + cost).eq("user_id", userId).update();
+        ThrowUtil.throwIf(!update, ErrorCode.SYSTEM_ERROR, "更新用户硬币数失败!");
+    }
+
+    @Override
+    public void addLeftCoin(Long userId, Long addCoins) {
+        boolean update = update().setSql("left_coin = left_coin + " + addCoins).eq("user_id", userId).update();
+        ThrowUtil.throwIf(!update, ErrorCode.SYSTEM_ERROR, "更新用户硬币数失败!");
+    }
 }
 
 
