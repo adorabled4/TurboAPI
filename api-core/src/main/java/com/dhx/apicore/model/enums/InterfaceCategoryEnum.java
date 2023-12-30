@@ -1,5 +1,6 @@
 package com.dhx.apicore.model.enums;
 
+import com.dhx.apicommon.model.enums.BaseEnum;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -3,29 +3,32 @@ sidebar_position: 1
 
 ---
 
-#  每日天气情况
+![](http://dhx-blog.oss-cn-beijing.aliyuncs.com/dhx/ipana.png)
+#  IP属地解析
 
 ### 接口信息
 
 :::info
 
-**输入地区名称, 返回当地天气情况**
+**输入IPV4地址, 返回IP属地信息**
 
 - 接口状态:  `可用`
 - 请求方式: `GET`
 - 消耗积分数: `1`
-- Tags: `数据智能` `交通地理` `限时免费` 
+- Tags: `数据智能` `限时免费` 
 
 :::
 ### 请求地址
 
 ```
-http://localhost:88api/v1/common/weather/now
+https://turboapi.dhx.icu/api/v1/common/ip/ana
 ```
 
 ### 请求参数
 
-**暂无**
+```json
+{`ip`:`string`}
+```
 
 ### 响应参数
 
@@ -37,8 +40,18 @@ http://localhost:88api/v1/common/weather/now
 
 ### 请求示例
 
-**暂无**
+```json
+{
+    "ip":"43.132.44.14"
+}
+```
 
 ### 响应示例
 
-**暂无**
+```json
+{
+    "code": 200,
+    "data": "澳大利亚|0|0|0|0",
+    "message": "ok"
+}
+```

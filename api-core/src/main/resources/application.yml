@@ -85,5 +85,5 @@ dhx:
     secret-key: g45hg34wrxsa
 template:
   gen:
-    doc-path: ../api-doc/docs/gen
+    doc-path: D:\j2ee_project\TurboAPI-backend\api-doc\docs\gen
     sdk-path: ../api-sdk/src/main/java/com/dhx/apisdk/client

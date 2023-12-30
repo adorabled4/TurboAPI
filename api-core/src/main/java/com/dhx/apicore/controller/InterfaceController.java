@@ -2,6 +2,7 @@ package com.dhx.apicore.controller;
 
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.util.ResultUtil;
+import com.dhx.apicore.model.DO.InterfaceInfoEntity;
 import com.dhx.apicore.model.DO.InterfaceVariableInfoEntity;
 import com.dhx.apicore.model.enums.InterfaceCategoryEnum;
 import com.dhx.apicore.model.query.InterfaceCategoryQuery;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author adorabled4
@@ -33,6 +35,12 @@ public class InterfaceController {
 
     @Resource
     InterfaceInfoService interfaceInfoService;
+    @GetMapping("/test/gen/doc")
+    public void test(){
+        List<InterfaceInfoEntity> list = interfaceInfoService.list();
+        List<Long> ids = list.stream().map(InterfaceInfoEntity::getId).collect(Collectors.toList());
+        interfaceInfoService.genInterfaceDocMD(new InterfaceIdsQuery(ids));
+    }
     @Resource
     InterfaceVariableInfoService interfaceVariableInfoService;
 

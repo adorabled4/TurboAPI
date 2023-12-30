@@ -3,6 +3,7 @@ sidebar_position: 1
 
 ---
 
+![](${imageUrl})
 # ${name}
 
 ### 接口信息
@@ -28,9 +29,9 @@ ${serviceAddress}${callPath}
 
 ### 请求参数
 
-<#if param??>
+<#if requestParam??>
 ```json
-${param}
+${requestParam}
 ```
 <#else>
 **暂无**

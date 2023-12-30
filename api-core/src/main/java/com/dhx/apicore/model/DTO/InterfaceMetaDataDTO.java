@@ -52,6 +52,11 @@ public class InterfaceMetaDataDTO implements Serializable {
     private String docUrl;
 
     /**
+     * 消耗积分
+     */
+    private Integer cost;
+
+    /**
      * 请求方式
      */
     private String requestMethod;
