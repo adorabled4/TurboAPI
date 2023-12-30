@@ -5,10 +5,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONObject;
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.model.v3.ReviewTextResult;
-import com.dhx.apicommon.model.v3.param.IdiomParm;
-import com.dhx.apicommon.model.v3.param.LocationParm;
-import com.dhx.apicommon.model.v3.param.QRCodeParam;
-import com.dhx.apicommon.model.v3.param.ReviewTextParam;
+import com.dhx.apicommon.model.v3.param.*;
 import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apiinterface.manager.ReviewManager;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,6 +43,7 @@ public class OwnApiController {
             path2Url.put("idiom", VM_ADDRESS + "11000/query?");
             path2Url.put("jqrcode", VM_ADDRESS + "11001/query?");
             path2Url.put("jxzqh", VM_ADDRESS + "11002/query?");
+            path2Url.put("jxzcx", VM_ADDRESS + "11003/query?");
         }
     }
 
@@ -85,6 +83,17 @@ public class OwnApiController {
     @GetMapping("/jxzqh")
     public BaseResponse<Object> locationSearch(@Validated @RequestBody LocationParm param) {
         return queryAndReturn("jxzqh", param);
+    }
+
+    /**
+     * 星座查询API
+     *
+     * @param param 参数
+     * @return {@link BaseResponse}<{@link Object}>
+     */
+    @GetMapping("/jxzcx")
+    public BaseResponse<Object> constellationParamSearch(@Validated @RequestBody ConstellationParam param) {
+        return queryAndReturn("jxzcx", param);
     }
 
     private BaseResponse<Object> queryAndReturn(String path, Object param) {
