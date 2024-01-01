@@ -25,7 +25,7 @@ import reactor.core.publisher.Mono;
  **/
 @Slf4j
 @ControllerAdvice
-@Order(-1)
+@Order(0)
 public class GlobalExceptionHandler implements WebExceptionHandler {
 
     private final ObjectMapper objectMapper = new ObjectMapper();

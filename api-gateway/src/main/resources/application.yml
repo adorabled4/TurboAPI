@@ -7,6 +7,8 @@ spring:
         # 在线调用接口路由
         - id: call_online_route # 接口路由
           uri: lb://api-interface
+          metadata:
+            from: frontend_callOL
           predicates:
             - Path=/apicore/call/ol/** # 符合 /apicore/call/ol/** 的地址会被路由
           filters:

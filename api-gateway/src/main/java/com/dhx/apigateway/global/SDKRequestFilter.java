@@ -12,13 +12,16 @@ import com.dhx.apicommon.service.InnerInterfaceService;
 import com.dhx.apicommon.service.InnerUserInterfaceInfoService;
 import com.dhx.apicommon.service.InnerUserService;
 import com.dhx.apicommon.util.SignUtil;
+import com.dhx.apigateway.util.UserHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.reactivestreams.Publisher;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.cloud.gateway.route.Route;
 import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -35,6 +38,8 @@ import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
 
+import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR;
+
 /**
  * sdkrequest过滤器
  *
@@ -44,7 +49,8 @@ import java.nio.charset.StandardCharsets;
  */
 @Slf4j
 @Component
-public class SDKRequestFilter implements GlobalFilter, Ordered {
+@Order(2)
+public class SDKRequestFilter implements GlobalFilter {
 
     @DubboReference
     InnerUserService innerUserService;
@@ -61,8 +67,12 @@ public class SDKRequestFilter implements GlobalFilter, Ordered {
         HttpHeaders headers = request.getHeaders();
         // 请求来自SDK,执行对应流程
         if (path.toString().startsWith("/api/")) {
+            Route route = exchange.getAttribute(GATEWAY_ROUTE_ATTR);
+            if (route.getMetadata().get("from").equals("frontend_callOL")) {
+                return chain.filter(exchange);
+            }
             String accessKey = headers.getFirst("accessKey");
-            UserTo user = innerUserService.getUserEntityByAccessKey(accessKey);
+            UserTo user = UserHolder.getUser();
             InterfaceTo interfaceInfo = innerInterfaceService.getInterfaceInfo(path.value(), request.getMethodValue());
             validateRequest(headers, accessKey, user, interfaceInfo);
             // 获取路径以及 method
@@ -188,15 +198,6 @@ public class SDKRequestFilter implements GlobalFilter, Ordered {
         return chain.filter(exchange.mutate().response(successDecoratedResponse).build());
     }
 
-    /**
-     * 非常关键 ! 否则增强的结果不会起作用
-     *
-     * @return
-     */
-    @Override
-    public int getOrder() {
-        return 2; // 设置为-1 优先级最高
-    }
     /**
      * 处理内部异常
      *
