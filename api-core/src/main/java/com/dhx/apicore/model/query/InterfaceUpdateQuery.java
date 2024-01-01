@@ -4,6 +4,7 @@ import com.dhx.apicore.model.enums.InterfaceCategoryEnum;
 import com.dhx.apicommon.model.enums.InterfaceStatusEnum;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
 import java.util.List;
@@ -50,6 +51,7 @@ public class InterfaceUpdateQuery implements Serializable {
     /**
      * 枚举类 : 仅仅用于在接口调用的时候提示, 实际上不使用这个参数
      */
+    @Nullable
     private InterfaceCategoryEnum mockCategoryEnum;
 
     /**
@@ -106,6 +108,11 @@ public class InterfaceUpdateQuery implements Serializable {
      * 对应的实体类的名称
      */
     private String modelName;
+
+    /**
+     * 是否是异步接口
+     */
+    private String isAsync;
 
     private static final long serialVersionUID = 1L;
 

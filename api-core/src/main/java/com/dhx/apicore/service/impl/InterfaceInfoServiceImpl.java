@@ -304,6 +304,12 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
         boolean update = update().setSql("total_count = total_count + 1 ").eq("id", interfaceId).update();
         ThrowUtil.throwIf(!update, ErrorCode.SYSTEM_ERROR, "更新接口调用次数失败!");
     }
+
+    @Override
+    public void checkAsyncAPI(Long interfaceId) {
+        InterfaceInfoEntity interfaceInfo = findById(interfaceId);
+        ThrowUtil.throwIf(!interfaceInfo.getIsAsync(),ErrorCode.PARAMS_ERROR,"当前接口暂不支持异步调用!");
+    }
 }
 
 

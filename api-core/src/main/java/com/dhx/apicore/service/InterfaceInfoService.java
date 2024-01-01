@@ -93,4 +93,11 @@ public interface InterfaceInfoService extends IService<InterfaceInfoEntity> {
      * @param interfaceId 接口id
      */
     void increaseCount(Long interfaceId);
+
+    /**
+     * 校验接口是否是异步的API
+     *
+     * @param interfaceId 接口id
+     */
+    void checkAsyncAPI(Long interfaceId);
 }

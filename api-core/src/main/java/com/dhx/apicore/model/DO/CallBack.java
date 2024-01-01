@@ -4,16 +4,20 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import com.dhx.apicore.model.query.AddCalLBackQuery;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * 
  * @TableName call_back
  */
-@TableName(value ="call_back")
+@TableName(value = "call_back")
 @Data
+@NoArgsConstructor
 public class CallBack implements Serializable {
     /**
      * 主键, 自增
@@ -60,6 +64,12 @@ public class CallBack implements Serializable {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
+    public CallBack(AddCalLBackQuery query) {
+        this.callBackUrl = query.getCallBackUrl();
+        this.interfaceId = query.getInterfaceId();
+        this.createTime = LocalDateTime.now();
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -73,12 +83,12 @@ public class CallBack implements Serializable {
         }
         CallBack other = (CallBack) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getInterfaceId() == null ? other.getInterfaceId() == null : this.getInterfaceId().equals(other.getInterfaceId()))
-            && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
-            && (this.getCallBackUrl() == null ? other.getCallBackUrl() == null : this.getCallBackUrl().equals(other.getCallBackUrl()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
-            && (this.getIsDelete() == null ? other.getIsDelete() == null : this.getIsDelete().equals(other.getIsDelete()));
+                && (this.getInterfaceId() == null ? other.getInterfaceId() == null : this.getInterfaceId().equals(other.getInterfaceId()))
+                && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
+                && (this.getCallBackUrl() == null ? other.getCallBackUrl() == null : this.getCallBackUrl().equals(other.getCallBackUrl()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
+                && (this.getIsDelete() == null ? other.getIsDelete() == null : this.getIsDelete().equals(other.getIsDelete()));
     }
 
     @Override
