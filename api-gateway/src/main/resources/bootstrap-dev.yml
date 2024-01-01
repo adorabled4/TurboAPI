@@ -1,3 +1,6 @@
+host:
+  nacos: 192.168.159.134:8848
+  tailscale: 100.72.207.93
 spring:
   application:
     name: 'api-gateway'

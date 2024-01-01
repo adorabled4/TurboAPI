@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class, MissingServletRequestParameterException.class,
             ConversionFailedException.class, ConstraintViolationException.class, HttpMessageNotReadableException.class})
     public BaseResponse handleMethodArgumentTypeMismatchException(HttpMessageNotReadableException e) {
-        return ResultUtil.error(ErrorCode.PARAMS_ERROR);
+        return ResultUtil.error(ErrorCode.PARAMS_ERROR,e.getMessage());
     }
 
     /**
@@ -51,7 +51,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoHandlerFoundException.class)
     public BaseResponse handlerNoFoundException(Exception e) {
         log.error(e.getMessage(), e);
-        return ResultUtil.error(ErrorCode.NOT_FOUND);
+        return ResultUtil.error(ErrorCode.NOT_FOUND,e.getMessage());
     }
 
 
@@ -72,6 +72,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public BaseResponse handleException(Exception e){
         log.error(e.getMessage(), e);
-        return ResultUtil.error();
+        return ResultUtil.error(ErrorCode.SYSTEM_ERROR,e.getMessage());
     }
 }

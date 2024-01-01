@@ -9,6 +9,7 @@ import com.dhx.apicore.common.constant.RedisConstant;
 import com.dhx.apicore.model.DO.UserEntity;
 import com.dhx.apicore.service.JwtTokensService;
 import com.dhx.apicore.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
  * @date : 2023/04/19/ 13:56
  **/
 @DubboService
+@Slf4j
 public class InnerUserServiceImpl implements InnerUserService {
 
     @Resource
@@ -36,6 +38,7 @@ public class InnerUserServiceImpl implements InnerUserService {
 
     @Override
     public UserTo getUserEntityByAccessToken(String token, HttpHeaders headers) {
+        log.info("run getUserEntityByAccessToken");
         if(StringUtils.isBlank(token)){
             return null;
         }
