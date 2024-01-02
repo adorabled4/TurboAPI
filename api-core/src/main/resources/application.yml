@@ -87,3 +87,20 @@ template:
   gen:
     doc-path: D:\j2ee_project\TurboAPI-backend\api-doc\docs\gen
     sdk-path: ../api-sdk/src/main/java/com/dhx/apisdk/client
+
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: default
+      paths-to-match: '/**'
+      packages-to-scan: com.dhx.apicore.controller
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn

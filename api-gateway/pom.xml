@@ -127,6 +127,12 @@
             <version>5.12.6</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-gateway-spring-boot-starter</artifactId>
+            <version>4.3.0</version>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>

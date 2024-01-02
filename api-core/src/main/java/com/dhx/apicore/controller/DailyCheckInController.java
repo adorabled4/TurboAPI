@@ -10,6 +10,8 @@ import com.dhx.apicore.model.DO.DailyCheckIn;
 import com.dhx.apicore.model.vo.UserVo;
 import com.dhx.apicore.service.DailyCheckInService;
 import com.dhx.apicore.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,7 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/dailyCheckIn")
 @Slf4j
+@Tag(name = "每日签到")
 public class DailyCheckInController {
 
     @Resource
@@ -41,13 +44,9 @@ public class DailyCheckInController {
     public static final Long LOGIN_ADD_COIN = 10L;
 
 
-    /**
-     * 签到
-     *
-     * @return {@link BaseResponse}<{@link Boolean}>
-     */
     @PostMapping("/doCheckIn")
     @Transactional(rollbackFor = Exception.class)
+    @Operation(summary = "每日签到")
     public BaseResponse<Boolean> doDailyCheckIn() {
         UserVo loginUser = userService.getCurrentUser();
         String redissonLock = ("doDailyCheckIn_" + loginUser.getUserAccount()).intern();

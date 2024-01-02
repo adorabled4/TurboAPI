@@ -10,3 +10,13 @@ logging:
       springframework:
         cloud:
           gateway: trace # 设置日志级别
+# knife4j 网关聚合
+knife4j:
+  gateway:
+    enabled: true
+    # 指定服务发现的模式聚合微服务文档，并且是默认 default 分组
+    strategy: discover
+    discover:
+      # OpenAPI 3.0 规范
+      version: openapi3
+      enabled: true

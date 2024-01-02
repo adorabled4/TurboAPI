@@ -17,6 +17,8 @@ import com.dhx.apiinterface.service.IPoetService;
 import com.dhx.apiinterface.service.LovelornSentenceService;
 import com.dhx.apiinterface.service.WeatherService;
 import com.dhx.apiinterface.util.IpUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +40,7 @@ import java.util.List;
  **/
 @RestController
 @RequestMapping("/v1/common")
+@Tag(name = "v1接口")
 public class CommonUseController {
     @Resource
     ComputerSuffixService computerSuffixService;
@@ -48,12 +51,9 @@ public class CommonUseController {
     @Resource
     WeatherService weatherService;
 
-    /**
-     * 查询 文件后缀名 介绍
-     * @param param
-     * @return
-     */
+
     @GetMapping("/suffix")
+    @Operation(summary = "文件后缀信息查询API")
     public BaseResponse<ComputerSuffix> getSuffixDetail(@RequestBody FileSuffixParam param){
         QueryWrapper<ComputerSuffix> wrapper = new QueryWrapper<>();
         wrapper.eq("suffix",param);
@@ -64,11 +64,9 @@ public class CommonUseController {
         return ResultUtil.success(list.get(0));
     }
 
-    /**
-     * 随机 失恋 文案
-     * @return
-     */
+
     @GetMapping("/lovelorn")
+    @Operation(summary = "随机失恋文案API")
     public BaseResponse<LovelornSentence> getSuffixDetail(){
         long total = loveSentenceService.count();
         long id = (long) (Math.random()*total+1);
@@ -84,12 +82,9 @@ public class CommonUseController {
     }
 
 
-    /**
-     * 获取IPv4地址的location
-     * @param param
-     * @return
-     */
+
     @GetMapping("/ip/ana")
+    @Operation(summary = "IPv4属地查询API")
     public BaseResponse<String> analysisIP(@RequestBody IpAnaParam param){
         try{
             InetAddress inetAddress = InetAddress.getByName(param.getIp());
@@ -104,18 +99,16 @@ public class CommonUseController {
         }
     }
 
-    /**
-     * 获取请求者的IP地址
-     * @param request
-     * @return
-     */
+
     @GetMapping("/ip/me")
+    @Operation(summary = "获取自身IP属地API")
     public BaseResponse<String> getIpOfRequest(HttpServletRequest request){
         String ipAddr = IpUtil.getIpAddr(request);
         return ResultUtil.success(ipAddr);
     }
 
     @GetMapping("/weather/now")
+    @Operation(summary = "天气查询API")
     public BaseResponse<WeatherInfo> nowWeather(@RequestBody WeatherParam weatherParam, HttpServletRequest request){
         if(StringUtils.isEmpty(weatherParam.getCityName())){
             return weatherService.getWeatherByRequest(request);
@@ -123,6 +116,7 @@ public class CommonUseController {
         return weatherService.getWeatherByCityName(weatherParam.getCityName());
     }
     @GetMapping("/poet/random")
+    @Operation(summary = "随机诗句API")
     public BaseResponse<PoetVO> getRandomPoet() {
         long total = poetService.getTotal();
         long id = (long) (Math.random() * total + 1);

@@ -11,8 +11,8 @@ import com.dhx.apicore.model.query.UserUpdateQuery;
 import com.dhx.apicore.model.vo.UserVo;
 import com.dhx.apicore.service.UserService;
 import com.dhx.apicommon.util.ThrowUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -29,25 +29,25 @@ import java.util.List;
  **/
 @RestController
 @RequestMapping("/user")
-@Api(tags = "用户相关接口")
+@Tag(name = "用户相关接口")
 public class UserController {
 
     @Autowired
     UserService userService;
     @GetMapping("/{id}/info")
-    @ApiOperation("通过用户id获取当前信息")
+    @Operation(summary = "通过用户id获取当前信息")
     public BaseResponse<UserVo> getUserById(@PathVariable("id") Long userId) {
         return userService.getUserById(userId);
     }
 
     @GetMapping("/list/info")
-    @ApiOperation("获取用户列表")
+    @Operation(summary = "获取用户列表")
     public BaseResponse<List<UserVo>> getUserList(PageQuery pageQuery) {
         return userService.getUserList(pageQuery);
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation("通过ID删除用户")
+    @Operation(summary = "通过ID删除用户")
     @Profile("dev")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> deleteUserById(@PathVariable("id") Long userId) {
@@ -57,27 +57,27 @@ public class UserController {
     @DeleteMapping("/delete/account")
     @Profile("dev")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    @ApiOperation("通过账户删除用户")
+    @Operation(summary = "通过账户删除用户")
     public BaseResponse<Boolean> deleteUserByAccount(@RequestParam("account") String userAccount) {
         ThrowUtil.throwIf(StringUtils.isBlank(userAccount), ErrorCode.PARAMS_ERROR);
         return ResultUtil.success(userService.deleteUserByAccount(userAccount));
     }
 
     @PostMapping("/add")
-    @ApiOperation("添加用户")
+    @Operation(summary = "添加用户")
     public BaseResponse<Long> addUser(@RequestBody @Validated UserVo userVo) {
         return userService.addUser(userVo);
     }
 
     @GetMapping("/current")
-    @ApiOperation("获取当前用户信息")
+    @Operation(summary = "获取当前用户信息")
     public BaseResponse<UserVo> currentUser() {
         return ResultUtil.success(userService.getCurrentUser());
     }
 
 
     @PostMapping("/update")
-    @ApiOperation("更新用户信息")
+    @Operation(summary = "更新用户信息")
     @SysLog("更新用户")
     public BaseResponse<String> updateUserInfo(@RequestPart(value = "file", required = false) MultipartFile multipartFile,
                                        UserUpdateQuery param) {

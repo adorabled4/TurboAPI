@@ -7,6 +7,8 @@ import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apiinterface.manager.AigcManager;
 import com.dhx.apiinterface.service.AigcContentService;
 import com.dhx.apiinterface.service.InvokeInterfaceServiceV2;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.validation.annotation.Validated;
@@ -29,6 +31,7 @@ import static com.dhx.apicommon.common.BaseResponse.TRACE_ID;
 @RestController
 @RequestMapping("/v2")
 @Slf4j
+@Tag(name = "v2接口")
 public class AIGCController {
     @Resource
     InvokeInterfaceServiceV2 invokeInterfaceServiceV2;
@@ -37,11 +40,13 @@ public class AIGCController {
     AigcManager aigcManager;
 
     @GetMapping("/takeout/comment")
+    @Operation(summary = "外卖评价生成API")
     public BaseResponse genTakeOutComment(@RequestBody @Validated TakeCommentParam param, HttpServletRequest request) {
         return invokeInterfaceServiceV2.genTakeOutComment(param.getRecipe(), request);
     }
 
     @PostMapping("/translate")
+    @Operation(summary = "AI文本翻译API")
     public BaseResponse<String> genTranslate(@RequestBody @Validated TranslateParam param) {
         aigcManager.translateToChinese(param);
         return ResultUtil.success("");

@@ -8,6 +8,8 @@ import com.dhx.apicommon.model.v3.ReviewTextResult;
 import com.dhx.apicommon.model.v3.param.*;
 import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apiinterface.manager.ReviewManager;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,7 @@ import java.util.Map;
  **/
 @RestController
 @RequestMapping("/v3")
+@Tag(name = "v3接口")
 public class OwnApiController {
 
     @Value("${spring.profiles.active}")
@@ -48,50 +51,33 @@ public class OwnApiController {
     }
 
     @PostMapping("/review/text")
+    @Operation(summary = "文本审核API")
     public BaseResponse<ReviewTextResult> reviewText(@Validated @RequestBody ReviewTextParam param) {
         return ResultUtil.success(reviewManager.doFilter(param.getText()));
     }
 
-    /**
-     * 分析成语
-     *
-     * @param param 参数
-     * @return {@link BaseResponse}<{@link Object}>
-     */
     @GetMapping("/idiom")
+    @Operation(summary = "成语大全API")
     public BaseResponse<Object> anaIdiom(@Validated @RequestBody IdiomParm param) {
         return queryAndReturn("idiom", param);
     }
 
-    /**
-     * 生成二维码
-     *
-     * @param param 参数
-     * @return {@link BaseResponse}<{@link Object}> Base64格式的二维码
-     */
+
     @GetMapping("/jqrcode")
+    @Operation(summary = "二维码生成API")
     public BaseResponse<Object> jqrcode(@Validated @RequestBody QRCodeParam param) {
         return queryAndReturn("jqrcode", param);
     }
 
-    /**
-     * 全国行政区划查询API
-     *
-     * @param param 参数
-     * @return {@link BaseResponse}<{@link Object}>
-     */
     @GetMapping("/jxzqh")
+    @Operation(summary = "全国行政区划查询API")
     public BaseResponse<Object> locationSearch(@Validated @RequestBody LocationParm param) {
         return queryAndReturn("jxzqh", param);
     }
 
-    /**
-     * 星座查询API
-     *
-     * @param param 参数
-     * @return {@link BaseResponse}<{@link Object}>
-     */
+
     @GetMapping("/jxzcx")
+    @Operation(summary = "星座查询API")
     public BaseResponse<Object> constellationParamSearch(@Validated @RequestBody ConstellationParam param) {
         return queryAndReturn("jxzcx", param);
     }
