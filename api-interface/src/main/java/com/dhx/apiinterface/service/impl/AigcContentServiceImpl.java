@@ -45,7 +45,7 @@ public class AigcContentServiceImpl extends ServiceImpl<AigcContentMapper, AigcC
                 save(content);
                 interfaceMetadataService.increDataCount(interfaceId);
                 return handledResult;
-            } catch (NoApiKeyException | InputRequiredException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }

@@ -14,6 +14,7 @@ import com.dhx.apiinterface.config.AIGCKeyConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.List;
 
@@ -22,9 +23,9 @@ import java.util.List;
  * @className AliModelManager
  * @date : 2023/12/27/ 10:01
  **/
-@Service
+@Service(value = "QWEN_MAX")
 @Slf4j
-public class AliModelManager {
+public class AliModelManager implements BigModelChat {
 
     // 准备一个线程池, 每个线程都包含一个专属的key,存储到ThreadLocal中, 达到避免干扰的效果
 
@@ -33,7 +34,9 @@ public class AliModelManager {
     @Resource
     AIGCKeyConfig aigcKeyConfig;
 
-    public String doChat(String input) throws NoApiKeyException, ApiException, InputRequiredException {
+
+    @Override
+    public String doChat(String input) throws Exception {
         String localApiKey = apiKey.get();
         if (localApiKey == null) {
             handleSK();
