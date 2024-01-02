@@ -12,6 +12,7 @@ import com.dhx.apicommon.service.InnerInterfaceService;
 import com.dhx.apicommon.service.InnerUserInterfaceInfoService;
 import com.dhx.apicommon.service.InnerUserService;
 import com.dhx.apicommon.util.SignUtil;
+import com.dhx.apicommon.util.ThrowUtil;
 import com.dhx.apigateway.util.UserHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -100,15 +101,9 @@ public class SDKRequestFilter implements GlobalFilter {
         long currentTime = System.currentTimeMillis() / 1000;
         final long FIVE_MINUTES = 60 * 5L;
         assert timestamp != null;
-        if (StringUtils.isAnyBlank(timestamp, nonce, accessKey, sign)) {
-            throw new BusinessException(ErrorCode.FORBIDDEN_ERROR, "HMAC signature does not match");
-        }
-        if (currentTime - Long.parseLong(timestamp) >= FIVE_MINUTES) {
-            throw new BusinessException(ErrorCode.FORBIDDEN_ERROR, "HMAC signature cannot be verified, a valid date or x-date header is required for HMAC Authentication");
-        }
-        if (user == null) {
-            throw new BusinessException(ErrorCode.FORBIDDEN_ERROR, "账号不存在");
-        }
+        ThrowUtil.throwIf(StringUtils.isAnyBlank(timestamp, nonce, accessKey, sign), ErrorCode.FORBIDDEN_ERROR, "HMAC signature does not match");
+        ThrowUtil.throwIf(currentTime - Long.parseLong(timestamp) >= FIVE_MINUTES, ErrorCode.FORBIDDEN_ERROR, "HMAC signature cannot be verified, a valid date or x-date header is required for HMAC Authentication");
+        ThrowUtil.throwIf(user == null, ErrorCode.FORBIDDEN_ERROR, "账号不存在");
         // 校验accessKey
         if (!user.getAccessKey().equals(accessKey)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "HMAC signature cannot be verified");
@@ -125,17 +120,14 @@ public class SDKRequestFilter implements GlobalFilter {
         } else {
             serverSign = SignUtil.genSign(body, secretKey);
         }
-        if (sign == null || !sign.equals(serverSign)) {
-            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "非法请求!");
-        }
-        if (user.getLeftCoin() <= 0) {
-            throw new BusinessException(ErrorCode.OPERATION_ERROR, "余额不足，请先充值。");
-        }
-        if (interfaceInfo == null) {
-            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "接口不存在!");
-        }
-        if (interfaceInfo.getStatus() != InterfaceStatusEnum.AVAILABLE) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "当前接口暂时未开启!");
+        ThrowUtil.throwIf(sign == null || !sign.equals(serverSign), ErrorCode.NO_AUTH_ERROR, "非法请求!");
+        ThrowUtil.throwIf(user.getLeftCoin() <= 0, ErrorCode.POOR_LEFT_NUM);
+        ThrowUtil.throwIf(interfaceInfo == null, ErrorCode.NOT_FOUND_ERROR, "接口不存在");
+        ThrowUtil.throwIf(interfaceInfo.getStatus() != InterfaceStatusEnum.AVAILABLE, ErrorCode.PARAMS_ERROR, "当前接口暂时未开启");
+        // 如果是异步接口, 需要预先添加配置
+        if (interfaceInfo.isAsync()) {
+            boolean result = innerInterfaceService.checkCallBackConfig(user.getUserId(), interfaceInfo.getId());
+            ThrowUtil.throwIf(!result, ErrorCode.PARAMS_ERROR, "请先配置<%s>的回调接口配置!".formatted(interfaceInfo.getName()));
         }
     }
 
@@ -163,9 +155,9 @@ public class SDKRequestFilter implements GlobalFilter {
         DataBufferFactory bufferFactory = originalResponse.bufferFactory();
         // ! 拿到响应码 :  注意响应的结果并不是我们的接口的返回结果, 如果接口返回了500 , 那么其实在网关看来还是200 (只要成功响应了, 都是200)
         HttpStatus statusCode = originalResponse.getStatusCode();
-        if (statusCode != HttpStatus.OK) {
-            return handleSystemError(exchange.getResponse());
-        }
+        ThrowUtil.throwIf(statusCode != HttpStatus.OK, ErrorCode.NULL_ERROR, "服务响应异常!");
+        // 预先保存 callResult 上下文信息
+        innerUserInterfaceInfoService.createCallResult(interfaceTo, userId);
         // 装饰, 增强能力
         ServerHttpResponseDecorator successDecoratedResponse = new ServerHttpResponseDecorator(originalResponse) {
             // 等调用完转发的接口后才会执行
@@ -179,11 +171,10 @@ public class SDKRequestFilter implements GlobalFilter {
                         DataBufferUtils.release(dataBuffer);
                         String responseStr = new String(content, StandardCharsets.UTF_8);
                         BaseResponse baseResponse = JSONUtil.toBean(responseStr, BaseResponse.class);
-                        boolean invokeCount = innerUserInterfaceInfoService.invokeCount(userId, interfaceInfoId, interfaceTo.getCost());
-                        if(!invokeCount){
-                            throw new BusinessException(ErrorCode.OPERATION_ERROR, "更新用户调用异常!");
-                        }
-                        if (baseResponse.getCode() == 200) {
+                        boolean isSuccess = baseResponse.getCode() == 200;
+                        boolean invokeCount = innerUserInterfaceInfoService.invokeCount(userId, interfaceInfoId, interfaceTo.getCost(), isSuccess);
+                        ThrowUtil.throwIf(!invokeCount, ErrorCode.OPERATION_ERROR, "更新用户调用异常!");
+                        if (isSuccess) {
                             log.info("[callSuccess],ip:{} ,用户ID:{},  接口ID: {}, 请求参数:{}, 响应结果：{}", request.getRemoteAddress().getHostString(), userId, interfaceInfoId, request.getQueryParams(), new String(content, StandardCharsets.UTF_8));
                             return bufferFactory.wrap(content);
                         } else {
@@ -197,21 +188,6 @@ public class SDKRequestFilter implements GlobalFilter {
         };
         return chain.filter(exchange.mutate().response(successDecoratedResponse).build());
     }
-
-    /**
-     * 处理内部异常
-     *
-     * @param response
-     * @return
-     */
-    public Mono<Void> handleSystemError(ServerHttpResponse response) {
-        response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
-        BaseResponse baseResponse = new BaseResponse<>(ErrorCode.SYSTEM_ERROR);
-        byte[] bytes = JSONUtil.toJsonStr(baseResponse).getBytes(StandardCharsets.UTF_8);
-        DataBuffer buffer = response.bufferFactory().wrap(bytes); // 创建数据缓冲区
-        return response.writeWith(Mono.just(buffer)); // 写入响应内容
-    }
-
 
 }
 

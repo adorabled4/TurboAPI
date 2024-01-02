@@ -12,6 +12,7 @@
         <result property="categoryBitMap" column="category_bit_map" jdbcType="TINYINT"/>
         <result property="status" column="status" jdbcType="TINYINT"/>
         <result property="docUrl" column="doc_url" jdbcType="VARCHAR"/>
+        <result property="isAsync" column="is_async" jdbcType="TINYINT"/>
         <result property="requestMethod" column="request_method" jdbcType="VARCHAR"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
@@ -21,7 +22,7 @@
     <sql id="Base_Column_List">
         id,name,description,
         image_url,category,type,
-        status,doc_url,request_method,
+        status,doc_url,request_method,is_async
         create_time,update_time,is_deleted
     </sql>
 </mapper>

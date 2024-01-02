@@ -5,7 +5,7 @@ import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicore.mapper.InterfaceVariableInfoMapper;
 import com.dhx.apicore.model.DO.InterfaceVariableInfoEntity;
 import com.dhx.apicore.service.InterfaceVariableInfoService;
-import com.dhx.apicore.util.ThrowUtil;
+import com.dhx.apicommon.util.ThrowUtil;
 import org.springframework.stereotype.Service;
 
 /**

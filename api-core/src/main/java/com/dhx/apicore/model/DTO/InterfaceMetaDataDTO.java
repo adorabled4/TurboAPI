@@ -111,5 +111,10 @@ public class InterfaceMetaDataDTO implements Serializable {
      */
     private String modelName;
 
+    /**
+     * 是否是异步接口
+     */
+    private String isAsync;
+
     private static final long serialVersionUID = 1L;
 }

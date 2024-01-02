@@ -2,6 +2,7 @@ package com.dhx.apicommon.common;
 
 import com.dhx.apicommon.common.exception.ErrorCode;
 import lombok.Data;
+import org.slf4j.MDC;
 
 import java.io.Serializable;
 
@@ -13,6 +14,8 @@ import java.io.Serializable;
 @Data
 public class BaseResponse<T> implements Serializable {
 
+    public static final String TRACE_ID = "traceId";
+
     private static final long serialVersionUID = 1L;
     private int code;
 
@@ -20,11 +23,13 @@ public class BaseResponse<T> implements Serializable {
 
     private String message;
 
+    private String traceId;
 
     public BaseResponse(int code, T data, String message) {
         this.code = code;
         this.data = data;
         this.message = message;
+        this.traceId= MDC.get(TRACE_ID);
     }
 
     public BaseResponse(ErrorCode errorCode) {

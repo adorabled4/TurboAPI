@@ -28,7 +28,7 @@ import com.dhx.apicore.model.vo.InterfaceRankInfoVo;
 import com.dhx.apicore.service.InterfaceInfoService;
 import com.dhx.apicore.service.InterfaceVariableInfoService;
 import com.dhx.apicore.util.CategoryBitMapUtil;
-import com.dhx.apicore.util.ThrowUtil;
+import com.dhx.apicommon.util.ThrowUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -303,6 +303,12 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoEntityMap
     public void increaseCount(Long interfaceId) {
         boolean update = update().setSql("total_count = total_count + 1 ").eq("id", interfaceId).update();
         ThrowUtil.throwIf(!update, ErrorCode.SYSTEM_ERROR, "更新接口调用次数失败!");
+    }
+
+    @Override
+    public void checkAsyncAPI(Long interfaceId) {
+        InterfaceInfoEntity interfaceInfo = findById(interfaceId);
+        ThrowUtil.throwIf(!interfaceInfo.getIsAsync(),ErrorCode.PARAMS_ERROR,"当前接口暂不支持异步调用!");
     }
 }
 

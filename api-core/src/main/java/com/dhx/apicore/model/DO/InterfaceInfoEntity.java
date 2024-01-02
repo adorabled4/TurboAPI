@@ -78,6 +78,11 @@ public class InterfaceInfoEntity implements Serializable {
     private LocalDateTime updateTime;
 
     /**
+     * 是否是异步API
+     */
+    private Boolean isAsync;
+
+    /**
      * 逻辑删除字段
      */
     @TableLogic

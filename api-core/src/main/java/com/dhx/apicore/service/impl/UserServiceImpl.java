@@ -17,7 +17,7 @@ import com.dhx.apicore.model.query.PageQuery;
 import com.dhx.apicore.model.query.UserUpdateQuery;
 import com.dhx.apicore.model.vo.UserVo;
 import com.dhx.apicore.service.UserService;
-import com.dhx.apicore.util.ThrowUtil;
+import com.dhx.apicommon.util.ThrowUtil;
 import com.dhx.apicore.util.UserHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
