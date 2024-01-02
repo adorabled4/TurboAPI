@@ -62,7 +62,7 @@ public class CallResultListener {
             // 查询config
             BaseRepresenter invokeResult = JSONUtil.toBean(message, BaseRepresenter.class);
             CallResult callResult = callResultService.findByTraceId(traceId);
-            CallBack callBack = callBackService.getCallBackConfig(callResult.getInterfaceId(),callResult.getUserId());
+            CallBack callBack = callBackService.findCallBackConfig(callResult.getInterfaceId(),callResult.getUserId());
             String callBackUrl = callBack.getCallBackUrl();
             // 发送结果
             HttpRequest.post(callBackUrl).body(invokeResult.toString()).executeAsync();

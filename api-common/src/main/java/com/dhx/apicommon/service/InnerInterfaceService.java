@@ -16,4 +16,13 @@ public interface InnerInterfaceService {
      * @return
      */
     InterfaceTo getInterfaceInfo(String  callPath , String method);
+
+    /**
+     * 校验回调接口配置
+     *
+     * @param userId 用户id
+     * @param interfaceId     interfaceId
+     * @return boolean
+     */
+    boolean checkCallBackConfig(Long userId, Long interfaceId);
 }

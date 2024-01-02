@@ -102,9 +102,7 @@ public class SDKRequestFilter implements GlobalFilter {
         final long FIVE_MINUTES = 60 * 5L;
         assert timestamp != null;
         ThrowUtil.throwIf(StringUtils.isAnyBlank(timestamp, nonce, accessKey, sign), ErrorCode.FORBIDDEN_ERROR, "HMAC signature does not match");
-
         ThrowUtil.throwIf(currentTime - Long.parseLong(timestamp) >= FIVE_MINUTES, ErrorCode.FORBIDDEN_ERROR, "HMAC signature cannot be verified, a valid date or x-date header is required for HMAC Authentication");
-
         ThrowUtil.throwIf(user == null, ErrorCode.FORBIDDEN_ERROR, "账号不存在");
         // 校验accessKey
         if (!user.getAccessKey().equals(accessKey)) {
@@ -126,6 +124,11 @@ public class SDKRequestFilter implements GlobalFilter {
         ThrowUtil.throwIf(user.getLeftCoin() <= 0, ErrorCode.POOR_LEFT_NUM);
         ThrowUtil.throwIf(interfaceInfo == null, ErrorCode.NOT_FOUND_ERROR, "接口不存在");
         ThrowUtil.throwIf(interfaceInfo.getStatus() != InterfaceStatusEnum.AVAILABLE, ErrorCode.PARAMS_ERROR, "当前接口暂时未开启");
+        // 如果是异步接口, 需要预先添加配置
+        if (interfaceInfo.isAsync()) {
+            boolean result = innerInterfaceService.checkCallBackConfig(user.getUserId(), interfaceInfo.getId());
+            ThrowUtil.throwIf(!result, ErrorCode.PARAMS_ERROR, "请先配置<%s>的回调接口配置!".formatted(interfaceInfo.getName()));
+        }
     }
 
     /**

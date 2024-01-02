@@ -6,8 +6,10 @@ import com.dhx.apicommon.common.exception.BusinessException;
 import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.model.to.InterfaceTo;
 import com.dhx.apicommon.service.InnerInterfaceService;
+import com.dhx.apicore.model.DO.CallBack;
 import com.dhx.apicore.model.DO.InterfaceInfoEntity;
 import com.dhx.apicore.model.DO.InterfaceVariableInfoEntity;
+import com.dhx.apicore.service.CallBackService;
 import com.dhx.apicore.service.InterfaceInfoService;
 import com.dhx.apicore.service.InterfaceVariableInfoService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,24 +33,32 @@ public class InnerInterfaceServiceImpl implements InnerInterfaceService {
     @Resource
     InterfaceVariableInfoService interfaceVariableInfoService;
 
+    @Resource
+    CallBackService callBackService;
+
     @Override
-    public InterfaceTo getInterfaceInfo(String url , String method) {
-        if(StringUtils.isAnyBlank(method,url)){
+    public InterfaceTo getInterfaceInfo(String url, String method) {
+        if (StringUtils.isAnyBlank(method, url)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         QueryWrapper<InterfaceInfoEntity> wrapper = new QueryWrapper<>();
         wrapper.like("call_path", url);
         wrapper.eq("request_method", method);
-        try{
+        try {
             InterfaceInfoEntity interfaceInfo = interfaceInfoService.getOne(wrapper);
             InterfaceVariableInfoEntity variableInfo = interfaceVariableInfoService.findById(interfaceInfo.getId());
             InterfaceTo interfaceTo = BeanUtil.copyProperties(interfaceInfo, InterfaceTo.class);
-            BeanUtil.copyProperties(variableInfo,interfaceTo);
+            BeanUtil.copyProperties(variableInfo, interfaceTo);
             return interfaceTo;
-        }catch (RuntimeException e){
-            log.info("获取接口信息失败: {}",e.getMessage());
+        } catch (RuntimeException e) {
+            log.info("获取接口信息失败: {}", e.getMessage());
         }
         return null;
     }
 
+    @Override
+    public boolean checkCallBackConfig(Long userId, Long interfaceId) {
+        CallBack callBackConfig = callBackService.getCallBackConfig(userId, interfaceId);
+        return callBackConfig != null;
+    }
 }

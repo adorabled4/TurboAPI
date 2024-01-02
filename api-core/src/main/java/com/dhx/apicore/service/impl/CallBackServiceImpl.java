@@ -48,12 +48,21 @@ public class CallBackServiceImpl extends ServiceImpl<CallBackMapper, CallBack>
     }
 
     @Override
+    public CallBack findCallBackConfig(Long interfaceId, Long userId) {
+        List<CallBack> callBacks = query()
+                .eq("user_id", userId)
+                .eq("interface_id", interfaceId)
+                .list();
+        ThrowUtil.throwIf(callBacks.isEmpty(), ErrorCode.NULL_ERROR, "未进行接口回调地址配置!");
+        return callBacks.get(0);
+    }
+
+    @Override
     public CallBack getCallBackConfig(Long interfaceId, Long userId) {
         List<CallBack> callBacks = query()
                 .eq("user_id", userId)
                 .eq("interface_id", interfaceId)
                 .list();
-        ThrowUtil.throwIf(callBacks.isEmpty(),ErrorCode.NULL_ERROR,"未进行接口回调地址配置!");
         return callBacks.get(0);
     }
 }

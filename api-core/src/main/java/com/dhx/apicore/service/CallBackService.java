@@ -18,5 +18,7 @@ public interface CallBackService extends IService<CallBack> {
 
     Page<CallBack> listConfigs(PageQuery query);
 
-    CallBack getCallBackConfig(Long interfaceId, Long userId);
+    CallBack findCallBackConfig(Long interfaceId, Long userId);
+
+    CallBack getCallBackConfig(Long userId, Long interfaceId);
 }
