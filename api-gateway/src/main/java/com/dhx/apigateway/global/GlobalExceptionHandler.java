@@ -25,7 +25,7 @@ import reactor.core.publisher.Mono;
  **/
 @Slf4j
 @ControllerAdvice
-@Order(0)
+@Order(-1)
 public class GlobalExceptionHandler implements WebExceptionHandler {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler implements WebExceptionHandler {
         DataBufferFactory bufferFactory = response.bufferFactory();
         response.setStatusCode(HttpStatus.FORBIDDEN);
         BaseResponse<String> error = ResultUtil.error(HttpStatus.FORBIDDEN.value(), ex.getMessage());
-        log.error("【网关异常】：{}", error);
+        log.error("{}:{}",error , ex.getStackTrace() );
         try {
             byte[] errorBytes = objectMapper.writeValueAsBytes(error);
             DataBuffer dataBuffer = bufferFactory.wrap(errorBytes);
