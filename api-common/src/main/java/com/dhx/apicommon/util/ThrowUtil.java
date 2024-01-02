@@ -1,4 +1,4 @@
-package com.dhx.apicore.util;
+package com.dhx.apicommon.util;
 
 
 import com.dhx.apicommon.common.exception.BusinessException;

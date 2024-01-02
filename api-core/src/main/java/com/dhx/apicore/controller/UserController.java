@@ -10,7 +10,7 @@ import com.dhx.apicore.model.query.PageQuery;
 import com.dhx.apicore.model.query.UserUpdateQuery;
 import com.dhx.apicore.model.vo.UserVo;
 import com.dhx.apicore.service.UserService;
-import com.dhx.apicore.util.ThrowUtil;
+import com.dhx.apicommon.util.ThrowUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;

@@ -2,7 +2,6 @@ package com.dhx.apicore.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicore.model.DO.CallBack;
 import com.dhx.apicore.model.DTO.UserDTO;
@@ -11,12 +10,11 @@ import com.dhx.apicore.model.query.PageQuery;
 import com.dhx.apicore.service.CallBackService;
 import com.dhx.apicore.mapper.CallBackMapper;
 import com.dhx.apicore.service.InterfaceInfoService;
-import com.dhx.apicore.util.ThrowUtil;
+import com.dhx.apicommon.util.ThrowUtil;
 import com.dhx.apicore.util.UserHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @author dhx

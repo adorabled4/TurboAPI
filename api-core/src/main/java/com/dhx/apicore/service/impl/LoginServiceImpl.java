@@ -21,7 +21,7 @@ import com.dhx.apicore.model.query.RegisterQuery;
 import com.dhx.apicore.service.JwtTokensService;
 import com.dhx.apicore.service.LoginService;
 import com.dhx.apicore.service.UserService;
-import com.dhx.apicore.util.ThrowUtil;
+import com.dhx.apicommon.util.ThrowUtil;
 import com.dhx.apicore.util.UserHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;

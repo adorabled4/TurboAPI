@@ -28,7 +28,7 @@ import com.dhx.apicore.model.vo.InterfaceRankInfoVo;
 import com.dhx.apicore.service.InterfaceInfoService;
 import com.dhx.apicore.service.InterfaceVariableInfoService;
 import com.dhx.apicore.util.CategoryBitMapUtil;
-import com.dhx.apicore.util.ThrowUtil;
+import com.dhx.apicommon.util.ThrowUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;

@@ -6,7 +6,7 @@ import com.dhx.apicore.model.DO.CallResult;
 import com.dhx.apicore.model.enums.CallApiStatusEnum;
 import com.dhx.apicore.service.CallResultService;
 import com.dhx.apicore.mapper.CallResultMapper;
-import com.dhx.apicore.util.ThrowUtil;
+import com.dhx.apicommon.util.ThrowUtil;
 import org.springframework.stereotype.Service;
 
 /**

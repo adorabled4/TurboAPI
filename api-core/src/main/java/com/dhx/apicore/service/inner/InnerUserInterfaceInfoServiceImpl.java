@@ -8,7 +8,7 @@ import com.dhx.apicore.model.enums.CallApiStatusEnum;
 import com.dhx.apicore.service.CallResultService;
 import com.dhx.apicore.service.InterfaceInfoService;
 import com.dhx.apicore.service.UserService;
-import com.dhx.apicore.util.ThrowUtil;
+import com.dhx.apicommon.util.ThrowUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.slf4j.MDC;
