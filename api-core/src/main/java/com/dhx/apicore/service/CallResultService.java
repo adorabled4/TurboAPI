@@ -12,4 +12,6 @@ import com.dhx.apicore.model.enums.CallApiStatusEnum;
 public interface CallResultService extends IService<CallResult> {
 
     void updateCallStatus(String traceId, CallApiStatusEnum statusEnum);
+
+    CallResult findByTraceId(String traceId);
 }

@@ -1,6 +1,7 @@
 package com.dhx.apiinterface.manager;
 
 import com.dhx.apicommon.model.v2.param.TranslateParam;
+import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apiinterface.domain.enums.PromptEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -24,6 +25,8 @@ import static com.dhx.apicommon.common.BaseResponse.TRACE_ID;
 public class AigcManager {
     @Resource
     Map<String, BigModelChat> MODEL = new HashMap<>();
+    @Resource
+    CallResultProducer callResultProducer;
 
     private ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(2, 4, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(20));
 
@@ -40,6 +43,7 @@ public class AigcManager {
             String input = buildInputByEnum(param.getText(), PromptEnum.TRANSLATE);
             try {
                 String result = model.doChat(input);
+                callResultProducer.callBackResult(ResultUtil.success(result));
                 log.info("traceId : {} ,result : {}", finalTraceId, result);
             } catch (Exception e) {
                 throw new RuntimeException(e);
