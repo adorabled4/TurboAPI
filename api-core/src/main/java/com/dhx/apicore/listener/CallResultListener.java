@@ -53,7 +53,7 @@ public class CallResultListener {
             key = MQConstant.CALL_RESULT_QUEUE))
     public void callResultSendListener(String message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long deliverTag) throws IOException {
         String traceId = MDC.get(TRACE_ID);
-        try{
+        try {
             log.info("receive message :{}", message);
             if (StringUtils.isBlank(message)) {
                 channel.basicNack(deliverTag, false, false);
@@ -62,14 +62,18 @@ public class CallResultListener {
             // 查询config
             BaseRepresenter invokeResult = JSONUtil.toBean(message, BaseRepresenter.class);
             CallResult callResult = callResultService.findByTraceId(traceId);
-            CallBack callBack = callBackService.findCallBackConfig(callResult.getInterfaceId(),callResult.getUserId());
+            CallBack callBack = callBackService.findCallBackConfig(callResult.getInterfaceId(), callResult.getUserId());
             String callBackUrl = callBack.getCallBackUrl();
             // 发送结果
             HttpRequest.post(callBackUrl).body(invokeResult.toString()).executeAsync();
             // 更新调用状态
             callResultService.updateCallStatus(traceId, CallApiStatusEnum.SUCCEED);
-        }catch (Exception e){
-            callResultService.updateCallStatus(traceId, CallApiStatusEnum.FAILED);
+        } catch (Throwable e) {
+            try {
+                callResultService.updateCallStatus(traceId, CallApiStatusEnum.FAILED);
+            } catch (Throwable ex) {
+                log.info("更新调用信息失败 ,{}, {}", e.getMessage(), ex.getMessage());
+            }
         }
     }
 
