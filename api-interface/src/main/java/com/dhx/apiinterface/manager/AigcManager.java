@@ -28,27 +28,17 @@ public class AigcManager {
     @Resource
     CallResultProducer callResultProducer;
 
-    private ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(2, 4, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(20));
 
     public void translateToChinese(TranslateParam param) {
-        String traceId = MDC.get(TRACE_ID);
-        if (traceId == null) {
-            traceId = UUID.randomUUID().toString();
-            MDC.put(TRACE_ID, traceId);
+        BigModelChat model = getModel();
+        String input = buildInputByEnum(param.getText(), PromptEnum.TRANSLATE);
+        try {
+            String result = model.doChat(input);
+            callResultProducer.callBackResult(ResultUtil.success(result));
+            log.info("traceId : {} ,result : {}", MDC.get(TRACE_ID), result);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        String finalTraceId = traceId;
-        threadPoolExecutor.submit(() -> {
-            MDC.put(TRACE_ID, finalTraceId);
-            BigModelChat model = getModel();
-            String input = buildInputByEnum(param.getText(), PromptEnum.TRANSLATE);
-            try {
-                String result = model.doChat(input);
-                callResultProducer.callBackResult(ResultUtil.success(result));
-                log.info("traceId : {} ,result : {}", finalTraceId, result);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
     }
 
     private String buildInputByEnum(String input, PromptEnum promptEnum) {
