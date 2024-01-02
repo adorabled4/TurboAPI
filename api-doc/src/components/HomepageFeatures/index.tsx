@@ -28,11 +28,11 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
-    title: '分布式部署',
-    Svg: require('@site/static/img/disturb.svg').default,
+    title: '异步接口调用',
+    Svg: require('@site/static/img/async.svg').default,
     description: (
       <>
-        通过微服务以及注册中心和接口模块分布式部署充分保证接口服务的可用性。
+        系统支持异步接口, 通过绑定接口的回调消息接收配置, 即可实现更加快捷, 强大的接口服务。
       </>
     ),
   },

@@ -4,7 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'TurboAPI',
-  tagline: '🚀 To help you dev faster and more effective🚀',
+  tagline: '🚀 To help you dev faster and more effective 🚀',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
@@ -42,14 +42,14 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+           'https://github.com/adorabled4/TurboAPI/tree/dev/api-doc/',
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/adorabled4/TurboAPI/tree/dev/api-doc/',
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -120,7 +120,7 @@ const config: Config = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              href: 'https://github.com/adorabled4/TurboAPI',
             },
           ],
         },
