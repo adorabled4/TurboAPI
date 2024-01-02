@@ -5,23 +5,15 @@ import com.dhx.apicommon.model.v2.param.TakeCommentParam;
 import com.dhx.apicommon.model.v2.param.TranslateParam;
 import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apiinterface.manager.AigcManager;
-import com.dhx.apiinterface.service.AigcContentService;
 import com.dhx.apiinterface.service.InvokeInterfaceServiceV2;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.UUID;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-import static com.dhx.apicommon.common.BaseResponse.TRACE_ID;
 
 /**
  * @author adorabled4
@@ -32,7 +24,7 @@ import static com.dhx.apicommon.common.BaseResponse.TRACE_ID;
 @RequestMapping("/v2")
 @Slf4j
 @Tag(name = "v2接口")
-public class AIGCController {
+public class Version2Controller {
     @Resource
     InvokeInterfaceServiceV2 invokeInterfaceServiceV2;
 

@@ -27,7 +27,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/v3")
 @Tag(name = "v3接口")
-public class OwnApiController {
+public class Version3Controller {
 
     @Value("${spring.profiles.active}")
     private String env;

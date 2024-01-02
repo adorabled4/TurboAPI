@@ -41,7 +41,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/common")
 @Tag(name = "v1接口")
-public class CommonUseController {
+public class Version1Controller {
     @Resource
     ComputerSuffixService computerSuffixService;
     @Resource

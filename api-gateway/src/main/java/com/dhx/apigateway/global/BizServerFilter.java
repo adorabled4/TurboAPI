@@ -83,7 +83,7 @@ public class BizServerFilter implements GlobalFilter {
         } else if (whitePath.contains(path.toString())) {
             return null;
         } else {
-            throw new BusinessException(ErrorCode.FORBIDDEN_ERROR);
+//            throw new BusinessException(ErrorCode.FORBIDDEN_ERROR);
         }
         UserHolder.setUser(user);
         return user;
