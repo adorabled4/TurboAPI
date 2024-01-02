@@ -90,6 +90,11 @@ public class InterfaceTo implements Serializable {
      */
     private Long totalCallCount;
 
+    /**
+     * 是否是异步接口
+     */
+    private boolean isAsync;
+
 
     private static final long serialVersionUID = 1L;
 

@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import com.dhx.apicore.model.enums.CallApiStatusEnum;
 import lombok.Data;
 
 /**
@@ -49,7 +51,7 @@ public class CallResult implements Serializable {
      * 本次调用执行状态
      */
     @TableField(value = "status")
-    private Integer status;
+    private CallApiStatusEnum status;
 
     /**
      * 创建时间

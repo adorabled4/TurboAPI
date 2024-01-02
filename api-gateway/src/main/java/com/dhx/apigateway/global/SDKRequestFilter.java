@@ -166,6 +166,8 @@ public class SDKRequestFilter implements GlobalFilter {
         if (statusCode != HttpStatus.OK) {
             return handleSystemError(exchange.getResponse());
         }
+        // 预先保存 callResult 上下文信息
+        innerUserInterfaceInfoService.createCallResult(interfaceTo,userId);
         // 装饰, 增强能力
         ServerHttpResponseDecorator successDecoratedResponse = new ServerHttpResponseDecorator(originalResponse) {
             // 等调用完转发的接口后才会执行
@@ -179,7 +181,8 @@ public class SDKRequestFilter implements GlobalFilter {
                         DataBufferUtils.release(dataBuffer);
                         String responseStr = new String(content, StandardCharsets.UTF_8);
                         BaseResponse baseResponse = JSONUtil.toBean(responseStr, BaseResponse.class);
-                        boolean invokeCount = innerUserInterfaceInfoService.invokeCount(userId, interfaceInfoId, interfaceTo.getCost());
+                        boolean isSuccess = baseResponse.getCode()==200;
+                        boolean invokeCount = innerUserInterfaceInfoService.invokeCount(userId, interfaceInfoId, interfaceTo.getCost(),isSuccess);
                         if(!invokeCount){
                             throw new BusinessException(ErrorCode.OPERATION_ERROR, "更新用户调用异常!");
                         }

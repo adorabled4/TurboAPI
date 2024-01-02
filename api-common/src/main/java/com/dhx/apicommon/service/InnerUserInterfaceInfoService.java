@@ -1,6 +1,7 @@
 package com.dhx.apicommon.service;
 
 import com.dhx.apicommon.common.BaseResponse;
+import com.dhx.apicommon.model.to.InterfaceTo;
 
 /**
  * @author adorabled4
@@ -16,5 +17,13 @@ public interface InnerUserInterfaceInfoService {
      * @param interfaceId 接口id
      * @return boolean
      */
-    boolean invokeCount(Long userId, Long interfaceId, Integer cost);
+    boolean invokeCount(Long userId, Long interfaceId, Integer cost,boolean isSuccess);
+
+    /**
+     * 预先创建调用上下文信息
+     *
+     * @param interfaceTo 接口
+     * @param userId      用户id
+     */
+    void createCallResult(InterfaceTo interfaceTo,Long userId);
 }
