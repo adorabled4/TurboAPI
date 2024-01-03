@@ -43,7 +43,9 @@ public class LogAOP {
     public Object doRequestAround(ProceedingJoinPoint joinPoint) throws Throwable {
         // 日志链路
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        assert attributes != null;
+        if (attributes == null) {
+            return joinPoint.proceed();
+        }
         HttpServletRequest request = attributes.getRequest();
         String traceId = request.getHeader(TRACE_ID);
         MDC.put(TRACE_ID, traceId);
