@@ -67,7 +67,7 @@ public class Version1Controller {
 
     @GetMapping("/lovelorn")
     @Operation(summary = "随机失恋文案API")
-    public BaseResponse<LovelornSentence> getSuffixDetail(){
+    public BaseResponse<LovelornSentence> getRandomLovelornSentence(){
         long total = loveSentenceService.count();
         long id = (long) (Math.random()*total+1);
         while(id<0 || id >= total){
