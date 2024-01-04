@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * @author adorabled4
  * @className ReviewTextResult
@@ -14,7 +16,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ReviewTextResult {
+public class ReviewTextResult implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * 处理后的内容

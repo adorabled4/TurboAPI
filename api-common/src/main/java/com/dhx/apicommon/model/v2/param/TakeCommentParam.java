@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
+import java.io.Serializable;
+
 
 /**
  * @author adorabled4
@@ -16,7 +18,9 @@ import org.hibernate.validator.constraints.Length;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TakeCommentParam {
+public class TakeCommentParam implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 菜品

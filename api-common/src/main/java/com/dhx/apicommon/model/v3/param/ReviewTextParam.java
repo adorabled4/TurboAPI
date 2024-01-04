@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
+import java.io.Serializable;
+
 /**
  * @author adorabled4
  * @className ReviewTextParam
@@ -15,7 +17,8 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ReviewTextParam {
+public class ReviewTextParam  implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Length(min = 2, max = 4096)
     private String text;

@@ -2,13 +2,17 @@ package com.dhx.apicommon.model.v1;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author adorabled4
  * @className Weather 天气信息实体类
  * @date : 2023/04/15/ 17:13
  **/
 @Data
-public class WeatherInfo {
+public class WeatherInfo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
 
     /**

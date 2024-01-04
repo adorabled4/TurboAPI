@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * @author adorabled4
  * @className QRCodeParam
@@ -14,7 +16,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Builder
-public class QRCodeParam {
+public class QRCodeParam  implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * 二维码内容
