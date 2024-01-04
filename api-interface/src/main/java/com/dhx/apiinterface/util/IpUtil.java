@@ -1,5 +1,6 @@
 package com.dhx.apiinterface.util;
 
+import cn.hutool.core.util.RandomUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +22,7 @@ import java.util.concurrent.TimeUnit;
  **/
 @Slf4j
 public class IpUtil {
+    private static String filePath = null;
 
     public static String getIpAddr(HttpServletRequest request) {
         String ip = null;
@@ -60,28 +62,26 @@ public class IpUtil {
         // 1、创建 searcher 对象
         Searcher searcher = null;
         String dbPath = "ip2region.xdb";
+        File file = null;
         try {
             Resource resource = new ClassPathResource(dbPath);
             InputStream inputStream = resource.getInputStream();
-            File file = File.createTempFile("ip2region", ".xdb");
-            FileUtils.copyInputStreamToFile(inputStream, file);
-            searcher = Searcher.newWithFileOnly(file.getAbsolutePath());
-        } catch (IOException e) {
-            log.error("failed to create searcher with `" + dbPath +"`:"  + e);
-            return "";
-        }
-        // 2、查询
-        String region = "";
-        try {
-            long sTime = System.nanoTime();
-            region = searcher.search(ip);
-            long cost = TimeUnit.NANOSECONDS.toMicros((long) (System.nanoTime() - sTime));
-//            System.out.printf("{region: %s, ioCount: %d, took: %d μs}\n", region, searcher.getIOCount(), cost);
-            // 3、关闭资源
-            searcher.close();
+            if (filePath == null) {
+                file = File.createTempFile("ip2region", ".xdb");
+                FileUtils.copyInputStreamToFile(inputStream, file);
+                filePath = file.getAbsolutePath();
+            }
+            searcher = Searcher.newWithFileOnly(filePath);
+            return searcher.search(ip);
         } catch (Exception e) {
-            log.error("failed to search(" + dbPath + "): " + e);
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                // 3、关闭资源
+                searcher.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
-        return region;
     }
 }
