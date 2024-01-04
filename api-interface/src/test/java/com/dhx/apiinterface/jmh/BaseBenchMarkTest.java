@@ -20,10 +20,10 @@ public abstract class BaseBenchMarkTest {
                 .shouldDoGC(true)
                 .shouldFailOnError(true)
                 .forks(1)
-                .threads(1) // 测试线程数
+                .threads(4) // 测试线程数
                 .warmupIterations(5) // 预热迭代次数
-                .measurementIterations(10) // 测试迭代次数
-                .timeUnit(TimeUnit.MICROSECONDS)
+                .measurementIterations(20) // 测试迭代次数
+                .timeUnit(TimeUnit.MILLISECONDS)
                 .resultFormat(resultsFileOutputType)
                 .result(buildResultsFileName(resultFilePrefix, resultsFileOutputType))
                 .shouldFailOnError(true)
