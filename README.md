@@ -484,6 +484,42 @@ knife4j:
 
 
 
+
+
+## BenchMark
+
+> Driver By jmh
+
+### v1-interface
+
+具体代码参考 `com.dhx.apiinterface.jmh.V1InterfaceBenchmarkTest`
+
+测试信息
+
+Windows 10 @ 5600H
+
+```
+# JMH version: 1.22
+# VM version: JDK 17.0.6, Java HotSpot(TM) 64-Bit Server VM, 17.0.6+9-LTS-190
+# VM invoker: D:\jdk17_\bin\java.exe
+# VM options: -server
+# Warmup: 5 iterations, 10 s each
+# Measurement: 20 iterations, 10 s each
+# Timeout: 120 s per iteration
+# Threads: 4 threads, will synchronize iterations
+# Benchmark mode: Average time, time/op
+
+Benchmark                                               Mode  Cnt  Score   Error  Units
+V1InterfaceBenchmarkTest.anaIpAddressTest               avgt   20  0.533 ± 0.008  ms/op
+V1InterfaceBenchmarkTest.getRandomLovelornSentenceTest  avgt   20  2.625 ± 0.032  ms/op
+V1InterfaceBenchmarkTest.getRandomPoetTest              avgt   20  1.382 ± 0.016  ms/op
+V1InterfaceBenchmarkTest.getSuffixInfoTest              avgt   20  0.909 ± 0.012  ms/op
+```
+
+![](http://dhx-blog.oss-cn-beijing.aliyuncs.com/dhx/image-20240104234348369.png)
+
+
+
 ## 快速部署
 
 本项目前后端均使用docker进行镜像构建以及部署。
