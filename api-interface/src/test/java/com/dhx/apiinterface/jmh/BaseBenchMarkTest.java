@@ -3,6 +3,7 @@ package com.dhx.apiinterface.jmh;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.openjdk.jmh.runner.options.TimeValue;
 
 import java.util.concurrent.TimeUnit;
 
@@ -20,9 +21,13 @@ public abstract class BaseBenchMarkTest {
                 .shouldDoGC(true)
                 .shouldFailOnError(true)
                 .forks(1)
-                .threads(4) // 测试线程数
-                .warmupIterations(5) // 预热迭代次数
-                .measurementIterations(20) // 测试迭代次数
+                .threads(1) // 测试线程数
+                .warmupIterations(1) // 预热迭代次数
+                .warmupTime(TimeValue.seconds(1))// 预热迭代的时间
+                .warmupBatchSize(10)// 预热迭代次数
+                .measurementIterations(100) // 测试迭代次数
+                .measurementTime(TimeValue.seconds(1))// 正式测量迭代的时间
+                .measurementBatchSize(10) // 每批次测量的大小
                 .timeUnit(TimeUnit.MILLISECONDS)
                 .resultFormat(resultsFileOutputType)
                 .result(buildResultsFileName(resultFilePrefix, resultsFileOutputType))

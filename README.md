@@ -496,9 +496,8 @@ knife4j:
 
 测试信息
 
-Windows 10 @ 5600H
-
 ```
+# Windows 10 @ 5600H
 # JMH version: 1.22
 # VM version: JDK 17.0.6, Java HotSpot(TM) 64-Bit Server VM, 17.0.6+9-LTS-190
 # VM invoker: D:\jdk17_\bin\java.exe
@@ -517,6 +516,38 @@ V1InterfaceBenchmarkTest.getSuffixInfoTest              avgt   20  0.909 ± 0.01
 ```
 
 ![](http://dhx-blog.oss-cn-beijing.aliyuncs.com/dhx/image-20240104234348369.png)
+
+
+
+### v2-interface
+
+具体代码参考 `com.dhx.apiinterface.jmh.V2InterfaceBenchmarkTest`
+
+测试信息
+
+```
+# Windows 10 @ 5600H
+# JMH version: 1.22
+# VM version: JDK 17.0.6, Java HotSpot(TM) 64-Bit Server VM, 17.0.6+9-LTS-190
+# VM invoker: D:\jdk17_\bin\java.exe
+# VM options: -server
+# Warmup: 1 iterations, 100 ms each, 10 calls per op
+# Measurement: 100 iterations, 1 s each, 10 calls per op
+# Timeout: 120 s per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: com.dhx.apiinterface.jmh.V3InterfaceBenchmarkTest.anaIdiomTest
+
+Benchmark                                              Mode  Cnt   Score   Error  Units
+V3InterfaceBenchmarkTest.anaIdiomTest                  avgt  100   5.846 ± 0.123  ms/op
+V3InterfaceBenchmarkTest.constellationParamSearchTest  avgt  100   5.958 ± 0.121  ms/op
+V3InterfaceBenchmarkTest.jqrcodeTest                   avgt  100  19.609 ± 0.433  ms/op
+V3InterfaceBenchmarkTest.locationSearchTest            avgt  100   5.837 ± 0.133  ms/op
+```
+
+
+
+![](http://dhx-blog.oss-cn-beijing.aliyuncs.com/dhx/image-20240105205527341.png)
 
 
 
