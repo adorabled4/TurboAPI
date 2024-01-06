@@ -2,15 +2,13 @@ package com.dhx.apiinterface.controller;
 
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.common.exception.ErrorCode;
-import com.dhx.apicommon.model.v2.param.OJParam;
-import com.dhx.apicommon.model.v2.param.TakeCommentParam;
-import com.dhx.apicommon.model.v2.param.TranslateParam;
+import com.dhx.apicommon.model.v2.param.*;
 import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apicommon.util.ThrowUtil;
 import com.dhx.apiinterface.manager.AigcManager;
 import com.dhx.apiinterface.service.InvokeInterfaceServiceV2;
-import com.dhx.apiinterface.service.judge.JavaSandboxTemplate;
 import com.dhx.apiinterface.service.judge.JudgeService;
+import com.github.houbb.pinyin.util.PinyinHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +56,7 @@ public class Version2Controller {
     public BaseResponse<String> genTranslate(@RequestBody @Validated TranslateParam param) {
         String traceId = genTraceId();
         threadPoolExecutor.submit(() -> {
-            MDC.put(TRACE_ID,traceId);
+            MDC.put(TRACE_ID, traceId);
             aigcManager.translateToChinese(param);
         });
         return ResultUtil.success("");
@@ -70,11 +68,18 @@ public class Version2Controller {
         ThrowUtil.throwIf(!param.getLanguage().equals("Java"), ErrorCode.PARAMS_ERROR, "unavailable language :%s ".formatted(param.getCode()));
         String traceId = genTraceId();
         threadPoolExecutor.submit(() -> {
-            MDC.put(TRACE_ID,traceId);
+            MDC.put(TRACE_ID, traceId);
             judgeService.executeJavaCode(param);
         });
         return ResultUtil.success("");
     }
+
+    @PostMapping("/pinyin")
+    @Operation(summary = "中文拼音转换API)")
+    public BaseResponse<String> pyConvert(@RequestBody @Validated PinyinConvertParam convertParam) {
+        return ResultUtil.success(PinyinHelper.toPinyin(convertParam.getText(), convertParam.getType()));
+    }
+
 
     private String genTraceId() {
         String traceId = MDC.get(TRACE_ID);
