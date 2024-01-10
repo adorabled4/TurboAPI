@@ -1,8 +1,10 @@
 package com.dhx.apiinterface.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.model.v1.PoetVO;
 import com.dhx.apiinterface.domain.Poet;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 
@@ -12,8 +14,7 @@ import java.util.List;
  * @author adorabled4
  * @date 2023-03-11
  */
-public interface IPoetService 
-{
+public interface IPoetService extends IService<Poet> {
     /**
      * 查询诗句
      * 
@@ -61,6 +62,10 @@ public interface IPoetService
      * @return 结果
      */
     public int deletePoetById(Long id);
+
+    PoetVO getPoetById(Long id);
+
+    Long randomId();
 
     BaseResponse<PoetVO> getPoetVO(long id);
 

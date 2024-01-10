@@ -1,5 +1,6 @@
 package com.dhx.apiinterface.service;
 
+import com.dhx.apicommon.model.v1.param.FileSuffixParam;
 import com.dhx.apiinterface.domain.ComputerSuffix;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -10,4 +11,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface ComputerSuffixService extends IService<ComputerSuffix> {
 
+    ComputerSuffix findBySuffix(FileSuffixParam param);
 }

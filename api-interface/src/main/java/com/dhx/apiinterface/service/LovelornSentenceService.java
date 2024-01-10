@@ -10,4 +10,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface LovelornSentenceService extends IService<LovelornSentence> {
 
+    LovelornSentence getSentenceById(Long id);
+
+    Long randomId();
 }

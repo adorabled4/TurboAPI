@@ -1,79 +1,46 @@
 package com.dhx.apiinterface.domain;
 
 
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
 /**
  * 诗句对象 t_poet
- * 
+ *
  * @author adorabled4
  * @date 2023-03-11
  */
-public class Poet
-{
+@TableName(value = "t_poet")
+@Data
+public class Poet {
     private static final long serialVersionUID = 1L;
 
-    /** 主键 */
+    /**
+     * 主键
+     */
     private Long id;
 
-    /** 作者 */
+    /**
+     * 作者
+     */
     private String author;
 
-    /** 朝代 */
+    /**
+     * 朝代
+     */
     private String dynasty;
 
-    /** 题目 */
+    /**
+     * 题目
+     */
     private String title;
 
-    /** 诗句 */
-//    @Excel(name = "诗句")
+    /**
+     * 诗句
+     */
     private String poetry;
 
     private String createTime;
-
-    public void setId(Long id) 
-    {
-        this.id = id;
-    }
-
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setAuthor(String author) 
-    {
-        this.author = author;
-    }
-
-    public String getAuthor() 
-    {
-        return author;
-    }
-    public void setDynasty(String dynasty) 
-    {
-        this.dynasty = dynasty;
-    }
-
-    public String getDynasty() 
-    {
-        return dynasty;
-    }
-    public void setTitle(String title) 
-    {
-        this.title = title;
-    }
-
-    public String getTitle() 
-    {
-        return title;
-    }
-    public void setPoetry(String poetry) 
-    {
-        this.poetry = poetry;
-    }
-
-    public String getPoetry() 
-    {
-        return poetry;
-    }
 
     @Override
     public String toString() {
