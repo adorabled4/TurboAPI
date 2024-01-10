@@ -22,12 +22,10 @@ public abstract class BaseBenchMarkTest {
                 .shouldFailOnError(true)
                 .forks(1)
                 .threads(1) // 测试线程数
-                .warmupIterations(1) // 预热迭代次数
+                .warmupIterations(5) // 预热迭代次数
                 .warmupTime(TimeValue.seconds(1))// 预热迭代的时间
-                .warmupBatchSize(10)// 预热迭代次数
-                .measurementIterations(100) // 测试迭代次数
+                .measurementIterations(10) // 测试迭代次数
                 .measurementTime(TimeValue.seconds(1))// 正式测量迭代的时间
-                .measurementBatchSize(10) // 每批次测量的大小
                 .timeUnit(TimeUnit.MILLISECONDS)
                 .resultFormat(resultsFileOutputType)
                 .result(buildResultsFileName(resultFilePrefix, resultsFileOutputType))
