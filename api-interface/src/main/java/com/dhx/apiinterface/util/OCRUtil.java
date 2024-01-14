@@ -29,13 +29,18 @@ public class OCRUtil {
 
 
     public static String doOCR(File image, LanguageEnum type) throws TesseractException {
-        tesseract.setLanguage(type.getValue());
-        //设置配置文件夹微视、识别语言、识别模式
-        //使用 OSD 进行自动页面分割以进行图像处理
-        tesseract.setPageSegMode(1);
-        //设置引擎模式是神经网络LSTM引擎
-        tesseract.setOcrEngineMode(1);
-        //开始识别整张图片中的文字
-        return tesseract.doOCR(image);
+        try{
+            tesseract.setLanguage(type.getValue());
+            //设置配置文件夹微视、识别语言、识别模式
+            //使用 OSD 进行自动页面分割以进行图像处理
+            tesseract.setPageSegMode(1);
+            //设置引擎模式是神经网络LSTM引擎
+            tesseract.setOcrEngineMode(1);
+            //开始识别整张图片中的文字
+            return tesseract.doOCR(image);
+        }finally {
+            // 识别完成之后需要删除文件
+            image.delete();
+        }
     }
 }
