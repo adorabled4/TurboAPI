@@ -3,11 +3,13 @@ package com.dhx.apiinterface.controller;
 import com.dhx.apicommon.common.BaseResponse;
 import com.dhx.apicommon.common.exception.ErrorCode;
 import com.dhx.apicommon.model.v2.param.*;
+import com.dhx.apicommon.util.FileUtil;
 import com.dhx.apicommon.util.ResultUtil;
 import com.dhx.apicommon.util.ThrowUtil;
 import com.dhx.apiinterface.manager.AigcManager;
 import com.dhx.apiinterface.service.InvokeInterfaceServiceV2;
 import com.dhx.apiinterface.service.judge.JudgeService;
+import com.dhx.apiinterface.util.OCRUtil;
 import com.github.houbb.pinyin.util.PinyinHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -78,6 +81,17 @@ public class Version2Controller {
     @Operation(summary = "中文拼音转换API)")
     public BaseResponse<String> pyConvert(@RequestBody @Validated PinyinConvertParam convertParam) {
         return ResultUtil.success(PinyinHelper.toPinyin(convertParam.getText(), convertParam.getType()));
+    }
+
+    @PostMapping("/ocr")
+    @Operation(summary = "图像文字识别API")
+    public BaseResponse<String> imageOCR(@RequestBody OCRParam ocrParam) {
+        try {
+            File file = FileUtil.base64ToFile(ocrParam.getBase64File(),ocrParam.getSuffix());
+            return ResultUtil.success(OCRUtil.doOCR(file, ocrParam.getLanguage()));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

@@ -1,6 +1,6 @@
 package com.dhx.apicore.service;
 
-import com.dhx.apicore.util.FileUtil;
+import com.dhx.apicommon.util.FileUtil;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
