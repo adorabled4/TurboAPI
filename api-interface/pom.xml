@@ -190,6 +190,18 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.houbb</groupId>
+            <artifactId>pinyin</artifactId>
+            <version>0.4.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/net.sourceforge.tess4j/tess4j -->
+        <dependency>
+            <groupId>net.sourceforge.tess4j</groupId>
+            <artifactId>tess4j</artifactId>
+            <version>5.10.0</version>
+        </dependency>
 
     </dependencies>
 

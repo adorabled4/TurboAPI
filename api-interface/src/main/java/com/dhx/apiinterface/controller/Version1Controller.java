@@ -54,45 +54,33 @@ public class Version1Controller {
 
     @GetMapping("/suffix")
     @Operation(summary = "文件后缀信息查询API")
-    public BaseResponse<ComputerSuffix> getSuffixDetail(@RequestBody FileSuffixParam param){
-        QueryWrapper<ComputerSuffix> wrapper = new QueryWrapper<>();
-        wrapper.eq("suffix",param);
-        List<ComputerSuffix> list = computerSuffixService.list(wrapper);
-        if(list==null || list.size()==0){
-            return  ResultUtil.error(ErrorCode.PARAMS_ERROR,"未知的文件后缀~");
+    public BaseResponse<ComputerSuffix> getSuffixDetail(@RequestBody FileSuffixParam param) {
+        ComputerSuffix suffix = computerSuffixService.findBySuffix(param);
+        if (suffix == null) {
+            return ResultUtil.error(ErrorCode.PARAMS_ERROR, "未知的文件后缀~");
         }
-        return ResultUtil.success(list.get(0));
+        return ResultUtil.success(suffix);
     }
 
 
     @GetMapping("/lovelorn")
     @Operation(summary = "随机失恋文案API")
-    public BaseResponse<LovelornSentence> getRandomLovelornSentence(){
-        long total = loveSentenceService.count();
-        long id = (long) (Math.random()*total+1);
-        while(id<0 || id >= total){
-            id = (long) (Math.random()*total+1);
-        }
-        // id 不存在,  返回一号
-        if(loveSentenceService.list(new QueryWrapper<LovelornSentence>().eq("id",id)).size()==0){
-            return ResultUtil.success(loveSentenceService.getById(1));
-        }
-        // 正常返回
-        return ResultUtil.success(loveSentenceService.getById(id));
+    public BaseResponse<LovelornSentence> getRandomLovelornSentence() {
+        Long id = loveSentenceService.randomId();
+        return ResultUtil.success(loveSentenceService.getSentenceById(id));
     }
-
 
 
     @GetMapping("/ip/ana")
     @Operation(summary = "IPv4属地查询API")
-    public BaseResponse<String> analysisIP(@RequestBody IpAnaParam param){
-        try{
+    public BaseResponse<String> analysisIP(@RequestBody IpAnaParam param) {
+        try {
             InetAddress inetAddress = InetAddress.getByName(param.getIp());
             if (inetAddress instanceof Inet4Address) {
                 String location = IpUtil.getIpLocation(param.getIp());
                 return ResultUtil.success(location);
             } else {
-                throw new BusinessException(ErrorCode.PARAMS_ERROR,"参数不是合法的IPv4地址!");
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数不是合法的IPv4地址!");
             }
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
@@ -102,28 +90,25 @@ public class Version1Controller {
 
     @GetMapping("/ip/me")
     @Operation(summary = "获取自身IP属地API")
-    public BaseResponse<String> getIpOfRequest(HttpServletRequest request){
+    public BaseResponse<String> getIpOfRequest(HttpServletRequest request) {
         String ipAddr = IpUtil.getIpAddr(request);
         return ResultUtil.success(ipAddr);
     }
 
     @GetMapping("/weather/now")
     @Operation(summary = "天气查询API")
-    public BaseResponse<WeatherInfo> nowWeather(@RequestBody WeatherParam weatherParam, HttpServletRequest request){
-        if(StringUtils.isEmpty(weatherParam.getCityName())){
+    public BaseResponse<WeatherInfo> nowWeather(@RequestBody WeatherParam weatherParam, HttpServletRequest request) {
+        if (StringUtils.isEmpty(weatherParam.getCityName())) {
             return weatherService.getWeatherByRequest(request);
         }
         return weatherService.getWeatherByCityName(weatherParam.getCityName());
     }
+
     @GetMapping("/poet/random")
     @Operation(summary = "随机诗句API")
     public BaseResponse<PoetVO> getRandomPoet() {
-        long total = poetService.getTotal();
-        long id = (long) (Math.random() * total + 1);
-        while (id < 0 || id >= total) {
-            id = (long) (Math.random() * total + 1);
-        }
-        return poetService.getPoetVO(id);
+        Long id = poetService.randomId();
+        return ResultUtil.success(poetService.getPoetById(id));
     }
 
 }

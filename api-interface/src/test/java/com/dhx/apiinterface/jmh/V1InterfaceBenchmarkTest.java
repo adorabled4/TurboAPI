@@ -20,7 +20,7 @@ import java.io.IOException;
  * @date : 2024/01/03/ 22:51
  **/
 @State(Scope.Benchmark)
-@BenchmarkMode(Mode.AverageTime)
+@BenchmarkMode({Mode.Throughput,Mode.AverageTime})
 @Timeout(time = 120)
 public class V1InterfaceBenchmarkTest extends BaseBenchMarkTest {
     private Version1Controller controller;

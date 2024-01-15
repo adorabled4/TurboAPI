@@ -72,6 +72,12 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>3.5.3</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.houbb</groupId>
+            <artifactId>pinyin</artifactId>
+            <version>0.4.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 <!--    <build> 被依赖的模块不能有这个插件-->
