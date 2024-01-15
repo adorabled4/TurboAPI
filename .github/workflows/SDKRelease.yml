@@ -2,11 +2,12 @@ name: SDK CI with Maven
 
 on:
   push:
+#   branches:
+#      - dev
+#      - feature/sdk-perf
+  pull_request:
     branches:
-      - dev
-      - feature/sdk-perf
-    pull_request:
-      branches: [ test ]
+      - test
 jobs:
   build:
     #配置权限
